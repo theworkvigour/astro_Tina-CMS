@@ -18,6 +18,8 @@ let data: Record<string, any> = {
   logo_image: '',
   logo_alt: 'Vectoflare logo',
   copyright: '© {year} Vectoflare · All rights reserved.',
+  whatsapp_number: '',
+  whatsapp_default_message: '你好,我想咨询一下产品。',
 };
 let sha = '';
 let loadError: string | null = null;
@@ -92,6 +94,29 @@ const year = new Date().getFullYear();
           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm font-mono"
         >{data.copyright ?? ''}</textarea>
         <p class="mt-1 text-xs text-gray-500">预览 (实时替换 <code class="font-mono">{'{year}'}</code>): <span class="font-mono" data-copyright-preview></span></p>
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-6 space-y-5">
+      <h2 class="text-base font-semibold">WhatsApp 浮动聊天</h2>
+      <p class="text-xs text-gray-500">右下角的 WhatsApp 聊天按钮。号码留空则不显示。</p>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">WhatsApp 号码</label>
+        <input
+          type="text"
+          name="whatsapp_number"
+          value={data.whatsapp_number ?? ''}
+          placeholder="8613800000000 (带国家代码, 不带 + 号)"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm font-mono"
+        />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">默认消息</label>
+        <textarea
+          name="whatsapp_default_message"
+          rows="2"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm"
+        >{data.whatsapp_default_message ?? ''}</textarea>
       </div>
     </div>
 
@@ -190,6 +215,8 @@ const year = new Date().getFullYear();
           logo_image: String(fd.get('logo_image') || '').trim(),
           logo_alt: String(fd.get('logo_alt') || '').trim(),
           copyright: String(fd.get('copyright') || ''),
+          whatsapp_number: String(fd.get('whatsapp_number') || '').trim(),
+          whatsapp_default_message: String(fd.get('whatsapp_default_message') || ''),
         };
 
         try {

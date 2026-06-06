@@ -2,6 +2,7 @@
 import Layout from '~/layouts/PageLayout.astro';
 
 import Hero from '~/components/widgets/Hero.astro';
+import HeroCarousel from '~/components/HeroCarousel.astro';
 import Features from '~/components/widgets/Features.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import Content from '~/components/widgets/Content.astro';
@@ -15,6 +16,7 @@ import { getProducts } from '~/utils/products';
 import data from '~/data/pages/home.yaml';
 
 const hero = data.hero ?? {};
+const carousel = data.hero_carousel ?? {};
 const features = data.features ?? {};
 const featured = data.featured_products ?? {};
 const workshop = data.content_workshop ?? {};
@@ -22,6 +24,8 @@ const steps = data.steps ?? {};
 const blog = data.blog_latest ?? {};
 const faqs = data.faqs ?? {};
 const cta = data.cta ?? {};
+
+const carouselSlides = Array.isArray(carousel.slides) ? carousel.slides : [];
 
 const metadata = {
   title: `${SITE.name} — Premium inflatable boats, RIBs and engineered products`,
@@ -35,14 +39,22 @@ const featuredProducts = APP_PRODUCTS?.isEnabled
 ---
 
 <Layout metadata={metadata}>
-  <Hero
-    id="hero"
-    tagline={hero.tagline}
-    title={hero.title}
-    subtitle={hero.subtitle}
-    actions={hero.actions}
-    image={hero.image}
-  />
+  {carouselSlides.length > 0 ? (
+    <HeroCarousel
+      id="hero"
+      slides={carouselSlides}
+      autoplayInterval={typeof carousel.autoplay_interval === 'number' ? carousel.autoplay_interval : 5000}
+    />
+  ) : (
+    <Hero
+      id="hero"
+      tagline={hero.tagline}
+      title={hero.title}
+      subtitle={hero.subtitle}
+      actions={hero.actions}
+      image={hero.image}
+    />
+  )}
 
   <Features
     id={features.id}

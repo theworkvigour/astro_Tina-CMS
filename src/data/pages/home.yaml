@@ -18,6 +18,52 @@ hero:
     src: ~/assets/images/hero-image.png
     alt: Vectoflare hero image
 
+hero_carousel:
+  autoplay_interval: 5000
+  slides:
+    - image:
+        src: https://images.unsplash.com/photo-1500627964684-141351970a7f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80
+        alt: Vectoflare workshop by the sea
+      tagline: Welcome
+      title: |
+        Engineered for the water. <br />
+        Built for <span class="text-sky-300">life on board</span>.
+      subtitle: Premium inflatable boats, RIBs and engineered products for marine professionals and enthusiasts.
+      actions:
+        - text: Browse products
+          href: /products
+          variant: primary
+        - text: Get a quote
+          href: /contact
+          variant: secondary
+    - image:
+        src: https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80
+        alt: Custom boat build in progress
+      tagline: Craftsmanship
+      title: |
+        Hulls that outlast the warranty. <br />
+        Service that outlasts the hull.
+      subtitle: Marine-grade materials. Aluminium welding. Twenty-year-old boats still call us for parts.
+      actions:
+        - text: Our story
+          href: /about
+          variant: primary
+    - image:
+        src: https://images.unsplash.com/photo-1505236858219-8359eb29e329?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80
+        alt: Inflatable boat on the water
+      tagline: Support
+      title: |
+        Engineered before sold. <br />
+        Supported long after.
+      subtitle: Authorised service partners in 40+ countries. Twenty-year-old hulls still call us for parts — and we still pick up.
+      actions:
+        - text: Contact us
+          href: /contact
+          variant: primary
+        - text: See pricing
+          href: /pricing
+          variant: secondary
+
 features:
   id: features
   tagline: Why Vectoflare

@@ -8,6 +8,7 @@ import { PAGE_BY_SLUG, type PageSpec } from '~/components/admin/page-schemas';
 
 import HeroForm from '~/components/admin/sections/HeroForm.astro';
 import HeroTextForm from '~/components/admin/sections/HeroTextForm.astro';
+import HeroCarouselForm from '~/components/admin/sections/HeroCarouselForm.astro';
 import FeaturesForm from '~/components/admin/sections/FeaturesForm.astro';
 import Features2Form from '~/components/admin/sections/Features2Form.astro';
 import Features3Form from '~/components/admin/sections/Features3Form.astro';
@@ -79,6 +80,7 @@ try {
           <div class="px-5 py-4 border-t border-gray-200 dark:border-gray-800">
             {section.type === 'hero' && <HeroForm prefix={prefix} data={sectionData} />}
             {section.type === 'hero_text' && <HeroTextForm prefix={prefix} data={sectionData} />}
+            {section.type === 'hero_carousel' && <HeroCarouselForm prefix={prefix} data={sectionData} />}
             {section.type === 'features' && <FeaturesForm prefix={prefix} data={sectionData} />}
             {section.type === 'features2' && <Features2Form prefix={prefix} data={sectionData} />}
             {section.type === 'features3' && <Features3Form prefix={prefix} data={sectionData} />}
@@ -234,7 +236,34 @@ try {
         const type = section.dataset.sectionType;
         const d = readRow(section);
         const out = {};
-        if (type === 'hero' || type === 'cta') {
+        if (type === 'hero_carousel') {
+          out.autoplay_interval = parseInt(d.autoplay_interval || '5000', 10) || 0;
+          const slides = [];
+          section.querySelectorAll('[data-slide-row]').forEach((row) => {
+            const sd = readRow(row);
+            const slide = {};
+            if (sd.slideImageSrc || sd.slideImageAlt) {
+              slide.image = {};
+              if (sd.slideImageSrc) slide.image.src = sd.slideImageSrc;
+              if (sd.slideImageAlt) slide.image.alt = sd.slideImageAlt;
+            }
+            if (sd.slideTagline) slide.tagline = sd.slideTagline;
+            if (sd.slideTitle) slide.title = sd.slideTitle;
+            if (sd.slideSubtitle) slide.subtitle = sd.slideSubtitle;
+            const actions = [];
+            row.querySelectorAll('[data-slide-action-row]').forEach((ar) => {
+              const ad = readRow(ar);
+              const a = {};
+              if (ad.slideActionText) a.text = ad.slideActionText;
+              if (ad.slideActionHref) a.href = ad.slideActionHref;
+              if (ad.slideActionVariant) a.variant = ad.slideActionVariant;
+              if (Object.keys(a).length) actions.push(a);
+            });
+            if (actions.length) slide.actions = actions;
+            if (Object.keys(slide).length) slides.push(slide);
+          });
+          if (slides.length) out.slides = slides;
+        } else if (type === 'hero' || type === 'cta') {
           if (d.tagline) out.tagline = d.tagline;
           if (d.title) out.title = d.title;
           if (d.subtitle) out.subtitle = d.subtitle;
@@ -450,6 +479,32 @@ try {
           e.preventDefault();
           const btn = t.matches('[data-remove-tier-item]') ? t : t.closest('[data-remove-tier-item]');
           const row = btn.closest('[data-tier-item-row]');
+          if (row) row.remove();
+        } else if (t.matches('[data-add-slide]') || t.closest('[data-add-slide]')) {
+          e.preventDefault();
+          const btn = t.matches('[data-add-slide]') ? t : t.closest('[data-add-slide]');
+          const section = btn.closest('[data-section-type]');
+          if (!section) return;
+          const tpl = section.querySelector('template[data-slide-template]');
+          const list = section.querySelector('[data-slides-list]');
+          if (tpl && list) list.appendChild(tpl.content.cloneNode(true));
+        } else if (t.matches('[data-remove-slide]') || t.closest('[data-remove-slide]')) {
+          e.preventDefault();
+          const btn = t.matches('[data-remove-slide]') ? t : t.closest('[data-remove-slide]');
+          const row = btn.closest('[data-slide-row]');
+          if (row) row.remove();
+        } else if (t.matches('[data-add-slide-action]') || t.closest('[data-add-slide-action]')) {
+          e.preventDefault();
+          const btn = t.matches('[data-add-slide-action]') ? t : t.closest('[data-add-slide-action]');
+          const slide = btn.closest('[data-slide-row]');
+          if (!slide) return;
+          const tpl = slide.querySelector('template[data-slide-action-template]');
+          const list = slide.querySelector('[data-slide-actions-list]');
+          if (tpl && list) list.appendChild(tpl.content.cloneNode(true));
+        } else if (t.matches('[data-remove-slide-action]') || t.closest('[data-remove-slide-action]')) {
+          e.preventDefault();
+          const btn = t.matches('[data-remove-slide-action]') ? t : t.closest('[data-remove-slide-action]');
+          const row = btn.closest('[data-slide-action-row]');
           if (row) row.remove();
         }
       });

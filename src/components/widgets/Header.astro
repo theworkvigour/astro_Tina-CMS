@@ -29,6 +29,7 @@ export interface Props {
   isFullWidth?: boolean;
   showToggleTheme?: boolean;
   showRssFeed?: boolean;
+  showSearch?: boolean;
   showTopBar?: boolean;
   position?: string;
 }
@@ -42,7 +43,8 @@ const {
   isFullWidth = false,
   showToggleTheme = false,
   showRssFeed = false,
-  showTopBar = true,
+  showSearch = true,
+  showTopBar = false,
   position = 'center',
 } = Astro.props;
 
@@ -61,9 +63,9 @@ const langs = [
 <header
   class:list={[
     { sticky: isSticky, relative: !isSticky, dark: isDark },
-    'top-0 z-40 flex-none mx-auto w-full border-b border-gray-50/0 transition-[opacity] ease-in-out',
+    'top-0 z-40 flex-none mx-auto w-full border-b border-gray-50/0 transition-transform duration-300 ease-out',
   ]}
-  {...isSticky ? { 'data-aw-sticky-header': true } : {}}
+  {...isSticky ? { 'data-aw-sticky-header': true, 'data-auto-hide': 'true' } : {}}
   {...id ? { id } : {}}
 >
   {showTopBar && (
@@ -161,6 +163,18 @@ const langs = [
         <div class="flex items-center gap-1">
           {showToggleTheme && <ToggleTheme iconClass="w-6 h-6 md:w-5 md:h-5 md:inline-block" />}
           {
+            showSearch && (
+              <button
+                type="button"
+                data-search-trigger
+                aria-label="Search"
+                class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
+              >
+                <Icon name="tabler:search" class="w-5 h-5" />
+              </button>
+            )
+          }
+          {
             showRssFeed && (
               <a
                 class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
@@ -218,6 +232,35 @@ const langs = [
     </div>
   </div>
 </header>
+
+<div
+  id="search-dialog"
+  data-search-dialog
+  class="hidden fixed inset-0 z-[70] bg-black/60 backdrop-blur-sm"
+  aria-hidden="true"
+>
+  <div class="max-w-2xl mx-auto mt-20 px-4">
+    <div class="bg-white dark:bg-gray-950 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+      <div class="flex items-center gap-3 px-4 py-3 border-b border-gray-200 dark:border-gray-800">
+        <Icon name="tabler:search" class="w-5 h-5 text-gray-400 shrink-0" />
+        <input
+          type="text"
+          data-search-input
+          placeholder="搜索文章、产品、页面…"
+          class="flex-1 bg-transparent outline-none text-base text-gray-900 dark:text-gray-100 placeholder-gray-400"
+          autocomplete="off"
+        />
+        <kbd class="text-xs text-gray-400 border border-gray-300 dark:border-gray-700 rounded px-1.5 py-0.5">Esc</kbd>
+      </div>
+      <div data-search-results class="max-h-[60vh] overflow-y-auto p-2">
+        <div class="px-3 py-6 text-center text-sm text-gray-500" data-search-empty>
+          输入关键词开始搜索
+        </div>
+        <ul data-search-list class="space-y-1 hidden"></ul>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script is:inline>
   (function () {
@@ -277,4 +320,130 @@ const langs = [
       }
     });
   })();
+
+  (function () {
+    const header = document.querySelector('[data-auto-hide="true"]');
+    if (!header) return;
+    let lastY = window.scrollY;
+    let ticking = false;
+    const THRESHOLD = 8;
+    function update() {
+      const y = window.scrollY;
+      if (y < 80) {
+        header.classList.remove('header-hidden');
+      } else if (y > lastY + THRESHOLD) {
+        header.classList.add('header-hidden');
+      } else if (y < lastY - THRESHOLD) {
+        header.classList.remove('header-hidden');
+      }
+      lastY = y;
+      ticking = false;
+    }
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    document.addEventListener('mousemove', function (e) {
+      if (e.clientY < 80) header.classList.remove('header-hidden');
+    });
+  })();
+
+  (function () {
+    const trigger = document.querySelector('[data-search-trigger]');
+    const dialog = document.getElementById('search-dialog');
+    const input = dialog ? dialog.querySelector('[data-search-input]') : null;
+    const empty = dialog ? dialog.querySelector('[data-search-empty]') : null;
+    const list = dialog ? dialog.querySelector('[data-search-list]') : null;
+    if (!trigger || !dialog || !input || !list) return;
+
+    let index = null;
+    let indexLoading = null;
+
+    async function loadIndex() {
+      if (index) return index;
+      if (indexLoading) return indexLoading;
+      indexLoading = fetch('/search-index.json')
+        .then(function (r) { return r.ok ? r.json() : []; })
+        .then(function (data) { index = data || []; return index; })
+        .catch(function () { index = []; return index; })
+        .finally(function () { indexLoading = null; });
+      return indexLoading;
+    }
+
+    function open() {
+      dialog.classList.remove('hidden');
+      dialog.setAttribute('aria-hidden', 'false');
+      setTimeout(function () { input.focus(); input.select(); }, 30);
+      loadIndex();
+    }
+    function close() {
+      dialog.classList.add('hidden');
+      dialog.setAttribute('aria-hidden', 'true');
+      input.value = '';
+      render('');
+    }
+    function render(q) {
+      q = (q || '').trim().toLowerCase();
+      if (!q) {
+        list.classList.add('hidden');
+        if (empty) { empty.textContent = '输入关键词开始搜索'; empty.classList.remove('hidden'); }
+        return;
+      }
+      const data = index || [];
+      const matches = data.filter(function (it) {
+        return (it.title || '').toLowerCase().includes(q) ||
+               (it.excerpt || '').toLowerCase().includes(q) ||
+               (it.tags || []).some(function (t) { return String(t).toLowerCase().includes(q); });
+      }).slice(0, 20);
+      if (matches.length === 0) {
+        list.classList.add('hidden');
+        if (empty) { empty.textContent = '没有匹配结果'; empty.classList.remove('hidden'); }
+        return;
+      }
+      if (empty) empty.classList.add('hidden');
+      list.classList.remove('hidden');
+      list.innerHTML = matches.map(function (m) {
+        const tag = m.type ? '<span class="text-[10px] uppercase tracking-wider text-gray-400 font-mono">' + escapeHtml(m.type) + '</span>' : '';
+        return '<li><a href="' + escapeAttr(m.url) + '" class="block px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800">'
+          + '<div class="flex items-center gap-2">' + tag + '<div class="text-sm font-medium text-gray-900 dark:text-gray-100">' + escapeHtml(m.title) + '</div></div>'
+          + (m.excerpt ? '<div class="text-xs text-gray-500 mt-0.5 line-clamp-1">' + escapeHtml(m.excerpt) + '</div>' : '')
+          + '</a></li>';
+      }).join('');
+    }
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
+      });
+    }
+    function escapeAttr(s) { return escapeHtml(s); }
+
+    trigger.addEventListener('click', open);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === '/' && document.activeElement && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        open();
+      }
+      if (e.key === 'Escape' && !dialog.classList.contains('hidden')) close();
+    });
+    dialog.addEventListener('click', function (e) {
+      if (e.target === dialog) close();
+    });
+    input.addEventListener('input', function () { render(input.value); });
+    list.addEventListener('click', function (e) {
+      const a = e.target instanceof Element ? e.target.closest('a') : null;
+      if (a) close();
+    });
+  })();
 </script>
+
+<style is:global>
+  [data-auto-hide="true"].header-hidden {
+    transform: translateY(-110%);
+  }
+  [data-auto-hide="true"] {
+    will-change: transform;
+  }
+</style>

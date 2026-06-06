@@ -3,6 +3,7 @@ export interface SectionSpec {
   type:
     | 'hero'
     | 'hero_text'
+    | 'hero_carousel'
     | 'features'
     | 'features2'
     | 'features3'
@@ -37,7 +38,8 @@ export const PAGES: PageSpec[] = [
     permalink: '/',
     file: 'src/data/pages/home.yaml',
     sections: [
-      { key: 'hero', type: 'hero', label: '顶部 Hero 区' },
+      { key: 'hero', type: 'hero', label: '顶部 Hero 区 (静态, 仅无 carousel 时使用)' },
+      { key: 'hero_carousel', type: 'hero_carousel', label: 'Hero 轮播图 (3 张可切换)' },
       { key: 'features', type: 'features', label: 'Features 区块(为什么选择我们)' },
       { key: 'featured_products', type: 'featured_products', label: 'Featured Products 区块' },
       { key: 'content_workshop', type: 'features3', label: 'Workshop Content 区块' },
