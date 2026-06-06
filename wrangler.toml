@@ -7,4 +7,4 @@ build_output_dir = "dist"
 
 [vars]
 TINA_PUBLIC_IS_LOCAL = "true"
-NODE_VERSION = "20"
+NODE_VERSION = "22"
