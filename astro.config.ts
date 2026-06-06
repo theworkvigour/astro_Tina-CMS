@@ -92,11 +92,18 @@ export default defineConfig({
   },
 
   vite: {
+    server: {
+      watch: {
+        // 让 Astro 彻底无视 tina 文件夹和生成的缓存锁文件，别去跟着瞎刷新
+        ignored: ['**/tina/**', '**/.tina/**', '**/tina-lock.json'],
+      }, // <-- 这里闭合 watch
+    }, // <-- 这里闭合 server
+
     plugins: [tailwindcss()],
     resolve: {
       alias: {
         '~': path.resolve(__dirname, './src'),
       },
     },
-  },
+  }, // <-- 这里闭合 vite
 });
