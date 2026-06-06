@@ -96,15 +96,16 @@ const year = new Date().getFullYear();
     </div>
 
     <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 p-4">
-      <div class="text-xs text-gray-500 mb-2">当前 LOGO 预览</div>
-      <div class="flex items-center gap-2">
+      <div class="text-xs text-gray-500 mb-2">当前 LOGO 预览 (实时)</div>
+      <div class="flex items-center gap-2" data-logo-preview>
         {data.logo_image ? (
-          <img src={data.logo_image} alt={data.logo_alt} class="h-9 w-9 rounded-lg object-cover shadow-sm" />
+          <img src={data.logo_image} alt={data.logo_alt} class="h-9 w-9 rounded-lg object-cover shadow-sm" data-preview-img />
         ) : (
-          <span class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-sky-500 to-blue-600 text-white font-black text-lg shadow-sm">{(data.site_name || 'V').charAt(0).toUpperCase()}</span>
+          <span class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-sky-500 to-blue-600 text-white font-black text-lg shadow-sm" data-preview-letter>{(data.site_name || 'V').charAt(0).toUpperCase()}</span>
         )}
-        <span class="self-center text-xl font-bold text-gray-900 whitespace-nowrap dark:text-white tracking-tight">{data.site_name}</span>
+        <span class="self-center text-xl font-bold text-gray-900 whitespace-nowrap dark:text-white tracking-tight" data-preview-name>{data.site_name}</span>
       </div>
+      <p class="mt-2 text-xs text-gray-500">底部页脚 LOGO 文字会显示相同的 site_name。</p>
     </div>
 
     <div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 z-40">
@@ -126,16 +127,55 @@ const year = new Date().getFullYear();
       const file = form.dataset.file;
       const sha = form.dataset.sha;
       const year = new Date().getFullYear();
+      const siteNameEl = form.querySelector('[name="site_name"]');
+      const logoImageEl = form.querySelector('[name="logo_image"]');
       const copyrightEl = form.querySelector('[name="copyright"]');
       const previewEl = form.querySelector('[data-copyright-preview]');
+      const previewName = form.querySelector('[data-preview-name]');
+      const previewImg = form.querySelector('[data-preview-img]');
+      const previewLetter = form.querySelector('[data-preview-letter]');
+      const previewWrap = form.querySelector('[data-logo-preview]');
 
-      function refreshPreview() {
+      function refreshCopyright() {
         if (copyrightEl instanceof HTMLTextAreaElement && previewEl) {
           previewEl.textContent = (copyrightEl.value || '').replace(/\\{year\\}/gi, String(year));
         }
       }
-      if (copyrightEl) copyrightEl.addEventListener('input', refreshPreview);
-      refreshPreview();
+      function refreshName() {
+        const name = siteNameEl instanceof HTMLInputElement ? (siteNameEl.value || 'V').trim() || 'V' : 'V';
+        if (previewName) previewName.textContent = name;
+        if (previewLetter) previewLetter.textContent = name.charAt(0).toUpperCase();
+      }
+      function refreshLogo() {
+        const url = logoImageEl instanceof HTMLInputElement ? (logoImageEl.value || '').trim() : '';
+        if (!previewWrap) return;
+        if (url) {
+          if (previewImg) {
+            previewImg.src = url;
+          } else if (previewLetter && previewLetter.parentNode) {
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = '';
+            img.className = 'h-9 w-9 rounded-lg object-cover shadow-sm';
+            img.setAttribute('data-preview-img', '');
+            previewLetter.parentNode.replaceChild(img, previewLetter);
+          }
+        } else {
+          if (previewImg) {
+            const name = siteNameEl instanceof HTMLInputElement ? (siteNameEl.value || 'V').charAt(0).toUpperCase() : 'V';
+            const span = document.createElement('span');
+            span.className = 'inline-flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-sky-500 to-blue-600 text-white font-black text-lg shadow-sm';
+            span.setAttribute('data-preview-letter', '');
+            span.textContent = name;
+            previewImg.parentNode.replaceChild(span, previewImg);
+          }
+        }
+      }
+      function refreshAll() { refreshCopyright(); refreshName(); refreshLogo(); }
+      if (siteNameEl) siteNameEl.addEventListener('input', refreshAll);
+      if (logoImageEl) logoImageEl.addEventListener('input', refreshAll);
+      if (copyrightEl) copyrightEl.addEventListener('input', refreshCopyright);
+      refreshAll();
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
