@@ -1,7 +1,7 @@
 {
   "name": "foida-website",
   "version": "1.0.0-beta.63",
-  "description": "AstroWind: A free template using Astro 6 and Tailwind CSS v4. Astro starter theme.",
+  "description": "Foida marine products website, built with Astro 6 and Tailwind CSS v4.",
   "type": "module",
   "private": true,
   "engines": {
@@ -70,7 +70,8 @@
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.60.0"
+    "typescript-eslint": "^8.60.0",
+    "wrangler": "^4.98.0"
   },
   "overrides": {
     "yaml": ">=2.8.3",
