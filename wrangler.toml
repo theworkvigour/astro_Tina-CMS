@@ -1,6 +1,9 @@
 name = "foida-website"
 compatibility_date = "2026-06-05"
-pages_build_output_dir = "./dist"
+
+[assets]
+directory = "./dist"
+not_found_handling = "404-page"
 
 [vars]
 TINA_PUBLIC_IS_LOCAL = "true"
