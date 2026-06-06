@@ -8,7 +8,6 @@ const publicPaths = [
   '/api/auth/login',
   '/api/auth/logout',
   '/api/auth/change-password',
-  '/api/auth/set-github-token',
 ];
 
 const toolbarSnippet = `

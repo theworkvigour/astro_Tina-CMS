@@ -7,13 +7,8 @@ import { verifySessionToken } from '~/lib/auth';
 const sessionCookie = Astro.cookies.get('ks-admin-session')?.value;
 const session = sessionCookie ? verifySessionToken(sessionCookie) : null;
 
-const existingGhToken = Astro.cookies.get('keystatic-gh-access-token')?.value;
-
 if (session) {
-  if (existingGhToken) {
-    return Astro.redirect('/keystatic');
-  }
-  return Astro.redirect('/login/github-token');
+  return Astro.redirect('/keystatic');
 }
 ---
 
@@ -91,7 +86,7 @@ if (session) {
         const data = await res.json();
 
         if (res.ok && data.success) {
-          window.location.href = '/login/github-token';
+          window.location.href = '/keystatic';
         } else {
           errorEl.textContent = data.error || 'Invalid username or password';
           errorEl.classList.remove('hidden');
