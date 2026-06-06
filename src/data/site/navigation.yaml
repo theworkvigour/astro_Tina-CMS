@@ -39,9 +39,6 @@ header:
         - text: Privacy
           href: /privacy
   actions:
-    - text: Admin
-      href: /keystatic
-      variant: secondary
     - text: Get a quote
       href: /contact
       variant: primary

@@ -21,7 +21,6 @@ const headerData = {
       },
     ],
   actions: navData?.header?.actions ?? [
-    { text: 'Admin', href: '/keystatic', variant: 'secondary' as const },
     { text: 'Get a quote', href: getPermalink('/contact'), variant: 'primary' as const },
   ],
 };
@@ -52,7 +51,4 @@ export const footerData = {
     { ariaLabel: 'RSS', icon: 'tabler:rss', href: getAsset('/rss.xml') },
     { ariaLabel: 'GitHub', icon: 'tabler:brand-github', href: 'https://github.com/theworkvigour' },
   ],
-  footNote:
-    navData?.footer?.footNote ??
-    `© ${new Date().getFullYear()} <a class="text-blue-600 underline dark:text-muted" href="/">Vectoflare</a> · All rights reserved.`,
 };

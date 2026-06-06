@@ -1,0 +1,179 @@
+---
+export const prerender = false;
+import AdminLayout from '~/layouts/AdminLayout.astro';
+import { verifySessionToken } from '~/lib/auth';
+import { readTokenFromCookies } from '~/lib/token-store';
+import { GitHubClient } from '~/lib/github';
+
+const session = Astro.cookies.get('ks-admin-session')?.value;
+const verified = session ? verifySessionToken(session) : null;
+if (!verified) return Astro.redirect('/login');
+const token = readTokenFromCookies(Astro.cookies);
+if (!token) return Astro.redirect('/keystatic/github-token');
+
+const file = 'src/data/site/branding.yaml';
+
+let data: Record<string, any> = {
+  site_name: 'Vectoflare',
+  logo_image: '',
+  logo_alt: 'Vectoflare logo',
+  copyright: '© {year} Vectoflare · All rights reserved.',
+};
+let sha = '';
+let loadError: string | null = null;
+
+try {
+  const client = new GitHubClient(token);
+  const f = await client.readFile(file);
+  const yamlMod = await import('js-yaml');
+  const parsed = yamlMod.load(f.content) as Record<string, any>;
+  if (parsed && typeof parsed === 'object') data = { ...data, ...parsed };
+  sha = f.sha;
+} catch (err) {
+  loadError = err instanceof Error ? err.message : '读取失败';
+}
+
+const year = new Date().getFullYear();
+---
+<AdminLayout title="品牌与 LOGO" active="branding" username={verified?.username}>
+  <div class="mb-6">
+    <h1 class="text-2xl font-semibold">品牌与 LOGO</h1>
+    <p class="mt-1 text-sm text-gray-500">编辑网站名称、LOGO 图片、版权信息。文件: <code class="font-mono">{file}</code>。版权文本中可使用 <code class="font-mono">{'{year}'}</code> 占位符,会自动替换为当前年份 (现在是 {year})。</p>
+  </div>
+
+  {loadError && (
+    <div class="mb-4 rounded-md border border-red-200 bg-red-50 dark:bg-red-950/40 dark:border-red-900 p-3 text-sm text-red-700 dark:text-red-300">
+      读取失败: {loadError}
+    </div>
+  )}
+
+  <form id="branding-form" class="space-y-6 pb-32" data-file={file} data-sha={sha}>
+    <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-6 space-y-5">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">网站名称 (LOGO 文字)</label>
+        <input
+          type="text"
+          name="site_name"
+          value={data.site_name ?? ''}
+          placeholder="Vectoflare"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm"
+        />
+        <p class="mt-1 text-xs text-gray-500">显示在右上角 LOGO、右下角页脚 LOGO 以及版权中。修改后请保持一致。</p>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">LOGO 图片 URL (可选)</label>
+        <input
+          type="text"
+          name="logo_image"
+          value={data.logo_image ?? ''}
+          placeholder="https://example.com/logo.png"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm font-mono"
+        />
+        <p class="mt-1 text-xs text-gray-500">留空则使用首字母占位符。推荐 PNG/SVG,方形 1:1。</p>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">LOGO 图片替代文本 (alt)</label>
+        <input
+          type="text"
+          name="logo_alt"
+          value={data.logo_alt ?? ''}
+          placeholder="Vectoflare logo"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">版权信息 (支持 HTML 标签,如 <code class="font-mono">&lt;a class="text-blue-600 underline"&gt;</code>)</label>
+        <textarea
+          name="copyright"
+          rows="3"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm font-mono"
+        >{data.copyright ?? ''}</textarea>
+        <p class="mt-1 text-xs text-gray-500">预览 (实时替换 <code class="font-mono">{'{year}'}</code>): <span class="font-mono" data-copyright-preview></span></p>
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 p-4">
+      <div class="text-xs text-gray-500 mb-2">当前 LOGO 预览</div>
+      <div class="flex items-center gap-2">
+        {data.logo_image ? (
+          <img src={data.logo_image} alt={data.logo_alt} class="h-9 w-9 rounded-lg object-cover shadow-sm" />
+        ) : (
+          <span class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-sky-500 to-blue-600 text-white font-black text-lg shadow-sm">{(data.site_name || 'V').charAt(0).toUpperCase()}</span>
+        )}
+        <span class="self-center text-xl font-bold text-gray-900 whitespace-nowrap dark:text-white tracking-tight">{data.site_name}</span>
+      </div>
+    </div>
+
+    <div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 z-40">
+      <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
+        <div class="text-xs text-gray-500" data-file-info>文件: <code class="font-mono">{file}</code></div>
+        <div class="flex gap-2">
+          <a href="/keystatic" class="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:underline">取消</a>
+          <button id="submit-btn" type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md">保存并推送</button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <script is:inline>
+    (function () {
+      const form = document.getElementById('branding-form');
+      if (!form) return;
+      const submitBtn = document.getElementById('submit-btn');
+      const file = form.dataset.file;
+      const sha = form.dataset.sha;
+      const year = new Date().getFullYear();
+      const copyrightEl = form.querySelector('[name="copyright"]');
+      const previewEl = form.querySelector('[data-copyright-preview]');
+
+      function refreshPreview() {
+        if (copyrightEl instanceof HTMLTextAreaElement && previewEl) {
+          previewEl.textContent = (copyrightEl.value || '').replace(/\\{year\\}/gi, String(year));
+        }
+      }
+      if (copyrightEl) copyrightEl.addEventListener('input', refreshPreview);
+      refreshPreview();
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = '推送中...'; }
+
+        const fd = new FormData(form);
+        const data = {
+          site_name: String(fd.get('site_name') || '').trim(),
+          logo_image: String(fd.get('logo_image') || '').trim(),
+          logo_alt: String(fd.get('logo_alt') || '').trim(),
+          copyright: String(fd.get('copyright') || ''),
+        };
+
+        try {
+          const res = await fetch('/api/admin/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              format: 'yaml',
+              path: file,
+              sha,
+              data,
+              commitMessage: 'Update site branding and copyright',
+            }),
+          });
+          const result = await res.json();
+          if (!res.ok || !result.success) {
+            window.__adminToast?.(result.error || '保存失败', 'error');
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = '保存并推送'; }
+            return;
+          }
+          window.__adminToast?.('已保存,Cloudflare 正在重新部署...', 'success');
+          setTimeout(() => { window.location.reload(); }, 800);
+        } catch {
+          window.__adminToast?.('网络错误', 'error');
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = '保存并推送'; }
+        }
+      });
+    })();
+  </script>
+</AdminLayout>

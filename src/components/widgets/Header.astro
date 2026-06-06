@@ -29,6 +29,7 @@ export interface Props {
   isFullWidth?: boolean;
   showToggleTheme?: boolean;
   showRssFeed?: boolean;
+  showTopBar?: boolean;
   position?: string;
 }
 
@@ -41,10 +42,20 @@ const {
   isFullWidth = false,
   showToggleTheme = false,
   showRssFeed = false,
+  showTopBar = true,
   position = 'center',
 } = Astro.props;
 
 const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
+
+const langs = [
+  { code: 'EN', name: 'English' },
+  { code: 'FR', name: 'Français' },
+  { code: 'DE', name: 'Deutsch' },
+  { code: 'ES', name: 'Español' },
+  { code: 'PT', name: 'Português' },
+  { code: 'AR', name: 'العربية' },
+];
 ---
 
 <header
@@ -55,6 +66,17 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
   {...isSticky ? { 'data-aw-sticky-header': true } : {}}
   {...id ? { id } : {}}
 >
+  {showTopBar && (
+    <div class="bg-black text-white text-xs">
+      <div class="max-w-7xl mx-auto px-3 md:px-6 py-1.5 flex items-center">
+        <a
+          href="/keystatic"
+          class="font-medium hover:underline hover:text-white"
+          data-i18n="topbar.login"
+        >Login</a>
+      </div>
+    </div>
+  )}
   <div class="absolute inset-0"></div>
   <div
     class:list={[
@@ -63,7 +85,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
         'md:flex md:justify-between': position !== 'center',
       },
       {
-        'md:grid md:grid-cols-3 md:items-center': position === 'center',
+        'md:grid md:grid-cols-[auto_1fr_auto] md:items-center md:gap-x-8': position === 'center',
       },
       {
         'max-w-7xl': !isFullWidth,
@@ -79,7 +101,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
       </div>
     </div>
     <nav
-      class="items-center w-full md:w-auto hidden md:flex md:mx-5 text-default overflow-y-auto overflow-x-hidden md:overflow-visible md:justify-self-center"
+      class="items-center w-full md:w-auto hidden md:flex text-default overflow-y-auto overflow-x-hidden md:overflow-visible md:justify-self-center"
       aria-label="Main navigation"
     >
       <ul
@@ -135,8 +157,8 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
         'hidden md:self-center md:flex items-center md:mb-0 fixed w-full md:w-auto md:static justify-end left-0 rtl:left-auto rtl:right-0 bottom-0 p-3 md:p-0 md:justify-self-end',
       ]}
     >
-      <div class="items-center flex justify-between w-full md:w-auto">
-        <div class="flex">
+      <div class="items-center flex justify-between w-full md:w-auto gap-2">
+        <div class="flex items-center gap-1">
           {showToggleTheme && <ToggleTheme iconClass="w-6 h-6 md:w-5 md:h-5 md:inline-block" />}
           {
             showRssFeed && (
@@ -150,11 +172,42 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
             )
           }
         </div>
+        <div class="relative" data-lang-switcher>
+          <button
+            type="button"
+            data-lang-button
+            aria-haspopup="true"
+            aria-expanded="false"
+            class="inline-flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <Icon name="tabler:language" class="w-4 h-4" />
+            <span data-lang-current>EN</span>
+            <Icon name="tabler:chevron-down" class="w-3.5 h-3.5" />
+          </button>
+          <ul
+            data-lang-menu
+            class="hidden absolute right-0 mt-1 min-w-[10rem] rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-lg z-50 py-1"
+          >
+            {langs.map((l) => (
+              <li>
+                <button
+                  type="button"
+                  data-lang-code={l.code}
+                  data-lang-name={l.name}
+                  class="w-full text-left px-3 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center justify-between"
+                >
+                  <span>{l.name}</span>
+                  <span class="text-xs text-gray-400 font-mono">{l.code}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
         {
           actions?.length ? (
-            <span class="ml-4 rtl:ml-0 rtl:mr-4">
+            <span class="ml-1 rtl:ml-0 rtl:mr-1">
               {actions.map((btnProps) => (
-                <Button {...btnProps} class="ml-2 py-2.5 px-5.5 md:px-6 font-semibold shadow-none text-sm w-auto" />
+                <Button {...btnProps} class="ml-1 py-2 px-4 md:px-5 font-semibold shadow-none text-sm w-auto" />
               ))}
             </span>
           ) : (
@@ -165,3 +218,63 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
     </div>
   </div>
 </header>
+
+<script is:inline>
+  (function () {
+    const KEY = 'vf_lang';
+    const switcher = document.querySelector('[data-lang-switcher]');
+    if (!switcher) return;
+    const btn = switcher.querySelector('[data-lang-button]');
+    const menu = switcher.querySelector('[data-lang-menu]');
+    const label = switcher.querySelector('[data-lang-current]');
+    if (!btn || !menu || !label) return;
+
+    const saved = (() => {
+      try { return localStorage.getItem(KEY) || 'EN'; } catch { return 'EN'; }
+    })();
+    label.textContent = saved;
+    btn.setAttribute('aria-expanded', 'false');
+
+    function showToast(msg) {
+      let host = document.getElementById('vf-toast');
+      if (!host) {
+        host = document.createElement('div');
+        host.id = 'vf-toast';
+        host.className = 'fixed top-3 right-3 z-[60] pointer-events-none';
+        document.body.appendChild(host);
+      }
+      const div = document.createElement('div');
+      div.className = 'bg-gray-900 text-white text-sm px-3 py-2 rounded-md shadow-lg pointer-events-auto';
+      div.textContent = msg;
+      host.appendChild(div);
+      setTimeout(function () { div.style.opacity = '0'; }, 2400);
+      setTimeout(function () { div.remove(); }, 2800);
+    }
+
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      const open = menu.classList.toggle('hidden') === false;
+      btn.setAttribute('aria-expanded', String(open));
+    });
+
+    menu.addEventListener('click', function (e) {
+      const t = e.target instanceof Element ? e.target.closest('[data-lang-code]') : null;
+      if (!t) return;
+      e.preventDefault();
+      const code = t.getAttribute('data-lang-code') || 'EN';
+      const name = t.getAttribute('data-lang-name') || code;
+      try { localStorage.setItem(KEY, code); } catch {}
+      label.textContent = code;
+      menu.classList.add('hidden');
+      btn.setAttribute('aria-expanded', 'false');
+      showToast('Language: ' + name + ' (' + code + ') — translation coming soon');
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!switcher.contains(e.target)) {
+        menu.classList.add('hidden');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  })();
+</script>

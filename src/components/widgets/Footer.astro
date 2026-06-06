@@ -1,6 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
-import { SITE } from 'astrowind:config';
+import branding from '~/data/site/branding.yaml';
 import { getHomePermalink } from '~/utils/permalinks';
 
 interface Link {
@@ -23,7 +23,12 @@ export interface Props {
   theme?: string;
 }
 
-const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme = 'light' } = Astro.props;
+const { socialLinks = [], secondaryLinks = [], links = [], footNote, theme = 'light' } = Astro.props;
+
+const siteName = branding?.site_name?.trim() || 'Vectoflare';
+const year = new Date().getFullYear();
+const rawCopyright = footNote ?? branding?.copyright ?? `© ${year} ${siteName} · All rights reserved.`;
+const copyrightHtml = String(rawCopyright).replace(/\{year\}/gi, String(year));
 ---
 
 <footer class:list={[{ dark: theme === 'dark' }, 'relative border-t border-gray-200 dark:border-slate-800 not-prose']}>
@@ -34,7 +39,7 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme 
     <div class="grid grid-cols-12 gap-4 gap-y-8 sm:gap-8 py-8 md:py-12">
       <div class="col-span-12 lg:col-span-4">
         <div class="mb-2">
-          <a class="inline-block font-bold text-xl" href={getHomePermalink()}>{SITE?.name}</a>
+          <a class="inline-block font-bold text-xl" href={getHomePermalink()}>{siteName}</a>
         </div>
         <div class="text-sm text-muted flex gap-1">
           {
@@ -97,7 +102,7 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme 
       }
 
       <div class="text-sm mr-4 dark:text-muted">
-        <Fragment set:html={footNote} />
+        <Fragment set:html={copyrightHtml} />
       </div>
     </div>
   </div>
