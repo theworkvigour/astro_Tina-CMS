@@ -4,7 +4,12 @@ import { parseMarkdown } from '~/lib/markdown';
 
 export const prerender = false;
 
-const ALLOWED_PREFIXES = ['src/data/post/', 'src/data/product/'];
+const ALLOWED_PREFIXES = [
+  'src/data/post/',
+  'src/data/product/',
+  'src/data/pages/',
+  'src/data/site/',
+];
 
 export const GET: APIRoute = async ({ url, cookies }) => {
   const auth = authorizeAdmin(cookies);
@@ -15,29 +20,46 @@ export const GET: APIRoute = async ({ url, cookies }) => {
     return errorResponse('prefix 不在允许列表中', 400);
   }
 
+  const isYaml = prefix.startsWith('src/data/pages/') || prefix.startsWith('src/data/site/');
+
   try {
     const files = await auth.ctx.github.listFiles(prefix);
-    const items = files
-      .filter((f) => /\.(md|mdx)$/i.test(f.name))
-      .map((f) => {
-        let title = f.name.replace(/\.(md|mdx)$/i, '');
-        let date = '';
-        let category = '';
-        try {
-          const dl = JSON.parse(Buffer.from(f.name + ':peek', 'utf-8').toString('utf-8'));
-          void dl;
-        } catch {}
-        return {
-          name: f.name,
-          path: f.path,
-          sha: f.sha,
-          size: f.size,
-          downloadUrl: f.download_url,
-          title,
-          date,
-          category,
-        };
-      });
+    const matcher = isYaml ? /\.(ya?ml)$/i : /\.(md|mdx)$/i;
+    const items = files.filter((f) => matcher.test(f.name));
+
+    if (isYaml) {
+      const enriched = await Promise.all(
+        items.map(async (f) => {
+          try {
+            const file = await auth.ctx.github.readFile(f.path);
+            const yamlMod = await import('js-yaml');
+            const data = yamlMod.load(file.content) as Record<string, unknown>;
+            const topKeys = Object.keys(data ?? {}).slice(0, 6);
+            return {
+              name: f.name,
+              path: f.path,
+              sha: f.sha,
+              size: f.size,
+              downloadUrl: f.download_url,
+              title: (data?.title as string) ?? f.name.replace(/\.(ya?ml)$/i, ''),
+              topKeys,
+            };
+          } catch {
+            return {
+              name: f.name,
+              path: f.path,
+              sha: f.sha,
+              size: f.size,
+              downloadUrl: f.download_url,
+              title: f.name.replace(/\.(ya?ml)$/i, ''),
+              topKeys: [],
+            };
+          }
+        }),
+      );
+      enriched.sort((a, b) => a.name.localeCompare(b.name));
+      return okResponse({ items: enriched });
+    }
 
     const enriched = await Promise.all(
       items.map(async (item) => {
@@ -46,18 +68,31 @@ export const GET: APIRoute = async ({ url, cookies }) => {
           const parsed = parseMarkdown(res.content);
           const fm = parsed.frontmatter as Record<string, unknown>;
           return {
-            ...item,
-            title: (fm.title as string) ?? item.title,
+            name: item.name,
+            path: item.path,
+            sha: item.sha,
+            size: item.size,
+            downloadUrl: item.download_url,
+            title: (fm.title as string) ?? item.name.replace(/\.(md|mdx)$/i, ''),
             date: typeof fm.publishDate === 'string' ? fm.publishDate : '',
             category: typeof fm.category === 'string' ? fm.category : '',
             draft: fm.draft === true,
           };
         } catch {
-          return item;
+          return {
+            name: item.name,
+            path: item.path,
+            sha: item.sha,
+            size: item.size,
+            downloadUrl: item.download_url,
+            title: item.name.replace(/\.(md|mdx)$/i, ''),
+            date: '',
+            category: '',
+            draft: false,
+          };
         }
       }),
     );
-
     enriched.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
     return okResponse({ items: enriched });
   } catch (err) {

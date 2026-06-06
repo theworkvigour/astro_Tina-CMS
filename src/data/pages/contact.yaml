@@ -1,0 +1,46 @@
+hero_text:
+  tagline: Contact
+  title: Let's talk boats.
+
+contact_form:
+  id: form
+  title: Send us a message
+  subtitle: For quotes, technical questions or partnership enquiries, drop us a line. We reply within one business day.
+  inputs:
+    - type: text
+      name: name
+      label: Name
+    - type: email
+      name: email
+      label: Email
+    - type: text
+      name: subject
+      label: Subject
+  textarea:
+    label: Message
+  disclaimer:
+    label: By submitting this form, you agree to be contacted about your enquiry. We will not use your details for marketing.
+  description: Mon–Fri, 09:00–18:00 (local time). We respond within one business day.
+
+features2_other_ways:
+  title: Other ways to reach us
+  columns: 3
+  items:
+    - title: Sales enquiries
+      description: Quotes, configurations, dealer applications and bulk orders.
+      icon: tabler:shopping-bag
+    - title: Technical support
+      description: Warranty, repairs, spare parts and operating questions.
+      icon: tabler:wrench
+    - title: Press & partnerships
+      description: Media kits, sponsorship and industry collaboration.
+      icon: tabler:news
+    - title: Phone
+      description: +1 (555) 010-3300
+      icon: tabler:headset
+    - title: Email
+      description: hello@vectoflare.example
+      icon: tabler:mail
+    - title: Headquarters
+      description: Coastal industrial park, building 4, EU time zone
+      icon: tabler:map-pin

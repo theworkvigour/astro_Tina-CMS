@@ -4,7 +4,8 @@ import { stringifyMarkdown } from '~/lib/markdown';
 
 export const prerender = false;
 
-interface UpdatePayload {
+interface UpdateMarkdownPayload {
+  format: 'markdown';
   path: string;
   sha: string;
   frontmatter: Record<string, unknown>;
@@ -12,22 +13,46 @@ interface UpdatePayload {
   commitMessage?: string;
 }
 
+interface UpdateYamlPayload {
+  format: 'yaml';
+  path: string;
+  sha: string;
+  data: Record<string, unknown>;
+  commitMessage?: string;
+}
+
+type UpdatePayload = UpdateMarkdownPayload | UpdateYamlPayload;
+
 function isAllowedPath(path: string): boolean {
   if (!path.startsWith('src/data/')) return false;
-  if (!/\.(md|mdx)$/i.test(path)) return false;
   if (path.includes('..')) return false;
-  return true;
+  if (/\.(md|mdx)$/i.test(path)) return true;
+  if (/\.(ya?ml)$/i.test(path)) return true;
+  return false;
 }
 
 function validatePayload(body: unknown): UpdatePayload | string {
   if (!body || typeof body !== 'object') return '请求格式错误';
   const b = body as Record<string, unknown>;
   if (typeof b.path !== 'string') return 'path 必填';
-  if (!isAllowedPath(b.path)) return 'path 必须在 src/data/ 下且为 .md/.mdx';
+  if (!isAllowedPath(b.path)) return 'path 必须在 src/data/ 下且为 .md/.mdx/.yaml/.yml';
   if (typeof b.sha !== 'string' || b.sha.length === 0) return 'sha 必填(防冲突)';
+
+  if (b.format === 'yaml' || /\.(ya?ml)$/i.test(b.path)) {
+    if (!b.data || typeof b.data !== 'object') return 'data 必填(YAML 模式)';
+    return {
+      format: 'yaml',
+      path: b.path,
+      sha: b.sha,
+      data: b.data as Record<string, unknown>,
+      commitMessage: typeof b.commitMessage === 'string' ? b.commitMessage : undefined,
+    };
+  }
+
   if (!b.frontmatter || typeof b.frontmatter !== 'object') return 'frontmatter 必填';
   if (typeof b.body !== 'string') return 'body 必填';
   return {
+    format: 'markdown',
     path: b.path,
     sha: b.sha,
     frontmatter: b.frontmatter as Record<string, unknown>,
@@ -49,9 +74,18 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const payload = validatePayload(body);
   if (typeof payload === 'string') return errorResponse(payload, 400);
 
-  const content = stringifyMarkdown(payload.frontmatter, payload.body);
-  const title = (payload.frontmatter.title as string) ?? payload.path;
-  const message = payload.commitMessage ?? `Update ${payload.path.split('/').pop()}: ${title}`;
+  let content: string;
+  let defaultMessage: string;
+  if (payload.format === 'yaml') {
+    const yamlMod = await import('js-yaml');
+    content = yamlMod.dump(payload.data, { lineWidth: 120, noRefs: true, sortKeys: false });
+    defaultMessage = `Update ${payload.path.split('/').pop()}`;
+  } else {
+    content = stringifyMarkdown(payload.frontmatter, payload.body);
+    const title = (payload.frontmatter.title as string) ?? payload.path;
+    defaultMessage = `Update ${payload.path.split('/').pop()}: ${title}`;
+  }
+  const message = payload.commitMessage ?? defaultMessage;
 
   try {
     const result = await auth.ctx.github.updateFile(payload.path, content, payload.sha, message);

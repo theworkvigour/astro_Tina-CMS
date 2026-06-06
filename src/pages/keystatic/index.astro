@@ -21,20 +21,24 @@ if (token) {
   }
 }
 
-let counts = { posts: 0, products: 0 };
+let counts = { posts: 0, products: 0, pages: 0, nav: 0 };
 if (token) {
   try {
     const client = new GitHubClient(token);
-    const [posts, products] = await Promise.all([
+    const [posts, products, pages, site] = await Promise.all([
       client.listFiles('src/data/post/'),
       client.listFiles('src/data/product/'),
+      client.listFiles('src/data/pages/'),
+      client.listFiles('src/data/site/'),
     ]);
     counts = {
       posts: posts.filter((f) => /\.(md|mdx)$/i.test(f.name)).length,
       products: products.filter((f) => /\.(md|mdx)$/i.test(f.name)).length,
+      pages: pages.filter((f) => /\.(ya?ml)$/i.test(f.name)).length,
+      nav: site.filter((f) => /\.(ya?ml)$/i.test(f.name)).length,
     };
   } catch {
-    counts = { posts: 0, products: 0 };
+    counts = { posts: 0, products: 0, pages: 0, nav: 0 };
   }
 }
 ---
@@ -64,7 +68,7 @@ if (token) {
     </div>
   )}
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
     <a href="/keystatic/posts" class="block rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-6 hover:border-blue-400 transition">
       <div class="text-sm uppercase tracking-wide text-gray-500">博客文章</div>
       <div class="mt-2 text-3xl font-semibold">{counts.posts}</div>
@@ -74,6 +78,16 @@ if (token) {
       <div class="text-sm uppercase tracking-wide text-gray-500">产品</div>
       <div class="mt-2 text-3xl font-semibold">{counts.products}</div>
       <div class="mt-4 text-sm text-blue-600 dark:text-blue-400">管理 Products →</div>
+    </a>
+    <a href="/keystatic/pages" class="block rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-6 hover:border-blue-400 transition">
+      <div class="text-sm uppercase tracking-wide text-gray-500">网页内容</div>
+      <div class="mt-2 text-3xl font-semibold">{counts.pages}</div>
+      <div class="mt-4 text-sm text-blue-600 dark:text-blue-400">编辑页面文案 →</div>
+    </a>
+    <a href="/keystatic/navigation" class="block rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-6 hover:border-blue-400 transition">
+      <div class="text-sm uppercase tracking-wide text-gray-500">导航 / 页脚</div>
+      <div class="mt-2 text-3xl font-semibold">{counts.nav}</div>
+      <div class="mt-4 text-sm text-blue-600 dark:text-blue-400">编辑导航与社交链接 →</div>
     </a>
   </div>
 

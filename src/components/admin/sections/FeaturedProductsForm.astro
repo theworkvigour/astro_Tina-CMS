@@ -1,0 +1,39 @@
+---
+interface Props {
+  prefix: string;
+  data?: {
+    id?: string;
+    title?: string;
+    subtitle?: string;
+    linkText?: string;
+    linkUrl?: string;
+  };
+}
+const { prefix, data = {} } = Astro.props;
+const d = data ?? {};
+---
+<div class="space-y-4" data-section-type="featured_products" data-prefix={prefix}>
+  <div>
+    <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">ID (锚点)</label>
+    <input type="text" name="id" value={d.id ?? ''} placeholder="featured" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
+    <input type="text" name="title" value={d.title ?? ''} class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Subtitle</label>
+    <textarea name="subtitle" rows="2" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm">{d.subtitle ?? ''}</textarea>
+  </div>
+  <div class="grid grid-cols-2 gap-2">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Link Text</label>
+      <input type="text" name="linkText" value={d.linkText ?? ''} class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Link URL</label>
+      <input type="text" name="linkUrl" value={d.linkUrl ?? ''} class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+    </div>
+  </div>
+  <p class="text-xs text-gray-500">产品列表本身来自 <code>src/data/product/</code>(在 Posts/Products 管理),此区块只控制展示文字和链接。</p>
+</div>

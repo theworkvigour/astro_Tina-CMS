@@ -1,0 +1,22 @@
+---
+interface Props {
+  prefix: string;
+  data?: {
+    title?: string;
+    information?: string;
+  };
+}
+const { prefix, data = {} } = Astro.props;
+const d = data ?? {};
+---
+<div class="space-y-4" data-section-type="blog_latest" data-prefix={prefix}>
+  <div>
+    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
+    <input type="text" name="title" value={d.title ?? ''} class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Information <span class="text-xs text-gray-500">(支持 HTML 标签)</span></label>
+    <textarea name="information" rows="4" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm font-mono">{d.information ?? ''}</textarea>
+  </div>
+  <p class="text-xs text-gray-500">博客文章本身来自 <code>src/data/post/</code>(在 Posts 管理),此区块只控制展示标题和说明文字。</p>
+</div>

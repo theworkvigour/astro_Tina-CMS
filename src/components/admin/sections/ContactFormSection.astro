@@ -1,0 +1,75 @@
+---
+interface Props {
+  prefix: string;
+  data?: {
+    id?: string;
+    title?: string;
+    subtitle?: string;
+    tagline?: string;
+    inputs?: Array<{ type?: string; name?: string; label?: string }>;
+    textarea?: { label?: string; name?: string; rows?: number; placeholder?: string };
+    disclaimer?: { label?: string };
+    description?: string;
+    button?: string;
+  };
+}
+const { prefix, data = {} } = Astro.props;
+const d = data ?? {};
+---
+<div class="space-y-4" data-section-type="contact" data-prefix={prefix}>
+  <div>
+    <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">ID (锚点)</label>
+    <input type="text" name="id" value={d.id ?? ''} placeholder="form" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
+    <input type="text" name="title" value={d.title ?? ''} class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Subtitle <span class="text-xs text-gray-500">(支持 HTML)</span></label>
+    <textarea name="subtitle" rows="2" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm font-mono">{d.subtitle ?? ''}</textarea>
+  </div>
+  <div>
+    <div class="flex items-center justify-between mb-2">
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Inputs (输入字段)</label>
+      <button type="button" data-add-input class="text-xs text-blue-600 dark:text-blue-400 hover:underline">+ 添加字段</button>
+    </div>
+    <div data-inputs-list class="space-y-3">
+      {(d.inputs ?? []).map((inp) => (
+        <div data-input-row class="rounded-md border border-gray-200 dark:border-gray-700 p-3 space-y-2 bg-gray-50 dark:bg-gray-900/50">
+          <div class="grid grid-cols-4 gap-2">
+            <input type="text" name="inputType" value={inp.type ?? 'text'} placeholder="type" class="px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+            <input type="text" name="inputName" value={inp.name ?? ''} placeholder="name" class="px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+            <input type="text" name="inputLabel" value={inp.label ?? ''} placeholder="label" class="px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+            <button type="button" data-remove-input class="text-xs text-red-600 dark:text-red-400 hover:underline">删除</button>
+          </div>
+        </div>
+      ))}
+    </div>
+    <template data-input-template>
+      <div data-input-row class="rounded-md border border-gray-200 dark:border-gray-700 p-3 space-y-2 bg-gray-50 dark:bg-gray-900/50">
+        <div class="grid grid-cols-4 gap-2">
+          <input type="text" name="inputType" value="text" placeholder="type" class="px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+          <input type="text" name="inputName" placeholder="name" class="px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+          <input type="text" name="inputLabel" placeholder="label" class="px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+          <button type="button" data-remove-input class="text-xs text-red-600 dark:text-red-400 hover:underline">删除</button>
+        </div>
+      </div>
+    </template>
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Textarea (多行文本)</label>
+    <div class="grid grid-cols-2 gap-2">
+      <input type="text" name="textareaLabel" value={d.textarea?.label ?? ''} placeholder="label" class="px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+      <input type="text" name="textareaName" value={d.textarea?.name ?? ''} placeholder="name" class="px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+    </div>
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Disclaimer (协议说明)</label>
+    <textarea name="disclaimer" rows="2" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm">{d.disclaimer?.label ?? ''}</textarea>
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description (提交下方说明)</label>
+    <textarea name="description" rows="2" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm">{d.description ?? ''}</textarea>
+  </div>
+</div>

@@ -1,9 +1,12 @@
 import path from 'path';
+import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
 
 import { defineConfig } from 'astro/config';
+import type { Plugin } from 'vite';
 
 import { unified } from '@astrojs/markdown-remark';
+import yaml from 'js-yaml';
 
 import sitemap from '@astrojs/sitemap';
 import mdx from '@astrojs/mdx';
@@ -18,6 +21,23 @@ import astrowind from './vendor/integration';
 import { readingTimeRemarkPlugin, responsiveTablesRehypePlugin } from './src/utils/frontmatter';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+function yamlPlugin(): Plugin {
+  return {
+    name: 'inline-yaml-loader',
+    enforce: 'pre',
+    async load(id) {
+      if (!id.endsWith('.yaml') && !id.endsWith('.yml')) return null;
+      const clean = id.split('?')[0];
+      const content = await fs.readFile(clean, 'utf8');
+      const data = yaml.load(content);
+      return {
+        code: `export default ${JSON.stringify(data)};`,
+        map: null,
+      };
+    },
+  };
+}
 
 const hasExternalScripts = false;
 const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroIntegration)[] = []) =>
@@ -88,6 +108,7 @@ export default defineConfig({
   },
 
   vite: {
+    plugins: [yamlPlugin()],
     server: {
       watch: {
         ignored: ['**/tina/**', '**/.tina/**', '**/tina-lock.json'],

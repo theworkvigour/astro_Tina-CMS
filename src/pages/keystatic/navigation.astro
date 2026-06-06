@@ -1,0 +1,514 @@
+---
+export const prerender = false;
+import AdminLayout from '~/layouts/AdminLayout.astro';
+import { verifySessionToken } from '~/lib/auth';
+import { readTokenFromCookies } from '~/lib/token-store';
+import { GitHubClient } from '~/lib/github';
+
+const session = Astro.cookies.get('ks-admin-session')?.value;
+const verified = session ? verifySessionToken(session) : null;
+if (!verified) return Astro.redirect('/login');
+const token = readTokenFromCookies(Astro.cookies);
+if (!token) return Astro.redirect('/keystatic/github-token');
+
+const file = 'src/data/site/navigation.yaml';
+
+let data: Record<string, any> = {};
+let sha = '';
+let loadError: string | null = null;
+
+try {
+  const client = new GitHubClient(token);
+  const f = await client.readFile(file);
+  const yamlMod = await import('js-yaml');
+  data = (yamlMod.load(f.content) as Record<string, any>) ?? {};
+  sha = f.sha;
+} catch (err) {
+  loadError = err instanceof Error ? err.message : '读取失败';
+}
+
+const header = data?.header ?? {};
+const footer = data?.footer ?? {};
+---
+<AdminLayout title="导航与页脚" active="navigation" username={verified?.username}>
+  <div class="mb-6">
+    <h1 class="text-2xl font-semibold">导航与页脚</h1>
+    <p class="mt-1 text-sm text-gray-500">编辑顶部菜单、页脚分类链接、社交媒体图标。文件: <code class="font-mono">src/data/site/navigation.yaml</code></p>
+  </div>
+
+  {loadError && (
+    <div class="mb-4 rounded-md border border-red-200 bg-red-50 dark:bg-red-950/40 dark:border-red-900 p-3 text-sm text-red-700 dark:text-red-300">
+      读取失败: {loadError}
+    </div>
+  )}
+
+  <form id="nav-form" class="space-y-6 pb-32" data-file={file} data-sha={sha}>
+    <details open class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 overflow-hidden">
+      <summary class="px-5 py-3 cursor-pointer flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-900">
+        <div>
+          <div class="text-sm font-semibold">Header 顶部导航</div>
+          <div class="text-xs text-gray-500 font-mono mt-0.5">header.links / header.actions</div>
+        </div>
+      </summary>
+      <div class="px-5 py-4 border-t border-gray-200 dark:border-gray-800 space-y-4">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-sm font-medium text-gray-700 dark:text-gray-300">导航菜单组 (有子菜单的下拉)</label>
+            <button type="button" data-add-header-group class="text-xs text-blue-600 dark:text-blue-400 hover:underline">+ 添加菜单组</button>
+          </div>
+          <div data-header-groups class="space-y-3">
+            {(header.links ?? []).map((g: any) => (
+              <div data-header-group-row class="rounded-md border border-gray-200 dark:border-gray-700 p-3 space-y-2 bg-gray-50 dark:bg-gray-900/50">
+                <div class="flex gap-2">
+                  <input type="text" name="headerGroupText" value={g.text ?? ''} placeholder="菜单组名 (如 Products)" class="flex-1 px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+                  <button type="button" data-remove-header-group class="text-xs text-red-600 dark:text-red-400 hover:underline">删除组</button>
+                </div>
+                <div class="pl-4 border-l-2 border-gray-200 dark:border-gray-700 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <label class="text-xs text-gray-500">子链接</label>
+                    <button type="button" data-add-header-link class="text-xs text-blue-600 dark:text-blue-400 hover:underline">+ 添加链接</button>
+                  </div>
+                  <div data-header-links-list class="space-y-1.5">
+                    {(g.links ?? []).map((l: any) => (
+                      <div data-header-link-row class="flex gap-1">
+                        <input type="text" name="headerLinkText" value={l.text ?? ''} placeholder="链接文字" class="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+                        <input type="text" name="headerLinkHref" value={l.href ?? ''} placeholder="/url" class="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+                        <button type="button" data-remove-header-link class="text-xs text-red-600 dark:text-red-400 hover:underline px-1">×</button>
+                      </div>
+                    ))}
+                  </div>
+                  <template data-header-link-template>
+                    <div data-header-link-row class="flex gap-1">
+                      <input type="text" name="headerLinkText" placeholder="链接文字" class="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+                      <input type="text" name="headerLinkHref" placeholder="/url" class="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+                      <button type="button" data-remove-header-link class="text-xs text-red-600 dark:text-red-400 hover:underline px-1">×</button>
+                    </div>
+                  </template>
+                </div>
+              </div>
+            ))}
+          </div>
+          <template data-header-group-template>
+            <div data-header-group-row class="rounded-md border border-gray-200 dark:border-gray-700 p-3 space-y-2 bg-gray-50 dark:bg-gray-900/50">
+              <div class="flex gap-2">
+                <input type="text" name="headerGroupText" placeholder="菜单组名" class="flex-1 px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+                <button type="button" data-remove-header-group class="text-xs text-red-600 dark:text-red-400 hover:underline">删除组</button>
+              </div>
+              <div class="pl-4 border-l-2 border-gray-200 dark:border-gray-700 space-y-2">
+                <div class="flex items-center justify-between">
+                  <label class="text-xs text-gray-500">子链接</label>
+                  <button type="button" data-add-header-link class="text-xs text-blue-600 dark:text-blue-400 hover:underline">+ 添加链接</button>
+                </div>
+                <div data-header-links-list class="space-y-1.5"></div>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-sm font-medium text-gray-700 dark:text-gray-300">右侧按钮 (Actions)</label>
+            <button type="button" data-add-header-action class="text-xs text-blue-600 dark:text-blue-400 hover:underline">+ 添加按钮</button>
+          </div>
+          <div data-header-actions-list class="space-y-2">
+            {(header.actions ?? []).map((a: any) => (
+              <div data-header-action-row class="rounded-md border border-gray-200 dark:border-gray-700 p-3 grid grid-cols-4 gap-2 bg-gray-50 dark:bg-gray-900/50">
+                <input type="text" name="headerActionText" value={a.text ?? ''} placeholder="按钮文字" class="px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+                <input type="text" name="headerActionHref" value={a.href ?? ''} placeholder="/url" class="px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+                <select name="headerActionVariant" class="px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm">
+                  <option value="" selected={!a.variant}>默认</option>
+                  <option value="primary" selected={a.variant === 'primary'}>primary</option>
+                  <option value="secondary" selected={a.variant === 'secondary'}>secondary</option>
+                  <option value="tertiary" selected={a.variant === 'tertiary'}>tertiary</option>
+                </select>
+                <button type="button" data-remove-header-action class="text-xs text-red-600 dark:text-red-400 hover:underline">删除</button>
+              </div>
+            ))}
+          </div>
+          <template data-header-action-template>
+            <div data-header-action-row class="rounded-md border border-gray-200 dark:border-gray-700 p-3 grid grid-cols-4 gap-2 bg-gray-50 dark:bg-gray-900/50">
+              <input type="text" name="headerActionText" placeholder="按钮文字" class="px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+              <input type="text" name="headerActionHref" placeholder="/url" class="px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+              <select name="headerActionVariant" class="px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm">
+                <option value="">默认</option>
+                <option value="primary">primary</option>
+                <option value="secondary">secondary</option>
+                <option value="tertiary">tertiary</option>
+              </select>
+              <button type="button" data-remove-header-action class="text-xs text-red-600 dark:text-red-400 hover:underline">删除</button>
+            </div>
+          </template>
+        </div>
+      </div>
+    </details>
+
+    <details open class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 overflow-hidden">
+      <summary class="px-5 py-3 cursor-pointer flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-900">
+        <div>
+          <div class="text-sm font-semibold">Footer 页脚分类链接</div>
+          <div class="text-xs text-gray-500 font-mono mt-0.5">footer.links</div>
+        </div>
+      </summary>
+      <div class="px-5 py-4 border-t border-gray-200 dark:border-gray-800 space-y-4">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-sm font-medium text-gray-700 dark:text-gray-300">页脚分类</label>
+            <button type="button" data-add-footer-group class="text-xs text-blue-600 dark:text-blue-400 hover:underline">+ 添加分类</button>
+          </div>
+          <div data-footer-groups class="space-y-3">
+            {(footer.links ?? []).map((g: any) => (
+              <div data-footer-group-row class="rounded-md border border-gray-200 dark:border-gray-700 p-3 space-y-2 bg-gray-50 dark:bg-gray-900/50">
+                <div class="flex gap-2">
+                  <input type="text" name="footerGroupTitle" value={g.title ?? ''} placeholder="分类标题 (如 Products)" class="flex-1 px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+                  <button type="button" data-remove-footer-group class="text-xs text-red-600 dark:text-red-400 hover:underline">删除分类</button>
+                </div>
+                <div class="pl-4 border-l-2 border-gray-200 dark:border-gray-700 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <label class="text-xs text-gray-500">链接</label>
+                    <button type="button" data-add-footer-link class="text-xs text-blue-600 dark:text-blue-400 hover:underline">+ 添加链接</button>
+                  </div>
+                  <div data-footer-links-list class="space-y-1.5">
+                    {(g.links ?? []).map((l: any) => (
+                      <div data-footer-link-row class="flex gap-1">
+                        <input type="text" name="footerLinkText" value={l.text ?? ''} placeholder="链接文字" class="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+                        <input type="text" name="footerLinkHref" value={l.href ?? ''} placeholder="/url" class="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+                        <button type="button" data-remove-footer-link class="text-xs text-red-600 dark:text-red-400 hover:underline px-1">×</button>
+                      </div>
+                    ))}
+                  </div>
+                  <template data-footer-link-template>
+                    <div data-footer-link-row class="flex gap-1">
+                      <input type="text" name="footerLinkText" placeholder="链接文字" class="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+                      <input type="text" name="footerLinkHref" placeholder="/url" class="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+                      <button type="button" data-remove-footer-link class="text-xs text-red-600 dark:text-red-400 hover:underline px-1">×</button>
+                    </div>
+                  </template>
+                </div>
+              </div>
+            ))}
+          </div>
+          <template data-footer-group-template>
+            <div data-footer-group-row class="rounded-md border border-gray-200 dark:border-gray-700 p-3 space-y-2 bg-gray-50 dark:bg-gray-900/50">
+              <div class="flex gap-2">
+                <input type="text" name="footerGroupTitle" placeholder="分类标题" class="flex-1 px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+                <button type="button" data-remove-footer-group class="text-xs text-red-600 dark:text-red-400 hover:underline">删除分类</button>
+              </div>
+              <div class="pl-4 border-l-2 border-gray-200 dark:border-gray-700 space-y-2">
+                <div class="flex items-center justify-between">
+                  <label class="text-xs text-gray-500">链接</label>
+                  <button type="button" data-add-footer-link class="text-xs text-blue-600 dark:text-blue-400 hover:underline">+ 添加链接</button>
+                </div>
+                <div data-footer-links-list class="space-y-1.5"></div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </details>
+
+    <details open class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 overflow-hidden">
+      <summary class="px-5 py-3 cursor-pointer flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-900">
+        <div>
+          <div class="text-sm font-semibold">Footer 次要链接 + 版权 + 社交媒体</div>
+          <div class="text-xs text-gray-500 font-mono mt-0.5">footer.secondaryLinks / footNote / socialLinks</div>
+        </div>
+      </summary>
+      <div class="px-5 py-4 border-t border-gray-200 dark:border-gray-800 space-y-4">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-sm font-medium text-gray-700 dark:text-gray-300">次要链接 (左下角,以 · 分隔)</label>
+            <button type="button" data-add-secondary class="text-xs text-blue-600 dark:text-blue-400 hover:underline">+ 添加</button>
+          </div>
+          <div data-secondary-list class="space-y-2">
+            {(footer.secondaryLinks ?? []).map((l: any) => (
+              <div data-secondary-row class="flex gap-2">
+                <input type="text" name="secondaryText" value={l.text ?? ''} placeholder="链接文字" class="flex-1 px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+                <input type="text" name="secondaryHref" value={l.href ?? ''} placeholder="/url" class="flex-1 px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+                <button type="button" data-remove-secondary class="text-xs text-red-600 dark:text-red-400 hover:underline">删除</button>
+              </div>
+            ))}
+          </div>
+          <template data-secondary-template>
+            <div data-secondary-row class="flex gap-2">
+              <input type="text" name="secondaryText" placeholder="链接文字" class="flex-1 px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+              <input type="text" name="secondaryHref" placeholder="/url" class="flex-1 px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+              <button type="button" data-remove-secondary class="text-xs text-red-600 dark:text-red-400 hover:underline">删除</button>
+            </div>
+          </template>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">版权信息 (footNote, 支持 HTML)</label>
+          <textarea name="footNote" rows="2" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm font-mono">{footer.footNote ?? ''}</textarea>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-sm font-medium text-gray-700 dark:text-gray-300">社交媒体图标</label>
+            <button type="button" data-add-social class="text-xs text-blue-600 dark:text-blue-400 hover:underline">+ 添加</button>
+          </div>
+          <div data-social-list class="space-y-2">
+            {(footer.socialLinks ?? []).map((s: any) => (
+              <div data-social-row class="rounded-md border border-gray-200 dark:border-gray-700 p-3 grid grid-cols-4 gap-2 bg-gray-50 dark:bg-gray-900/50">
+                <input type="text" name="socialAria" value={s.ariaLabel ?? ''} placeholder="ariaLabel (X, Instagram)" class="px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+                <input type="text" name="socialIcon" value={s.icon ?? ''} placeholder="图标 (tabler:brand-x)" class="px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+                <input type="text" name="socialHref" value={s.href ?? ''} placeholder="URL" class="px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+                <button type="button" data-remove-social class="text-xs text-red-600 dark:text-red-400 hover:underline">删除</button>
+              </div>
+            ))}
+          </div>
+          <template data-social-template>
+            <div data-social-row class="rounded-md border border-gray-200 dark:border-gray-700 p-3 grid grid-cols-4 gap-2 bg-gray-50 dark:bg-gray-900/50">
+              <input type="text" name="socialAria" placeholder="ariaLabel" class="px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+              <input type="text" name="socialIcon" placeholder="图标 (tabler:brand-x)" class="px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+              <input type="text" name="socialHref" placeholder="URL" class="px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm" />
+              <button type="button" data-remove-social class="text-xs text-red-600 dark:text-red-400 hover:underline">删除</button>
+            </div>
+          </template>
+        </div>
+      </div>
+    </details>
+
+    <div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 z-40">
+      <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
+        <div class="text-xs text-gray-500" data-file-info>文件: <code class="font-mono">{file}</code></div>
+        <div class="flex gap-2">
+          <a href="/keystatic" class="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:underline">取消</a>
+          <button id="submit-btn" type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md">保存并推送</button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <script is:inline>
+    (function () {
+      const form = document.getElementById('nav-form');
+      if (!form) return;
+      const file = form.dataset.file;
+      const sha = form.dataset.sha;
+      const submitBtn = document.getElementById('submit-btn');
+
+      function readRow(row) {
+        const out = {};
+        row.querySelectorAll('input, textarea, select').forEach((el) => {
+          if (!el.name) return;
+          out[el.name] = el.value;
+        });
+        return out;
+      }
+
+      document.addEventListener('click', (e) => {
+        const t = e.target instanceof Element ? e.target : null;
+        if (!t) return;
+
+        function findBtn(name) {
+          return t.closest(`[data-${name}]`);
+        }
+
+        const addHeaderGroup = findBtn('add-header-group');
+        if (addHeaderGroup) {
+          e.preventDefault();
+          const tpl = form.querySelector('template[data-header-group-template]');
+          const list = form.querySelector('[data-header-groups]');
+          if (tpl && list) list.appendChild(tpl.content.cloneNode(true));
+          return;
+        }
+        const removeHeaderGroup = findBtn('remove-header-group');
+        if (removeHeaderGroup) {
+          e.preventDefault();
+          const row = removeHeaderGroup.closest('[data-header-group-row]');
+          if (row) row.remove();
+          return;
+        }
+        const addHeaderLink = findBtn('add-header-link');
+        if (addHeaderLink) {
+          e.preventDefault();
+          const group = addHeaderLink.closest('[data-header-group-row]');
+          if (!group) return;
+          const tpl = group.querySelector('template[data-header-link-template]');
+          const list = group.querySelector('[data-header-links-list]');
+          if (tpl && list) list.appendChild(tpl.content.cloneNode(true));
+          return;
+        }
+        const removeHeaderLink = findBtn('remove-header-link');
+        if (removeHeaderLink) {
+          e.preventDefault();
+          const row = removeHeaderLink.closest('[data-header-link-row]');
+          if (row) row.remove();
+          return;
+        }
+        const addHeaderAction = findBtn('add-header-action');
+        if (addHeaderAction) {
+          e.preventDefault();
+          const tpl = form.querySelector('template[data-header-action-template]');
+          const list = form.querySelector('[data-header-actions-list]');
+          if (tpl && list) list.appendChild(tpl.content.cloneNode(true));
+          return;
+        }
+        const removeHeaderAction = findBtn('remove-header-action');
+        if (removeHeaderAction) {
+          e.preventDefault();
+          const row = removeHeaderAction.closest('[data-header-action-row]');
+          if (row) row.remove();
+          return;
+        }
+        const addFooterGroup = findBtn('add-footer-group');
+        if (addFooterGroup) {
+          e.preventDefault();
+          const tpl = form.querySelector('template[data-footer-group-template]');
+          const list = form.querySelector('[data-footer-groups]');
+          if (tpl && list) list.appendChild(tpl.content.cloneNode(true));
+          return;
+        }
+        const removeFooterGroup = findBtn('remove-footer-group');
+        if (removeFooterGroup) {
+          e.preventDefault();
+          const row = removeFooterGroup.closest('[data-footer-group-row]');
+          if (row) row.remove();
+          return;
+        }
+        const addFooterLink = findBtn('add-footer-link');
+        if (addFooterLink) {
+          e.preventDefault();
+          const group = addFooterLink.closest('[data-footer-group-row]');
+          if (!group) return;
+          const tpl = group.querySelector('template[data-footer-link-template]');
+          const list = group.querySelector('[data-footer-links-list]');
+          if (tpl && list) list.appendChild(tpl.content.cloneNode(true));
+          return;
+        }
+        const removeFooterLink = findBtn('remove-footer-link');
+        if (removeFooterLink) {
+          e.preventDefault();
+          const row = removeFooterLink.closest('[data-footer-link-row]');
+          if (row) row.remove();
+          return;
+        }
+        const addSecondary = findBtn('add-secondary');
+        if (addSecondary) {
+          e.preventDefault();
+          const tpl = form.querySelector('template[data-secondary-template]');
+          const list = form.querySelector('[data-secondary-list]');
+          if (tpl && list) list.appendChild(tpl.content.cloneNode(true));
+          return;
+        }
+        const removeSecondary = findBtn('remove-secondary');
+        if (removeSecondary) {
+          e.preventDefault();
+          const row = removeSecondary.closest('[data-secondary-row]');
+          if (row) row.remove();
+          return;
+        }
+        const addSocial = findBtn('add-social');
+        if (addSocial) {
+          e.preventDefault();
+          const tpl = form.querySelector('template[data-social-template]');
+          const list = form.querySelector('[data-social-list]');
+          if (tpl && list) list.appendChild(tpl.content.cloneNode(true));
+          return;
+        }
+        const removeSocial = findBtn('remove-social');
+        if (removeSocial) {
+          e.preventDefault();
+          const row = removeSocial.closest('[data-social-row]');
+          if (row) row.remove();
+          return;
+        }
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = '推送中...'; }
+
+        const headerGroups = [];
+        form.querySelectorAll('[data-header-group-row]').forEach((row) => {
+          const d = readRow(row);
+          if (!d.headerGroupText) return;
+          const group = { text: d.headerGroupText, links: [] };
+          row.querySelectorAll('[data-header-link-row]').forEach((lr) => {
+            const ld = readRow(lr);
+            if (ld.headerLinkText || ld.headerLinkHref) {
+              group.links.push({ text: ld.headerLinkText ?? '', href: ld.headerLinkHref ?? '' });
+            }
+          });
+          headerGroups.push(group);
+        });
+
+        const headerActions = [];
+        form.querySelectorAll('[data-header-action-row]').forEach((row) => {
+          const d = readRow(row);
+          const a = {};
+          if (d.headerActionText) a.text = d.headerActionText;
+          if (d.headerActionHref) a.href = d.headerActionHref;
+          if (d.headerActionVariant) a.variant = d.headerActionVariant;
+          if (Object.keys(a).length) headerActions.push(a);
+        });
+
+        const footerGroups = [];
+        form.querySelectorAll('[data-footer-group-row]').forEach((row) => {
+          const d = readRow(row);
+          if (!d.footerGroupTitle) return;
+          const group = { title: d.footerGroupTitle, links: [] };
+          row.querySelectorAll('[data-footer-link-row]').forEach((lr) => {
+            const ld = readRow(lr);
+            if (ld.footerLinkText || ld.footerLinkHref) {
+              group.links.push({ text: ld.footerLinkText ?? '', href: ld.footerLinkHref ?? '' });
+            }
+          });
+          footerGroups.push(group);
+        });
+
+        const secondaryLinks = [];
+        form.querySelectorAll('[data-secondary-row]').forEach((row) => {
+          const d = readRow(row);
+          if (d.secondaryText || d.secondaryHref) {
+            secondaryLinks.push({ text: d.secondaryText ?? '', href: d.secondaryHref ?? '' });
+          }
+        });
+
+        const socialLinks = [];
+        form.querySelectorAll('[data-social-row]').forEach((row) => {
+          const d = readRow(row);
+          const s = {};
+          if (d.socialAria) s.ariaLabel = d.socialAria;
+          if (d.socialIcon) s.icon = d.socialIcon;
+          if (d.socialHref) s.href = d.socialHref;
+          if (Object.keys(s).length) socialLinks.push(s);
+        });
+
+        const footNoteEl = form.querySelector('[name="footNote"]');
+        const footNote = footNoteEl instanceof HTMLTextAreaElement ? footNoteEl.value : '';
+
+        const payload = {
+          header: { links: headerGroups, actions: headerActions },
+          footer: { links: footerGroups, secondaryLinks, socialLinks, footNote },
+        };
+
+        try {
+          const res = await fetch('/api/admin/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              format: 'yaml',
+              path: file,
+              sha,
+              data: payload,
+              commitMessage: 'Update site navigation and footer',
+            }),
+          });
+          const result = await res.json();
+          if (!res.ok || !result.success) {
+            window.__adminToast?.(result.error || '保存失败', 'error');
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = '保存并推送'; }
+            return;
+          }
+          window.__adminToast?.('已保存,Cloudflare 正在重新部署...', 'success');
+          setTimeout(() => { window.location.reload(); }, 800);
+        } catch {
+          window.__adminToast?.('网络错误', 'error');
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = '保存并推送'; }
+        }
+      });
+    })();
+  </script>
+</AdminLayout>

@@ -1,0 +1,42 @@
+---
+export const prerender = false;
+import AdminLayout from '~/layouts/AdminLayout.astro';
+import { verifySessionToken } from '~/lib/auth';
+import { readTokenFromCookies } from '~/lib/token-store';
+import { PAGES } from '~/components/admin/page-schemas';
+
+const session = Astro.cookies.get('ks-admin-session')?.value;
+const verified = session ? verifySessionToken(session) : null;
+if (!verified) return Astro.redirect('/login');
+const token = readTokenFromCookies(Astro.cookies);
+if (!token) return Astro.redirect('/keystatic/github-token');
+---
+<AdminLayout title="网页内容 / Pages" active="pages" username={verified?.username}>
+  <div class="mb-6">
+    <h1 class="text-2xl font-semibold">网页内容管理</h1>
+    <p class="mt-1 text-sm text-gray-500">编辑首页、关于、服务、价格、联系五大页面的所有 widget 区块(全功能)。所有改动会提交到 GitHub 仓库的 <code class="font-mono">src/data/pages/</code> 目录。</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {PAGES.map((page) => (
+      <a
+        href={`/keystatic/pages/${page.slug}`}
+        class="block rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-6 hover:border-blue-400 transition"
+      >
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-base font-semibold">{page.label}</div>
+            <div class="mt-1 text-xs text-gray-500 font-mono">{page.file}</div>
+          </div>
+          <span class="text-xs text-gray-400 font-mono">{page.path}</span>
+        </div>
+        <div class="mt-4 flex flex-wrap gap-1.5">
+          {page.sections.map((s) => (
+            <span class="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">{s.label}</span>
+          ))}
+        </div>
+        <div class="mt-4 text-sm text-blue-600 dark:text-blue-400">编辑此页面 →</div>
+      </a>
+    ))}
+  </div>
+</AdminLayout>

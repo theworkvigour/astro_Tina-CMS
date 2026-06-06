@@ -1,0 +1,494 @@
+---
+export const prerender = false;
+import AdminLayout from '~/layouts/AdminLayout.astro';
+import { verifySessionToken } from '~/lib/auth';
+import { readTokenFromCookies } from '~/lib/token-store';
+import { GitHubClient } from '~/lib/github';
+import { PAGE_BY_SLUG, type PageSpec } from '~/components/admin/page-schemas';
+
+import HeroForm from '~/components/admin/sections/HeroForm.astro';
+import HeroTextForm from '~/components/admin/sections/HeroTextForm.astro';
+import FeaturesForm from '~/components/admin/sections/FeaturesForm.astro';
+import Features2Form from '~/components/admin/sections/Features2Form.astro';
+import Features3Form from '~/components/admin/sections/Features3Form.astro';
+import ContentForm from '~/components/admin/sections/ContentForm.astro';
+import StepsForm from '~/components/admin/sections/StepsForm.astro';
+import Steps2Form from '~/components/admin/sections/Steps2Form.astro';
+import StatsForm from '~/components/admin/sections/StatsForm.astro';
+import FaqsForm from '~/components/admin/sections/FaqsForm.astro';
+import TestimonialsForm from '~/components/admin/sections/TestimonialsForm.astro';
+import PricingForm from '~/components/admin/sections/PricingForm.astro';
+import ContactFormSection from '~/components/admin/sections/ContactFormSection.astro';
+import CtaForm from '~/components/admin/sections/CtaForm.astro';
+import FeaturedProductsForm from '~/components/admin/sections/FeaturedProductsForm.astro';
+import BlogLatestForm from '~/components/admin/sections/BlogLatestForm.astro';
+
+const session = Astro.cookies.get('ks-admin-session')?.value;
+const verified = session ? verifySessionToken(session) : null;
+if (!verified) return Astro.redirect('/login');
+const token = readTokenFromCookies(Astro.cookies);
+if (!token) return Astro.redirect('/keystatic/github-token');
+
+const slug = Astro.params.slug;
+const page: PageSpec | undefined = slug ? PAGE_BY_SLUG[slug] : undefined;
+if (!page) return Astro.redirect('/keystatic/pages');
+
+let data: Record<string, any> = {};
+let sha = '';
+let loadError: string | null = null;
+
+try {
+  const client = new GitHubClient(token);
+  const file = await client.readFile(page.file);
+  const yamlMod = await import('js-yaml');
+  data = (yamlMod.load(file.content) as Record<string, any>) ?? {};
+  sha = file.sha;
+} catch (err) {
+  loadError = err instanceof Error ? err.message : '读取失败';
+}
+---
+<AdminLayout title={`编辑: ${page.label}`} active="pages" username={verified?.username}>
+  <div class="mb-6">
+    <a href="/keystatic/pages" class="text-sm text-gray-500 hover:underline">← 返回 Pages 列表</a>
+    <h1 class="mt-2 text-2xl font-semibold">编辑: {page.label}</h1>
+    <p class="mt-1 text-sm text-gray-500">
+      文件路径: <code class="font-mono">{page.file}</code>
+      · 站点路径: <a href={page.path} class="text-blue-600 dark:text-blue-400 hover:underline" target="_blank" rel="noopener">{page.path}</a>
+    </p>
+  </div>
+
+  {loadError && (
+    <div class="mb-4 rounded-md border border-red-200 bg-red-50 dark:bg-red-950/40 dark:border-red-900 p-3 text-sm text-red-700 dark:text-red-300">
+      读取失败: {loadError}
+    </div>
+  )}
+
+  <form id="page-form" class="space-y-6 pb-32" data-file={page.file} data-sha={sha}>
+    {page.sections.map((section) => {
+      const sectionData = data?.[section.key] ?? {};
+      const prefix = `s_${section.key}`;
+      return (
+        <details open class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 overflow-hidden">
+          <summary class="px-5 py-3 cursor-pointer flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-900">
+            <div>
+              <div class="text-sm font-semibold">{section.label}</div>
+              <div class="text-xs text-gray-500 font-mono mt-0.5">{section.key}</div>
+            </div>
+            <span class="text-xs text-gray-400">widget: {section.type}</span>
+          </summary>
+          <div class="px-5 py-4 border-t border-gray-200 dark:border-gray-800">
+            {section.type === 'hero' && <HeroForm prefix={prefix} data={sectionData} />}
+            {section.type === 'hero_text' && <HeroTextForm prefix={prefix} data={sectionData} />}
+            {section.type === 'features' && <FeaturesForm prefix={prefix} data={sectionData} />}
+            {section.type === 'features2' && <Features2Form prefix={prefix} data={sectionData} />}
+            {section.type === 'features3' && <Features3Form prefix={prefix} data={sectionData} />}
+            {section.type === 'content' && <ContentForm prefix={prefix} data={sectionData} />}
+            {section.type === 'steps' && <StepsForm prefix={prefix} data={sectionData} />}
+            {section.type === 'steps2' && <Steps2Form prefix={prefix} data={sectionData} />}
+            {section.type === 'stats' && <StatsForm prefix={prefix} data={sectionData} />}
+            {section.type === 'faqs' && <FaqsForm prefix={prefix} data={sectionData} />}
+            {section.type === 'testimonials' && <TestimonialsForm prefix={prefix} data={sectionData} />}
+            {section.type === 'pricing' && <PricingForm prefix={prefix} data={sectionData} />}
+            {section.type === 'contact' && <ContactFormSection prefix={prefix} data={sectionData} />}
+            {section.type === 'cta' && <CtaForm prefix={prefix} data={sectionData} />}
+            {section.type === 'featured_products' && <FeaturedProductsForm prefix={prefix} data={sectionData} />}
+            {section.type === 'blog_latest' && <BlogLatestForm prefix={prefix} data={sectionData} />}
+          </div>
+        </details>
+      );
+    })}
+
+    <div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 z-40">
+      <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
+        <div class="text-xs text-gray-500" data-file-info>文件: <code class="font-mono">{page.file}</code></div>
+        <div class="flex gap-2">
+          <a href="/keystatic/pages" class="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:underline">取消</a>
+          <button id="submit-btn" type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md">保存并推送</button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <script is:inline define:vars={{ pageSlug: page.slug, pageLabel: page.label }}>
+    (function () {
+      const form = document.getElementById('page-form');
+      if (!form) return;
+      const file = form.dataset.file;
+      const sha = form.dataset.sha;
+      const submitBtn = document.getElementById('submit-btn');
+
+      function sectionKeyFromPrefix(prefix) {
+        return prefix.replace(/^s_/, '');
+      }
+
+      function readRow(row) {
+        const out = {};
+        row.querySelectorAll('input, textarea, select').forEach((el) => {
+          if (!el.name) return;
+          if (el.type === 'checkbox') out[el.name] = el.checked;
+          else out[el.name] = el.value;
+        });
+        return out;
+      }
+
+      function readActions(section) {
+        const actions = [];
+        section.querySelectorAll('[data-action-row]').forEach((row) => {
+          const d = readRow(row);
+          const a = {};
+          if (d.actionText) a.text = d.actionText;
+          if (d.actionHref) a.href = d.actionHref;
+          if (d.actionVariant) a.variant = d.actionVariant;
+          else a.variant = 'primary';
+          if (d.actionIcon) a.icon = d.actionIcon;
+          if (Object.keys(a).length) actions.push(a);
+        });
+        return actions;
+      }
+
+      function readItems(section, fields) {
+        const items = [];
+        section.querySelectorAll('[data-item-row]').forEach((row) => {
+          const d = readRow(row);
+          const it = {};
+          for (const f of fields) if (d[f]) it[f === 'itemTitle' ? 'title' : f === 'itemDescription' ? 'description' : f === 'itemIcon' ? 'icon' : f] = d[f];
+          if (Object.keys(it).length) items.push(it);
+        });
+        return items;
+      }
+
+      function readStats(section) {
+        const out = [];
+        section.querySelectorAll('[data-stat-row]').forEach((row) => {
+          const d = readRow(row);
+          const s = {};
+          if (d.statAmount) s.amount = d.statAmount;
+          if (d.statTitle) s.title = d.statTitle;
+          if (d.statIcon) s.icon = d.statIcon;
+          if (Object.keys(s).length) out.push(s);
+        });
+        return out;
+      }
+
+      function readInputs(section) {
+        const out = [];
+        section.querySelectorAll('[data-input-row]').forEach((row) => {
+          const d = readRow(row);
+          const i = {};
+          if (d.inputType) i.type = d.inputType;
+          if (d.inputName) i.name = d.inputName;
+          if (d.inputLabel) i.label = d.inputLabel;
+          if (Object.keys(i).length) out.push(i);
+        });
+        return out;
+      }
+
+      function readTestimonials(section) {
+        const out = [];
+        section.querySelectorAll('[data-testimonial-row]').forEach((row) => {
+          const d = readRow(row);
+          const t = {};
+          if (d.testName) t.name = d.testName;
+          if (d.testJob) t.job = d.testJob;
+          if (d.testText) t.testimonial = d.testText;
+          if (d.testImageSrc || d.testImageAlt) {
+            t.image = {};
+            if (d.testImageSrc) t.image.src = d.testImageSrc;
+            if (d.testImageAlt) t.image.alt = d.testImageAlt;
+          }
+          if (Object.keys(t).length) out.push(t);
+        });
+        return out;
+      }
+
+      function readTiers(section) {
+        const out = [];
+        section.querySelectorAll('[data-tier-row]').forEach((row) => {
+          const d = readRow(row);
+          const t = {};
+          if (d.tierTitle) t.title = d.tierTitle;
+          if (d.tierSubtitle) t.subtitle = d.tierSubtitle;
+          if (d.tierPrice) t.price = d.tierPrice;
+          if (d.tierPeriod) t.period = d.tierPeriod;
+          if (d.tierHasRibbon) t.hasRibbon = true;
+          if (d.tierRibbonTitle) t.ribbonTitle = d.tierRibbonTitle;
+          if (d.tierCtaText || d.tierCtaHref) {
+            t.callToAction = {};
+            if (d.tierCtaText) t.callToAction.text = d.tierCtaText;
+            if (d.tierCtaHref) t.callToAction.href = d.tierCtaHref;
+          }
+          const itemRows = row.querySelectorAll('[data-tier-item-row]');
+          if (itemRows.length) {
+            t.items = [];
+            itemRows.forEach((ir) => {
+              const id = readRow(ir);
+              if (id.tierItemDesc) t.items.push({ description: id.tierItemDesc });
+            });
+          }
+          if (Object.keys(t).length) out.push(t);
+        });
+        return out;
+      }
+
+      function readSection(section) {
+        const type = section.dataset.sectionType;
+        const d = readRow(section);
+        const out = {};
+        if (type === 'hero' || type === 'cta') {
+          if (d.tagline) out.tagline = d.tagline;
+          if (d.title) out.title = d.title;
+          if (d.subtitle) out.subtitle = d.subtitle;
+          const actions = readActions(section);
+          if (actions.length) out.actions = actions;
+          if (d.imageSrc || d.imageAlt) {
+            out.image = {};
+            if (d.imageSrc) out.image.src = d.imageSrc;
+            if (d.imageAlt) out.image.alt = d.imageAlt;
+          }
+        } else if (type === 'hero_text') {
+          if (d.tagline) out.tagline = d.tagline;
+          if (d.title) out.title = d.title;
+          if (d.subtitle) out.subtitle = d.subtitle;
+          if (d.content) out.content = d.content;
+        } else if (type === 'features' || type === 'features2') {
+          if (d.id) out.id = d.id;
+          if (d.tagline) out.tagline = d.tagline;
+          if (d.title) out.title = d.title;
+          if (d.subtitle) out.subtitle = d.subtitle;
+          if (d.columns) out.columns = Number(d.columns);
+          if (d.defaultIcon) out.defaultIcon = d.defaultIcon;
+          const items = readItems(section, ['itemTitle', 'itemDescription', 'itemIcon']);
+          if (items.length) out.items = items;
+        } else if (type === 'features3' || type === 'content') {
+          if (d.isReversed) out.isReversed = true;
+          if (type === 'features3') {
+            if (d.isBeforeContent) out.isBeforeContent = true;
+            if (d.isAfterContent) out.isAfterContent = true;
+          } else {
+            if (d.isAfterContent) out.isAfterContent = true;
+          }
+          if (d.columns) out.columns = Number(d.columns);
+          if (d.defaultIcon) out.defaultIcon = d.defaultIcon;
+          if (d.tagline) out.tagline = d.tagline;
+          if (d.title) out.title = d.title;
+          if (d.subtitle) out.subtitle = d.subtitle;
+          if (d.content) out.content = d.content;
+          if (d.ctaText || d.ctaHref) {
+            out.callToAction = {};
+            if (d.ctaText) out.callToAction.text = d.ctaText;
+            if (d.ctaHref) out.callToAction.href = d.ctaHref;
+            if (d.ctaVariant) out.callToAction.variant = d.ctaVariant;
+          }
+          const items = readItems(section, ['itemTitle', 'itemDescription', 'itemIcon']);
+          if (items.length) out.items = items;
+          if (d.imageSrc || d.imageAlt) {
+            out.image = {};
+            if (d.imageSrc) out.image.src = d.imageSrc;
+            if (d.imageAlt) out.image.alt = d.imageAlt;
+          }
+        } else if (type === 'steps') {
+          if (d.tagline) out.tagline = d.tagline;
+          if (d.title) out.title = d.title;
+          if (d.isReversed) out.isReversed = true;
+          const items = readItems(section, ['itemTitle', 'itemDescription', 'itemIcon']);
+          if (items.length) out.items = items;
+          if (d.imageSrc || d.imageAlt) {
+            out.image = {};
+            if (d.imageSrc) out.image.src = d.imageSrc;
+            if (d.imageAlt) out.image.alt = d.imageAlt;
+          }
+        } else if (type === 'steps2') {
+          if (d.tagline) out.tagline = d.tagline;
+          if (d.title) out.title = d.title;
+          if (d.subtitle) out.subtitle = d.subtitle;
+          if (d.isReversed) out.isReversed = true;
+          if (d.ctaText || d.ctaHref) {
+            out.callToAction = {};
+            if (d.ctaText) out.callToAction.text = d.ctaText;
+            if (d.ctaHref) out.callToAction.href = d.ctaHref;
+            if (d.ctaVariant) out.callToAction.variant = d.ctaVariant;
+          }
+          const items = readItems(section, ['itemTitle', 'itemDescription', 'itemIcon']);
+          if (items.length) out.items = items;
+        } else if (type === 'stats') {
+          if (d.title) out.title = d.title;
+          if (d.subtitle) out.subtitle = d.subtitle;
+          const stats = readStats(section);
+          if (stats.length) out.stats = stats;
+        } else if (type === 'faqs') {
+          if (d.title) out.title = d.title;
+          if (d.subtitle) out.subtitle = d.subtitle;
+          if (d.columns) out.columns = Number(d.columns);
+          const items = readItems(section, ['itemTitle', 'itemDescription', 'itemIcon']);
+          if (items.length) out.items = items;
+        } else if (type === 'testimonials') {
+          if (d.title) out.title = d.title;
+          if (d.subtitle) out.subtitle = d.subtitle;
+          const testimonials = readTestimonials(section);
+          if (testimonials.length) out.testimonials = testimonials;
+        } else if (type === 'pricing') {
+          if (d.title) out.title = d.title;
+          if (d.subtitle) out.subtitle = d.subtitle;
+          const tiers = readTiers(section);
+          if (tiers.length) out.prices = tiers;
+        } else if (type === 'contact') {
+          if (d.id) out.id = d.id;
+          if (d.title) out.title = d.title;
+          if (d.subtitle) out.subtitle = d.subtitle;
+          const inputs = readInputs(section);
+          if (inputs.length) out.inputs = inputs;
+          if (d.textareaLabel || d.textareaName) {
+            out.textarea = {};
+            if (d.textareaLabel) out.textarea.label = d.textareaLabel;
+            if (d.textareaName) out.textarea.name = d.textareaName;
+          }
+          if (d.disclaimer) out.disclaimer = { label: d.disclaimer };
+          if (d.description) out.description = d.description;
+        } else if (type === 'featured_products') {
+          if (d.id) out.id = d.id;
+          if (d.title) out.title = d.title;
+          if (d.subtitle) out.subtitle = d.subtitle;
+          if (d.linkText) out.linkText = d.linkText;
+          if (d.linkUrl) out.linkUrl = d.linkUrl;
+        } else if (type === 'blog_latest') {
+          if (d.title) out.title = d.title;
+          if (d.information) out.information = d.information;
+        }
+        return out;
+      }
+
+      document.addEventListener('click', (e) => {
+        const t = e.target instanceof Element ? e.target : null;
+        if (!t) return;
+        if (t.matches('[data-add-action]') || t.closest('[data-add-action]')) {
+          e.preventDefault();
+          const btn = t.matches('[data-add-action]') ? t : t.closest('[data-add-action]');
+          const section = btn.closest('[data-section-type]');
+          if (!section) return;
+          const tpl = section.querySelector('template[data-action-template]');
+          const list = section.querySelector('[data-actions-list]');
+          if (tpl && list) list.appendChild(tpl.content.cloneNode(true));
+        } else if (t.matches('[data-remove-action]') || t.closest('[data-remove-action]')) {
+          e.preventDefault();
+          const btn = t.matches('[data-remove-action]') ? t : t.closest('[data-remove-action]');
+          const row = btn.closest('[data-action-row]');
+          if (row) row.remove();
+        } else if (t.matches('[data-add-item]') || t.closest('[data-add-item]')) {
+          e.preventDefault();
+          const btn = t.matches('[data-add-item]') ? t : t.closest('[data-add-item]');
+          const section = btn.closest('[data-section-type]');
+          if (!section) return;
+          const tpl = section.querySelector('template[data-item-template]');
+          const list = section.querySelector('[data-items-list]');
+          if (tpl && list) list.appendChild(tpl.content.cloneNode(true));
+        } else if (t.matches('[data-remove-item]') || t.closest('[data-remove-item]')) {
+          e.preventDefault();
+          const btn = t.matches('[data-remove-item]') ? t : t.closest('[data-remove-item]');
+          const row = btn.closest('[data-item-row]');
+          if (row) row.remove();
+        } else if (t.matches('[data-add-stat]') || t.closest('[data-add-stat]')) {
+          e.preventDefault();
+          const btn = t.matches('[data-add-stat]') ? t : t.closest('[data-add-stat]');
+          const section = btn.closest('[data-section-type]');
+          if (!section) return;
+          const tpl = section.querySelector('template[data-stat-template]');
+          const list = section.querySelector('[data-stats-list]');
+          if (tpl && list) list.appendChild(tpl.content.cloneNode(true));
+        } else if (t.matches('[data-remove-stat]') || t.closest('[data-remove-stat]')) {
+          e.preventDefault();
+          const btn = t.matches('[data-remove-stat]') ? t : t.closest('[data-remove-stat]');
+          const row = btn.closest('[data-stat-row]');
+          if (row) row.remove();
+        } else if (t.matches('[data-add-input]') || t.closest('[data-add-input]')) {
+          e.preventDefault();
+          const btn = t.matches('[data-add-input]') ? t : t.closest('[data-add-input]');
+          const section = btn.closest('[data-section-type]');
+          if (!section) return;
+          const tpl = section.querySelector('template[data-input-template]');
+          const list = section.querySelector('[data-inputs-list]');
+          if (tpl && list) list.appendChild(tpl.content.cloneNode(true));
+        } else if (t.matches('[data-remove-input]') || t.closest('[data-remove-input]')) {
+          e.preventDefault();
+          const btn = t.matches('[data-remove-input]') ? t : t.closest('[data-remove-input]');
+          const row = btn.closest('[data-input-row]');
+          if (row) row.remove();
+        } else if (t.matches('[data-add-testimonial]') || t.closest('[data-add-testimonial]')) {
+          e.preventDefault();
+          const btn = t.matches('[data-add-testimonial]') ? t : t.closest('[data-add-testimonial]');
+          const section = btn.closest('[data-section-type]');
+          if (!section) return;
+          const tpl = section.querySelector('template[data-testimonial-template]');
+          const list = section.querySelector('[data-testimonials-list]');
+          if (tpl && list) list.appendChild(tpl.content.cloneNode(true));
+        } else if (t.matches('[data-remove-testimonial]') || t.closest('[data-remove-testimonial]')) {
+          e.preventDefault();
+          const btn = t.matches('[data-remove-testimonial]') ? t : t.closest('[data-remove-testimonial]');
+          const row = btn.closest('[data-testimonial-row]');
+          if (row) row.remove();
+        } else if (t.matches('[data-add-tier]') || t.closest('[data-add-tier]')) {
+          e.preventDefault();
+          const btn = t.matches('[data-add-tier]') ? t : t.closest('[data-add-tier]');
+          const section = btn.closest('[data-section-type]');
+          if (!section) return;
+          const tpl = section.querySelector('template[data-tier-template]');
+          const list = section.querySelector('[data-tiers-list]');
+          if (tpl && list) list.appendChild(tpl.content.cloneNode(true));
+        } else if (t.matches('[data-remove-tier]') || t.closest('[data-remove-tier]')) {
+          e.preventDefault();
+          const btn = t.matches('[data-remove-tier]') ? t : t.closest('[data-remove-tier]');
+          const row = btn.closest('[data-tier-row]');
+          if (row) row.remove();
+        } else if (t.matches('[data-add-tier-item]') || t.closest('[data-add-tier-item]')) {
+          e.preventDefault();
+          const btn = t.matches('[data-add-tier-item]') ? t : t.closest('[data-add-tier-item]');
+          const tierRow = btn.closest('[data-tier-row]');
+          if (!tierRow) return;
+          const tpl = tierRow.querySelector('template[data-tier-item-template]');
+          const list = tierRow.querySelector('[data-tier-items-list]');
+          if (tpl && list) list.appendChild(tpl.content.cloneNode(true));
+        } else if (t.matches('[data-remove-tier-item]') || t.closest('[data-remove-tier-item]')) {
+          e.preventDefault();
+          const btn = t.matches('[data-remove-tier-item]') ? t : t.closest('[data-remove-tier-item]');
+          const row = btn.closest('[data-tier-item-row]');
+          if (row) row.remove();
+        }
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = '推送中...'; }
+        const payload = {};
+        form.querySelectorAll('[data-section-type]').forEach((section) => {
+          const prefix = section.dataset.prefix;
+          if (!prefix) return;
+          const key = sectionKeyFromPrefix(prefix);
+          payload[key] = readSection(section);
+        });
+        try {
+          const res = await fetch('/api/admin/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              format: 'yaml',
+              path: file,
+              sha,
+              data: payload,
+              commitMessage: `Update page content: ${pageSlug} (${pageLabel})`,
+            }),
+          });
+          const result = await res.json();
+          if (!res.ok || !result.success) {
+            window.__adminToast?.(result.error || '保存失败', 'error');
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = '保存并推送'; }
+            return;
+          }
+          window.__adminToast?.('已保存,Cloudflare 正在重新部署...', 'success');
+          setTimeout(() => { window.location.reload(); }, 800);
+        } catch {
+          window.__adminToast?.('网络错误', 'error');
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = '保存并推送'; }
+        }
+      });
+    })();
+  </script>
+</AdminLayout>
