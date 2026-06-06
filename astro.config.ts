@@ -10,6 +10,10 @@ import mdx from '@astrojs/mdx';
 import partytown from '@astrojs/partytown';
 import icon from 'astro-icon';
 import compress from 'astro-compress';
+import react from '@astrojs/react';
+import markdoc from '@astrojs/markdoc';
+import keystatic from '@keystatic/astro';
+import cloudflare from '@astrojs/cloudflare';
 import type { AstroIntegration } from 'astro';
 
 import astrowind from './vendor/integration';
@@ -25,8 +29,19 @@ const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroInteg
 export default defineConfig({
   output: 'static',
 
+  adapter: cloudflare({
+    platformProxy: { enabled: true },
+  }),
+
   integrations: [
-    sitemap(),
+    react(),
+    markdoc(),
+    keystatic(),
+    sitemap({
+      filter: (page) =>
+        !/\/(keystatic|admin|login|api|404|500)(?:\/|$)/.test(page) &&
+        !/^\/keystatic(?:\/|$)/.test(page),
+    }),
     mdx(),
     icon({
       include: {
@@ -70,16 +85,6 @@ export default defineConfig({
   ],
 
   image: {
-    // Astro's default Sharp service handles local images.
-    //
-    // Most remote CDN images (Unsplash, Cloudinary, Imgix…) are routed by
-    // src/components/common/Image.astro through `unpic`, which rewrites the
-    // URL with CDN-side query parameters and serves it straight from the
-    // provider — Astro never downloads it, so they don't need to be listed.
-    //
-    // `domains` only matters for remote URLs that fall through to Astro's
-    // native <Image /> (i.e. providers Unpic can't detect, like Pixabay).
-    // Listed entries are authorized to be processed by Sharp.
     domains: ['cdn.pixabay.com'],
   },
 
@@ -93,15 +98,26 @@ export default defineConfig({
   vite: {
     server: {
       watch: {
-        // 让 Astro 彻底无视 tina 文件夹和生成的缓存锁文件，别去跟着瞎刷新
         ignored: ['**/tina/**', '**/.tina/**', '**/tina-lock.json'],
-      }, // <-- 这里闭合 watch
-    }, // <-- 这里闭合 server
+      },
+    },
 
     resolve: {
       alias: {
         '~': path.resolve(__dirname, './src'),
+        // Cloudflare workaround for React 19 MessageChannel error
+        // https://github.com/withastro/adapters/pull/436
+        ...(import.meta.env.PROD && {
+          'react-dom/server': 'react-dom/server.edge',
+        }),
       },
     },
-  }, // <-- 这里闭合 vite
+
+    optimizeDeps: {
+      exclude: [
+        '@keystatic/astro/internal/keystatic-api.js',
+        '@keystatic/astro/internal/keystatic-page.js',
+      ],
+    },
+  },
 });
