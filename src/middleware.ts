@@ -16,18 +16,16 @@ const toolbarSnippet = `
 (function(){
   var style = document.createElement('style');
   style.textContent = \`
-    [class*="branch"] { display: none !important; }
-    #aw-toolbar { position: fixed; top: 0; left: 0; right: 0; z-index: 99999; display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 6px 16px; background: #1e293b; color: #94a3b8; font-size: 13px; font-family: system-ui, sans-serif; }
+    #aw-toolbar { position: fixed; top: 0; left: 0; right: 0; z-index: 2147483647; display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 6px 16px; background: #1e293b; color: #94a3b8; font-size: 13px; font-family: system-ui, sans-serif; }
     #aw-toolbar a { color: #e2e8f0; text-decoration: none; padding: 4px 10px; border-radius: 4px; }
     #aw-toolbar a:hover { background: #334155; color: #fff; }
     #aw-toolbar a.logout { color: #f87171; }
-    body { padding-top: 36px !important; }
   \`;
   document.head.appendChild(style);
   var tb = document.createElement('div');
   tb.id = 'aw-toolbar';
-  tb.innerHTML = '<a href="/">View site</a><a href="/login/change-password">修改密码</a><a class="logout" href="/api/auth/logout">退出登录</a>';
-  document.body.prepend(tb);
+  tb.innerHTML = '<a href="/">View site</a><a href="/login/change-password">\\u4FEE\\u6539\\u5BC6\\u7801</a><a class="logout" href="/api/auth/logout">\\u9000\\u51FA\\u767B\\u5F55</a>';
+  document.body.appendChild(tb);
 })();
 </script>`;
 
@@ -53,10 +51,14 @@ export const onRequest = defineMiddleware(async (context, next) => {
     if (contentType && contentType.includes('text/html')) {
       const html = await response.text();
       const finalHtml = html.includes('</body>') ? html.replace('</body>', toolbarSnippet + '</body>') : html + toolbarSnippet;
+      const newHeaders = new Headers(response.headers);
+      if (!newHeaders.has('content-type') || !newHeaders.get('content-type')?.includes('charset')) {
+        newHeaders.set('content-type', 'text/html; charset=utf-8');
+      }
       return new Response(finalHtml, {
         status: response.status,
         statusText: response.statusText,
-        headers: response.headers,
+        headers: newHeaders,
       });
     }
   }
