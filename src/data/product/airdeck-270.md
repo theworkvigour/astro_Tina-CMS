@@ -1,15 +1,15 @@
 ---
 publishDate: 2025-01-25
-title: Foida AirDeck 270
-sku: FD-AIR-270
+title: AirDeck 270
+sku: AIR-270
 summary: Lightweight 2.7 m inflatable dinghy with a drop-stitch air deck. Stows in a car boot.
 description: A 2.7 m inflatable with a high-pressure drop-stitch air deck. Packs down to a bag that fits in a small car boot, inflates in 10 minutes, planes with a 6 hp outboard.
 image: https://images.unsplash.com/photo-1605281317010-fe5ffe798166?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
 gallery:
   - url: https://images.unsplash.com/photo-1605281317010-fe5ffe798166?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
-    alt: Foida AirDeck 270 — inflated
+    alt: AirDeck 270 — inflated
   - url: https://images.unsplash.com/photo-1525909002-1b05e0c869d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
-    alt: Foida AirDeck 270 — on the water
+    alt: AirDeck 270 — on the water
 category: inflatable
 tags:
   - inflatable
@@ -43,8 +43,8 @@ price:
 inStock: true
 featured: true
 metadata:
-  title: Foida AirDeck 270 — 2.7 m portable inflatable
-  description: The Foida AirDeck 270 is a 2.7 m inflatable with a drop-stitch air deck. 28 kg, packs to a car-boot bag, planes with a 6 hp outboard.
+  title: AirDeck 270 — 2.7 m portable inflatable
+  description: The AirDeck 270 is a 2.7 m inflatable with a drop-stitch air deck. 28 kg, packs to a car-boot bag, planes with a 6 hp outboard.
 ---
 
 ## A dinghy that disappears in a bag

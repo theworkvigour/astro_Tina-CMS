@@ -1,15 +1,15 @@
 ---
 publishDate: 2025-02-10
-title: Foida RIB 450 Patrol
-sku: FD-RIB-450P
+title: RIB 450 Patrol
+sku: RIB-450P
 summary: 4.5 m aluminium-hull patrol RIB. Heavy-duty build, suitable for commercial operators.
 description: The 450 Patrol is a 4.5 m aluminium RIB built for commercial work — dive operators, coastguard auxiliaries, harbour pilots. Reinforced hull, Hypalon tube, custom console.
 image: https://images.unsplash.com/photo-1500627964684-141351970a7f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
 gallery:
   - url: https://images.unsplash.com/photo-1500627964684-141351970a7f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
-    alt: Foida RIB 450 Patrol — at sea
+    alt: RIB 450 Patrol — at sea
   - url: https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
-    alt: Foida RIB 450 Patrol — side view
+    alt: RIB 450 Patrol — side view
 category: rib
 tags:
   - rib
@@ -43,8 +43,8 @@ price:
 inStock: true
 featured: true
 metadata:
-  title: Foida RIB 450 Patrol — 4.5 m commercial RIB
-  description: The Foida RIB 450 Patrol is a 4.5 m commercial-grade aluminium RIB for dive, patrol and harbour-pilot operators. Heavy-duty build, Hypalon tube, custom console.
+  title: RIB 450 Patrol — 4.5 m commercial RIB
+  description: The RIB 450 Patrol is a 4.5 m commercial-grade aluminium RIB for dive, patrol and harbour-pilot operators. Heavy-duty build, Hypalon tube, custom console.
 ---
 
 ## Built for the daily grind

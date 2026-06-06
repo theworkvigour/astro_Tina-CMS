@@ -7,7 +7,7 @@ export default config({
     ? { kind: 'github', repo: 'theworkvigour/astro_Tina-CMS' }
     : { kind: 'local' },
 
-  ui: { brand: { name: 'Foida 管理系统' } },
+  ui: { brand: { name: 'Vectoflare 管理系统' } },
 
   collections: {
     post: collection({
@@ -176,10 +176,10 @@ export default config({
       label: '网站设置 / Site Settings',
       path: 'keystatic/site/',
       schema: {
-        siteName: fields.text({ label: '站点名称 / Site Name', defaultValue: 'Foida' }),
+        siteName: fields.text({ label: '站点名称 / Site Name', defaultValue: 'Vectoflare' }),
         siteTagline: fields.text({ label: '站点副标题 / Tagline' }),
         siteDescription: fields.text({ label: '站点描述 / Default Meta Description', multiline: true }),
-        siteUrl: fields.url({ label: '站点 URL / Site URL (Canonical)', defaultValue: 'https://foida.com' }),
+        siteUrl: fields.url({ label: '站点 URL / Site URL (Canonical)', defaultValue: 'https://vectoflare.com' }),
         defaultOgImage: fields.text({ label: '默认 OG 图片 URL / Default OG Image URL' }),
         googleSiteVerificationId: fields.text({ label: 'Google Search Console 验证码 / Google Verification' }),
         defaultLocale: fields.text({ label: '默认语言区域 / Default Locale', defaultValue: 'en_US' }),
@@ -215,8 +215,8 @@ export default config({
         ),
         twitter: fields.object(
           {
-            handle: fields.text({ label: 'Twitter Handle (e.g. @foida)' }),
-            site: fields.text({ label: 'Twitter Site (e.g. @foida)' }),
+            handle: fields.text({ label: 'Twitter Handle (e.g. @vectoflare)' }),
+            site: fields.text({ label: 'Twitter Site (e.g. @vectoflare)' }),
             cardType: fields.select(
               [
                 { label: 'summary', value: 'summary' },

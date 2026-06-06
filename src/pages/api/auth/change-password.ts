@@ -68,7 +68,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         headers: {
           Authorization: `Bearer ${githubToken}`,
           Accept: 'application/vnd.github.v3+json',
-          'User-Agent': 'foida-auth',
+          'User-Agent': 'vectoflare-auth',
         },
       }
     );
@@ -96,7 +96,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       headers: {
         Authorization: `Bearer ${githubToken}`,
         Accept: 'application/vnd.github.v3+json',
-        'User-Agent': 'foida-auth',
+        'User-Agent': 'vectoflare-auth',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

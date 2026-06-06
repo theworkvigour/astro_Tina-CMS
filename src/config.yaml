@@ -1,6 +1,6 @@
 site:
-  name: Foida
-  site: 'https://foida.com'
+  name: Vectoflare
+  site: 'https://vectoflare.com'
   base: '/'
   trailingSlash: false
 
@@ -9,22 +9,22 @@ site:
 # Default SEO metadata
 metadata:
   title:
-    default: Foida — Modern Solutions for Inflatable & Engineered Products
-    template: '%s — Foida'
-  description: 'Foida designs and manufactures premium inflatable boats, RIBs, and engineered products. Explore our catalog, technical specs, and resources for professionals and enthusiasts.'
+    default: Vectoflare — Modern Solutions for Inflatable & Engineered Products
+    template: '%s — Vectoflare'
+  description: 'Vectoflare designs and manufactures premium inflatable boats, RIBs, and engineered products. Explore our catalog, technical specs, and resources for professionals and enthusiasts.'
   keywords:
-    - Foida
+    - Vectoflare
     - inflatable boat
     - RIB
     - PVC
     - marine
     - engineering
-  author: Foida
+  author: Vectoflare
   robots:
     index: true
     follow: true
   openGraph:
-    site_name: Foida
+    site_name: Vectoflare
     images:
       - url: '~/assets/images/default.png'
         width: 1200
@@ -32,8 +32,8 @@ metadata:
     type: website
     locale: en_US
   twitter:
-    handle: '@foida'
-    site: '@foida'
+    handle: '@vectoflare'
+    site: '@vectoflare'
     cardType: summary_large_image
 
 i18n:

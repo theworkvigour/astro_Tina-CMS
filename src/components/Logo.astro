@@ -1,5 +1,7 @@
 ---
 import { SITE } from 'astrowind:config';
+
+const initial = (SITE?.name || '').charAt(0).toUpperCase() || 'V';
 ---
 
 <a href="/" class="flex items-center gap-2 group" aria-label={`${SITE?.name} home`}>
@@ -7,7 +9,7 @@ import { SITE } from 'astrowind:config';
     class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-sky-500 to-blue-600 text-white font-black text-lg shadow-sm group-hover:shadow-md transition-shadow"
     aria-hidden="true"
   >
-    F
+    {initial}
   </span>
   <span
     class="self-center text-xl md:text-xl font-bold text-gray-900 whitespace-nowrap dark:text-white tracking-tight"

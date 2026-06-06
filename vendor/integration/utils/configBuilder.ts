@@ -259,12 +259,12 @@ const getAppProducts = (config: Config) => {
 };
 
 const getSiteSettings = (config: Config): SiteSettingsConfig => {
-  const siteName = config?.siteSettings?.siteName || config?.site?.name || 'Foida';
+  const siteName = config?.siteSettings?.siteName || config?.site?.name || '';
   const _default: SiteSettingsConfig = {
     siteName,
     siteTagline: '',
     siteDescription: config?.metadata?.description || '',
-    siteUrl: config?.site?.site || 'https://foida.com',
+    siteUrl: config?.site?.site || '',
     defaultOgImage:
       (Array.isArray(config?.metadata?.openGraph?.images) && config?.metadata?.openGraph?.images?.[0]?.url) ||
       '',

@@ -1,8 +1,8 @@
 ---
 publishDate: 2025-03-01
-title: Foida Oars & Pump Set
-sku: FD-ACC-OAR-PUMP
-summary: Pair of 1.6 m aluminium oars and a 5 L high-flow foot pump. Fits all Foida inflatables.
+title: Oars & Pump Set
+sku: ACC-OAR-PUMP
+summary: Pair of 1.6 m aluminium oars and a 5 L high-flow foot pump. Fits all inflatables in the range.
 description: Spare or replacement oars and pump. 1.6 m aluminium oars with plastic blade, 5 L high-flow foot pump with pressure gauge.
 image: https://images.unsplash.com/photo-1500627964684-141351970a7f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
 category: accessory
@@ -20,7 +20,7 @@ specs:
   - label: Pump max pressure
     value: 1.0 bar (with gauge)
   - label: Compatibility
-    value: All Foida inflatables
+    value: All inflatables in the range
 price:
   amount: '180'
   currency: USD
@@ -28,8 +28,8 @@ price:
 inStock: true
 featured: false
 metadata:
-  title: Foida oars and pump set
-  description: Pair of 1.6 m aluminium oars and 5 L foot pump with pressure gauge. Compatible with all Foida inflatables.
+  title: Oars and pump set
+  description: Pair of 1.6 m aluminium oars and 5 L foot pump with pressure gauge. Compatible with all inflatables in the range.
 ---
 
 ## Spare oars and pump

@@ -97,5 +97,5 @@ export const footerData = {
     { ariaLabel: 'RSS', icon: 'tabler:rss', href: getAsset('/rss.xml') },
     { ariaLabel: 'GitHub', icon: 'tabler:brand-github', href: 'https://github.com/theworkvigour' },
   ],
-  footNote: `© ${new Date().getFullYear()} <a class="text-blue-600 underline dark:text-muted" href="/">Foida</a> · All rights reserved.`,
+  footNote: `© ${new Date().getFullYear()} <a class="text-blue-600 underline dark:text-muted" href="/">Vectoflare</a> · All rights reserved.`,
 };
