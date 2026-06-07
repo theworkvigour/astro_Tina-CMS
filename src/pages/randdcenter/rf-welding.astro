@@ -1,0 +1,124 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import { SITE } from 'astrowind:config';
+
+const metadata = {
+  title: `RF Welding Center — R&D Center — ${SITE.name}`,
+  description: `${SITE.name} RF Welding Center: radio-frequency welding technology, ISO 6185 compliant airtight seams, weld-strength testing, custom seam specifications for inflatable boats.`,
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-6 sm:px-6 py-16 sm:py-20 mx-auto max-w-5xl">
+    <a href="/randdcenter" class="text-sm text-gray-500 hover:underline">&larr; Back to R&D Center</a>
+    <div class="mt-4 grid md:grid-cols-5 gap-10">
+      <div class="md:col-span-3">
+        <p class="text-sm font-semibold text-primary uppercase tracking-wider">Lab 03</p>
+        <h1 class="mt-2 text-3xl md:text-4xl font-bold">RF Welding Center</h1>
+        <p class="mt-3 text-lg text-muted">Dielectric bonding technology for welds that hold under pressure</p>
+      </div>
+      <div class="md:col-span-2">
+        <img src="https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?ixlib=rb-4.0.3&auto=format&fit=crop&w=870&q=80" alt="Welding process" class="w-full h-48 object-cover rounded-xl" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <section class="px-6 sm:px-6 pb-12 mx-auto max-w-4xl prose prose-gray dark:prose-invert">
+    <h2>The science behind the seam</h2>
+    <p>
+      An inflatable boat is only as reliable as its seams. A single weak weld can compromise an entire chamber — and at sea, 
+      a chamber failure is not an inconvenience; it is a safety hazard. At {SITE.name}, we have invested in a dedicated 
+      Radio-Frequency (RF) Welding Center that combines industrial-grade dielectric welding presses with rigorous 
+      process control and post-weld testing. Every seam we produce is documented, traceable, and certified to meet or 
+      exceed the requirements of ISO 6185 — the international standard for inflatable craft.
+    </p>
+    <p>
+      RF welding uses high-frequency electromagnetic energy (typically 27.12 MHz) to excite the polar molecules within 
+      PVC or Hypalon-coated fabric, generating heat precisely at the material interface. Unlike hot-air or hot-wedge 
+      welding, RF welding creates a true molecular bond — the two fabric layers fuse into a single homogeneous material 
+      at the weld zone, producing a joint that is as strong as the parent material itself.
+    </p>
+
+    <h2>Welding equipment and process control</h2>
+    <p>Our welding centre is equipped with:</p>
+    <table>
+      <thead><tr><th>Machine</th><th>Power / Capacity</th><th>Application</th></tr></thead>
+      <tbody>
+        <tr><td>Dielectric RF press 1</td><td>15 kW, platen 2000 &times; 600 mm</td><td>Main longitudinal seams, transom-to-tube joints</td></tr>
+        <tr><td>Dielectric RF press 2</td><td>10 kW, platen 1500 &times; 500 mm</td><td>Baffle welds, cone attachments, valve patches</td></tr>
+        <tr><td>CNCcontrolled RF welder</td><td>8 kW, XYtable 2500 &times; 1200 mm</td><td>Curved seams, logo/panel embossing, precision patchwork</td></tr>
+        <tr><td>Hotwedge automatic welder</td><td>Variable temperature, 1.2 m/min max</td><td>Backup method for Hypalon/CSM materials</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Every RF press is equipped with closed-loop temperature and pressure monitoring. Weld parameters — power, 
+      press time, cooling time, electrode pressure — are programmed per material type and recorded in our 
+      Manufacturing Execution System (MES) for full traceability.
+    </p>
+
+    <h2>Weld quality tests — every seam, every boat</h2>
+    <p>Weld integrity is verified through a mandatory four-test protocol:</p>
+    <ol>
+      <li><strong>Visual inspection</strong> — 100 % of seams are visually inspected for burn-through, misalignment, 
+      contamination, or incomplete fusion. Reject rate threshold: 0.5 % of linear metres.</li>
+      <li><strong>Peel test (ISO 2411)</strong> — A 25 mm wide strip is cut from a test coupon welded with each production 
+      batch. Minimum peel force: 120 N/25 mm for PVC 1100 dtex.</li>
+      <li><strong>Air-retention test</strong> — Every completed chamber is pressurised to 1.5 &times; working pressure and held 
+      for 30 minutes. Pressure drop must not exceed 2 %.</li>
+      <li><strong>Thermal cycling test</strong> — Sample coupons are cycled from -20 &deg;C to +60 &deg;C for 50 cycles, 
+      then peel-tested again. Acceptable strength loss: &lt; 10 %.</li>
+    </ol>
+
+    <div class="not-prose my-10 p-6 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
+      <p class="text-sm font-semibold text-gray-500 mb-3 uppercase tracking-wider">Peel Strength Comparison — RF vs Hot-Air Welding (PVC 1100 dtex)</p>
+      <div class="space-y-3">
+        <div class="flex items-center gap-3"><span class="w-24 text-xs font-medium">RF Weld</span><div class="flex-1 h-6 bg-gray-200 dark:bg-gray-700 rounded"><div class="h-full bg-blue-600 rounded" style="width:92%"></div></div><span class="text-xs font-bold w-12 text-right">184 N</span></div>
+        <div class="flex items-center gap-3"><span class="w-24 text-xs font-medium">Hot-Air</span><div class="flex-1 h-6 bg-gray-200 dark:bg-gray-700 rounded"><div class="h-full bg-gray-400 rounded" style="width:65%"></div></div><span class="text-xs font-bold w-12 text-right">130 N</span></div>
+        <div class="flex items-center gap-3"><span class="w-24 text-xs font-medium">ISO 6185 min</span><div class="flex-1 h-6 bg-gray-200 dark:bg-gray-700 rounded"><div class="h-full bg-green-500 rounded" style="width:48%"></div></div><span class="text-xs font-bold w-12 text-right">96 N</span></div>
+      </div>
+      <p class="text-xs text-gray-400 mt-2">RF welding consistently achieves 90-95 % of parent-material strength, well above the ISO 6185 minimum.</p>
+    </div>
+
+    <h2>Professional expertise</h2>
+    <p>
+      Our welding team is led by a senior process engineer with 11 years of experience in dielectric welding of coated 
+      textiles. Each operator completes a 6-month in-house certification programme before being allowed to work on 
+      production seams. Recertification is required annually, including a practical weld test evaluated against our 
+      internal Grade-A standard (peel strength &ge; 160 N/25 mm).
+    </p>
+
+    <h2>Custom welding solutions for unique requirements</h2>
+    <p>
+      We understand that one welding specification does not fit every application. Our RF Welding Center routinely 
+      develops custom seam configurations for clients with special requirements:
+    </p>
+    <ul>
+      <li><strong>Multi-layer reinforcement patches</strong> — for high-wear areas such as rubbing strakes and bow cones, 
+      we develop multi-pass RF welds that integrate a wear-resistant outer layer without compromising flexibility.</li>
+      <li><strong>Conductive or RFopaque seams</strong> — for military or surveillance vessels requiring electromagnetic 
+      shielding, we weld in conductive mesh layers within the seam stack-up.</li>
+      <li><strong>Colourchange panel welding</strong> — dual-colour fabric panels (e.g. orange hull + grey topside) welded 
+      with a concealed overlap to maintain brand aesthetics without a visible join line.</li>
+    </ul>
+
+    <h2>Our commitment to you</h2>
+    <p>
+      Every boat we deliver carries our weld-quality guarantee: if any seam fails in normal service within the warranty 
+      period, we repair or replace the affected chamber at no cost, and a root-cause investigation is performed to 
+      prevent recurrence. This is not simply a warranty — it is a commitment to continuous improvement driven by real-world 
+      operational data.
+    </p>
+    <p>
+      When you choose {SITE.name}, you are choosing seams that are engineered, tested, and documented — not just welded. 
+      That is the difference between a boat that floats and a boat that performs.
+    </p>
+  </section>
+
+  <section class="px-6 sm:px-6 pb-20 mx-auto max-w-4xl text-center">
+    <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-8">
+      <h2 class="text-xl font-bold">Discuss your welding requirements</h2>
+      <p class="mt-2 text-sm text-muted">Custom seam specifications, material compatibility, or process validation.</p>
+      <a href="/contact" class="mt-4 inline-block px-6 py-3 bg-primary text-white font-semibold rounded-md hover:bg-primary/90">Contact our welding team</a>
+    </div>
+  </section>
+</Layout>

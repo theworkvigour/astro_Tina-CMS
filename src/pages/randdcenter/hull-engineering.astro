@@ -1,0 +1,130 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import { SITE } from 'astrowind:config';
+
+const metadata = {
+  title: `Hull Engineering Studio — R&D Center — ${SITE.name}`,
+  description: `${SITE.name} Hull Engineering Studio: CAD design, finite element analysis (FEA), custom HDPE/aluminium/fiberglass hull development. Structural simulation and optimisation for inflatable boats and RIBs.`,
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-6 sm:px-6 py-16 sm:py-20 mx-auto max-w-5xl">
+    <a href="/randdcenter" class="text-sm text-gray-500 hover:underline">&larr; Back to R&D Center</a>
+    <div class="mt-4 grid md:grid-cols-5 gap-10">
+      <div class="md:col-span-3">
+        <p class="text-sm font-semibold text-primary uppercase tracking-wider">Lab 02</p>
+        <h1 class="mt-2 text-3xl md:text-4xl font-bold">Hull Engineering Studio</h1>
+        <p class="mt-3 text-lg text-muted">Digital simulation, structural intelligence, custom hull design</p>
+      </div>
+      <div class="md:col-span-2">
+        <img src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&auto=format&fit=crop&w=870&q=80" alt="Engineering design workstation" class="w-full h-48 object-cover rounded-xl" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <section class="px-6 sm:px-6 pb-12 mx-auto max-w-4xl prose prose-gray dark:prose-invert">
+    <h2>Where strength meets hydrodynamics</h2>
+    <p>
+      The hull is the backbone of any RIB or inflatable boat. It must be light enough to plane efficiently, strong enough 
+      to absorb impact loads, and dimensionally stable across a wide temperature range. At {SITE.name}, our Hull 
+      Engineering Studio combines advanced CAD modelling, finite element analysis (FEA), and decades of practical 
+      naval-architecture experience to deliver hulls that are optimised for their intended mission — not generic shapes 
+      adapted from a catalogue.
+    </p>
+    <p>
+      We work with three primary hull materials — rotationally moulded HDPE, welded marine-grade aluminium, and hand-laid 
+      fibreglass — and have the engineering capability to design, simulate, and validate each one in-house.
+    </p>
+
+    <h2>Design tools and standards</h2>
+    <p>Our digital engineering environment includes:</p>
+    <table>
+      <thead><tr><th>Capability</th><th>Software / Tool</th><th>Application</th></tr></thead>
+      <tbody>
+        <tr><td>3D parametric modelling</td><td>SolidWorks Professional</td><td>Hull surface, stringer system, engine bracket, deck layout</td></tr>
+        <tr><td>Finite element analysis</td><td>ANSYS Mechanical &amp; LS-DYNA</td><td>Stress mapping, modal analysis, crash/impact simulation</td></tr>
+        <tr><td>Computational fluid dynamics</td><td>Ansys Fluent / Star-CCM+</td><td>Hydrodynamic drag prediction, trim optimisation</td></tr>
+        <tr><td>Laminate engineering</td><td>ESAComp / CADEC</td><td>Fibreglass layer stacking, core selection, weight estimation</td></tr>
+        <tr><td>Mould flow simulation</td><td>Moldex3D</td><td>Rotomoulding wall-thickness prediction</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Our engineering workflow</h2>
+    <p>Every hull design, whether it is a standard model or a fully custom project, follows a rigorous five-stage process:</p>
+    <ol>
+      <li><strong>Concept &amp; requirements gathering</strong> — We meet with you to define payload, speed envelope, sea-state capability, 
+      towing requirements, and any special mission equipment (deck hatches, console positions, fuel-tank integration).</li>
+      <li><strong>3D surfacing &amp; hydrostatic calculation</strong> — The hull form is modelled in SolidWorks and checked for 
+      hydrostatic stability (GM, righting arm) using built-in analysis tools.</li>
+      <li><strong>Structural FEA</strong> — Load cases are defined: static (crew + gear), dynamic (planing impacts at 5g), and 
+      slamming (dropping from a wave crest at 3 m/s). Stress contours are reviewed; safety factor &ge; 2.5 is mandatory.</li>
+      <li><strong>CFD drag optimisation</strong> — The hull is simulated at three loading conditions and five speeds. 
+      Wetted surface area, trim angle, and residual resistance are iteratively reduced.</li>
+      <li><strong>Design review &amp; release</strong> — The complete engineering package (3D model, FEA report, CFD report, 
+      weight estimate, ply book) is reviewed by our senior naval architect before release to the prototype workshop.</li>
+    </ol>
+
+    <div class="not-prose my-10 p-6 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
+      <p class="text-sm font-semibold text-gray-500 mb-3 uppercase tracking-wider">FEA Stress Distribution — RIB 450 Patrol Hull (Aluminium 5083)</p>
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div class="p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950">
+          <span class="block text-2xl font-bold text-blue-600">2.8 : 1</span>
+          <span class="text-gray-500">Safety factor at max payload</span>
+        </div>
+        <div class="p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950">
+          <span class="block text-2xl font-bold text-blue-600">15.2 %</span>
+          <span class="text-gray-500">Drag reduction vs previous generation</span>
+        </div>
+        <div class="p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950">
+          <span class="block text-2xl font-bold text-blue-600">87 kN/m&sup2;</span>
+          <span class="text-gray-500">Peak slamming pressure (design limit)</span>
+        </div>
+        <div class="p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950">
+          <span class="block text-2xl font-bold text-blue-600">18 000 h</span>
+          <span class="text-gray-500">Cumulative FEA runtime in 2025</span>
+        </div>
+      </div>
+    </div>
+
+    <h2>Customisation: your hull, your rules</h2>
+    <p>
+      No two operators have identical requirements. A harbour-patrol RIB needs a shallow-V hull for stability at low speed; 
+      a fast-interception craft needs a deep-V with spray rails; a dive-support boat needs a wide beam and a low transom. 
+      We do not force your application into a pre-existing hull shape. We design from your specification upward.
+    </p>
+    <p>Examples of recent custom hull engineering projects:</p>
+    <ul>
+      <li>A stretched 6.8 m HDPE hull for a Caribbean tour operator, with a reinforced bow for beach landings (+15 % bottom thickness).</li>
+      <li>A lightweight aluminium 7.2 m RIB for a coast guard, with integrated fuel-tank baffles and equipment-locker stiffeners.</li>
+      <li>A fibreglass 5.5 m dive boat with a cut-down transom and twin battery boxes, designed for easy snorkeller reboarding.</li>
+    </ul>
+
+    <h2>Our engineers</h2>
+    <p>
+      The studio is led by a senior naval architect with 14 years of experience in high-speed craft design, supported by 
+      two mechanical engineers specialised in FEA and CFD. All three hold advanced degrees in marine engineering or 
+      naval architecture from internationally recognised universities. The team publishes regularly in industry journals 
+      and presents at conferences such as the International Conference on High-Performance Marine Vehicles.
+    </p>
+
+    <h2>Partner with us on your next hull</h2>
+    <p>
+      From the first concept sketch to the final stress report, our Hull Engineering Studio is your partner in creating 
+      a boat that is not just built — but engineered. We invest the simulation hours upfront so that every weld, every 
+      laminate layer, and every curve of the hull is there for a reason.
+    </p>
+    <p>
+      Whether you need a minor modification to an existing model or a completely clean-sheet design, we are ready to 
+      discuss your requirements.
+    </p>
+  </section>
+
+  <section class="px-6 sm:px-6 pb-20 mx-auto max-w-4xl text-center">
+    <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-8">
+      <h2 class="text-xl font-bold">Start your hull design consultation</h2>
+      <p class="mt-2 text-sm text-muted">Tell us about your mission profile and we will propose an engineering path.</p>
+      <a href="/contact" class="mt-4 inline-block px-6 py-3 bg-primary text-white font-semibold rounded-md hover:bg-primary/90">Contact our engineering team</a>
+    </div>
+  </section>
+</Layout>

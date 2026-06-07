@@ -1,0 +1,126 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import { SITE } from 'astrowind:config';
+
+const metadata = {
+  title: `Prototype Workshop — R&D Center — ${SITE.name}`,
+  description: `${SITE.name} Prototype Workshop: full-scale prototyping, rigging, fitting, 20-hour sea trial programme. Custom configuration and validation for inflatable boats and RIBs before production.`,
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-6 sm:px-6 py-16 sm:py-20 mx-auto max-w-5xl">
+    <a href="/randdcenter" class="text-sm text-gray-500 hover:underline">&larr; Back to R&D Center</a>
+    <div class="mt-4 grid md:grid-cols-5 gap-10">
+      <div class="md:col-span-3">
+        <p class="text-sm font-semibold text-primary uppercase tracking-wider">Lab 05</p>
+        <h1 class="mt-2 text-3xl md:text-4xl font-bold">Prototype Workshop</h1>
+        <p class="mt-3 text-lg text-muted">From CAD model to sea-ready boat — built, fitted, and proven</p>
+      </div>
+      <div class="md:col-span-2">
+        <img src="https://images.unsplash.com/photo-1525909002-1b05e0c869d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=870&q=80" alt="Boat workshop" class="w-full h-48 object-cover rounded-xl" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <section class="px-6 sm:px-6 pb-12 mx-auto max-w-4xl prose prose-gray dark:prose-invert">
+    <h2>Where design becomes reality</h2>
+    <p>
+      A CAD model, no matter how detailed, cannot reveal how a boat will actually handle until it meets the water. 
+      That is why our Prototype Workshop is designed to translate engineering data into a physical, seagoing craft 
+      as quickly and accurately as possible. Every new {SITE.name} model — and every significant custom build — 
+      passes through this workshop before the production tooling is committed.
+    </p>
+    <p>
+      The workshop is fully equipped for simultaneous fabrication of hull, tubes, and rigging. This parallel-workflow 
+      approach cuts prototype lead time to 8-12 weeks from engineering release, compared to the industry norm of 
+      16-20 weeks. When your application demands a specialised solution, we can move from concept to on-water 
+      validation in under three months.
+    </p>
+
+    <h2>Workshop capabilities</h2>
+    <table>
+      <thead><tr><th>Workstation</th><th>Equipment</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>Hull fabrication</td><td>Rotational moulding oven (HDPE), TIG welding bay (aluminium), hand-lay-up moulds (fibreglass)</td><td>Full-scale hull production in all three material types</td></tr>
+        <tr><td>Tube assembly</td><td>RF welding press, hot-air tacking station, inflation test jig</td><td>Fabrication of full-size tube assemblies with all baffles, cones, and valves</td></tr>
+        <tr><td>Rigging &amp; fitting</td><td>Engine hoist (500 kg), console mock-up frame, hydraulic hose crimper, electrical harness board</td><td>Complete outfitting: engine, steering, controls, fuel system, electronics, seating</td></tr>
+        <tr><td>Instrumentation bay</td><td>GPS speed sensor, fuel-flow meter, accelerometers, thermocouple array, data-logger</td><td>Sea-trial instrumentation installation and calibration</td></tr>
+      </tbody>
+    </table>
+
+    <h2>The prototype journey — step by step</h2>
+    <ol>
+      <li><strong>Engineering handover</strong> — The design package (3D model, FEA report, bill of materials, layup schedule) 
+      is formally reviewed by the workshop lead and the project engineer. Any manufacturing concerns are flagged and resolved 
+      before cutting begins.</li>
+      <li><strong>Hull production</strong> — The hull is built according to the engineering specification. For HDPE: the 
+      rotational moulding programme is loaded from the Moldex3D simulation. For aluminium: the CNC-cut plates are welded 
+      in the TIG bay following the approved weld map. For fibreglass: the ply book is followed layer by layer.</li>
+      <li><strong>Tube fabrication</strong> — Fabric is cut using CNC-pattern templates, then RF-welded into full-size 
+      chambers. Each chamber is inflated to test pressure and left for 24 h for initial stabilisation.</li>
+      <li><strong>Assembly &amp; rigging</strong> — Hull and tubes are mated. The engine is hung, steering and controls 
+      are connected, fuel system is installed, and all electrical circuits are wired and verified.</li>
+      <li><strong>Static tests</strong> — Before the boat touches water, it undergoes: buoyancy check (full load + 30 % reserve), 
+      fuel system pressure test, steering system full-lock cycle test, electrical earth-bond continuity test.</li>
+      <li><strong>Sea trial programme</strong> — 20 hours of in-water testing, detailed below.</li>
+      <li><strong>Prototype review</strong> — A formal sign-off meeting is held with engineering, production, and quality 
+      teams. Any required design changes are documented and incorporated into the production release.</li>
+    </ol>
+
+    <div class="not-prose my-10 p-6 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
+      <p class="text-sm font-semibold text-gray-500 mb-3 uppercase tracking-wider">20-Hour Sea Trial Programme — Test Schedule</p>
+      <div class="space-y-2 text-sm">
+        <div class="flex items-center gap-3 p-2 rounded bg-white dark:bg-gray-950"><span class="w-12 text-xs font-bold text-blue-600">2 h</span><span class="flex-1">Harbour manoeuvring — low-speed handling, reverse, fendering check</span></div>
+        <div class="flex items-center gap-3 p-2 rounded bg-white dark:bg-gray-950"><span class="w-12 text-xs font-bold text-blue-600">4 h</span><span class="flex-1">Speed trial — GPS-verified top speed, cruise speed, fuel consumption at 3 RPM points</span></div>
+        <div class="flex items-center gap-3 p-2 rounded bg-white dark:bg-gray-950"><span class="w-12 text-xs font-bold text-blue-600">3 h</span><span class="flex-1">Turning test — tactical diameter, advance, and transfer at 20 kn, port and starboard</span></div>
+        <div class="flex items-center gap-3 p-2 rounded bg-white dark:bg-gray-950"><span class="w-12 text-xs font-bold text-blue-600">3 h</span><span class="flex-1">Slamming test — repeated runs through 0.5–1.0 m chop; accelerometer on helm seat base</span></div>
+        <div class="flex items-center gap-3 p-2 rounded bg-white dark:bg-gray-950"><span class="w-12 text-xs font-bold text-blue-600">3 h</span><span class="flex-1">Stability test — static heel angle with 4 crew + gear to starboard, offset load</span></div>
+        <div class="flex items-center gap-3 p-2 rounded bg-white dark:bg-gray-950"><span class="w-12 text-xs font-bold text-blue-600">3 h</span><span class="flex-1">Endurance run — 3 h continuous at cruise speed; temperature monitoring (engine, fuel, electrical)</span></div>
+        <div class="flex items-center gap-3 p-2 rounded bg-white dark:bg-gray-950"><span class="w-12 text-xs font-bold text-blue-600">2 h</span><span class="flex-1">Final inspection — post-trial inspection of all systems, tighten/check all fasteners, document findings</span></div>
+      </div>
+    </div>
+
+    <h2>Custom prototyping for unique applications</h2>
+    <p>
+      The Prototype Workshop is where we solve the problems that standard production boats cannot address. Recent 
+      examples include:
+    </p>
+    <ul>
+      <li>A 7.8 m RIB for a search-and-rescue organisation, requiring a custom cabin structure with roll-over protection, 
+      integrated stretcher mounts, and a bow-mounted sonar pod — all prototyped, fitted, and tested at our facility.</li>
+      <li>A 5.2 m inflatable for a hydrographic survey contractor, with a cut-down transom, removable instrument mast, 
+      and through-hull transducer pockets designed to minimise flow disturbance.</li>
+      <li>An electric-drive 4.5 m tender for a superyacht, where the prototype was used to validate range, charging 
+      infrastructure, and noise levels before the client committed to a fleet of four.</li>
+    </ul>
+
+    <h2>Our prototyping team</h2>
+    <p>
+      The workshop is staffed by eight multi-skilled marine technicians, each cross-trained in at least two of the 
+      three core disciplines (hull, tube, rigging). The team lead is a master boatbuilder with 16 years of experience 
+      spanning custom one-off builds to production series. Every prototype is assigned a dedicated project engineer 
+      who serves as the single point of contact for the client throughout the build and trial process.
+    </p>
+
+    <h2>Client involvement</h2>
+    <p>
+      We actively encourage our clients to attend key milestones during the prototype build — particularly the initial 
+      fit-out review and the sea trial. Your operational feedback during these stages is invaluable in fine-tuning 
+      the boat before it enters production. We do not build in a vacuum; we build in partnership with you.
+    </p>
+    <p>
+      The 20-hour sea trial is also an opportunity for your team to familiarise themselves with the boat's handling, 
+      systems layout, and maintenance requirements, ensuring a smooth transition to service when the production 
+      boats are delivered.
+    </p>
+  </section>
+
+  <section class="px-6 sm:px-6 pb-20 mx-auto max-w-4xl text-center">
+    <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-8">
+      <h2 class="text-xl font-bold">Start your prototype project</h2>
+      <p class="mt-2 text-sm text-muted">Tell us about the boat you need and we will propose a prototype development plan.</p>
+      <a href="/contact" class="mt-4 inline-block px-6 py-3 bg-primary text-white font-semibold rounded-md hover:bg-primary/90">Contact our prototyping team</a>
+    </div>
+  </section>
+</Layout>
