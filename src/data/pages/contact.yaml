@@ -516,6 +516,14 @@ contact_form:
     - { value: 'ZM', label: 'Zambia' }
     - { value: 'ZW', label: 'Zimbabwe' }
 
+map:
+  title: Our Location
+  subtitle: Visit us at our headquarters
+  address: Coastal industrial park, building 4, EU time zone
+  latitude: ''
+  longitude: ''
+  zoom: 15
+
 features2_other_ways:
   title: Other ways to reach us
   columns: 3

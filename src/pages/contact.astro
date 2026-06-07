@@ -4,6 +4,7 @@ import Layout from '~/layouts/PageLayout.astro';
 import HeroText from '~/components/widgets/HeroText.astro';
 import ContactUs from '~/components/widgets/Contact.astro';
 import Features2 from '~/components/widgets/Features2.astro';
+import Map from '~/components/widgets/Map.astro';
 import { SITE } from 'astrowind:config';
 
 import data from '~/data/pages/contact.yaml';
@@ -58,5 +59,15 @@ const metadata = {
     title={other.title}
     columns={other.columns}
     items={other.items}
+  />
+
+  <Map
+    title={data.map?.title}
+    subtitle={data.map?.subtitle}
+    address={data.map?.address}
+    embedUrl={data.map?.embedUrl}
+    latitude={data.map?.latitude}
+    longitude={data.map?.longitude}
+    zoom={data.map?.zoom}
   />
 </Layout>

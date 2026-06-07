@@ -17,7 +17,8 @@ export interface SectionSpec {
     | 'contact'
     | 'cta'
     | 'featured_products'
-    | 'blog_latest';
+    | 'blog_latest'
+    | 'map';
   label: string;
 }
 
@@ -104,6 +105,7 @@ export const PAGES: PageSpec[] = [
       { key: 'hero_text', type: 'hero_text', label: 'Top HeroText' },
       { key: 'contact_form', type: 'contact', label: 'Contact Form' },
       { key: 'features2_other_ways', type: 'features2', label: 'Other ways to reach us' },
+      { key: 'map', type: 'map', label: 'Google Maps Location' },
     ],
   },
 ];

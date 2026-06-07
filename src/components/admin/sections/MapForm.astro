@@ -1,0 +1,44 @@
+---
+export interface Props {
+  prefix: string;
+  data: Record<string, any>;
+}
+
+const { prefix, data } = Astro.props;
+---
+
+<div data-section-type="map" data-prefix={prefix}>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
+      <input name="title" value={data.title || ''} class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Subtitle</label>
+      <input name="subtitle" value={data.subtitle || ''} class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Address</label>
+      <input name="address" value={data.address || ''} class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" placeholder="123 Marine Drive, Suite 4" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Latitude</label>
+      <input name="latitude" value={data.latitude || ''} class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" placeholder="40.7128" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Longitude</label>
+      <input name="longitude" value={data.longitude || ''} class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" placeholder="-74.0060" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Zoom Level</label>
+      <input name="zoom" type="number" value={data.zoom || 15} class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm" min="1" max="20" />
+    </div>
+  </div>
+  <div class="mt-4">
+    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+      Google Maps Embed URL <span class="text-gray-400 font-normal">(optional - replaces lat/lng)</span>
+    </label>
+    <input name="embedUrl" value={data.embedUrl || ''} class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm font-mono" placeholder="https://www.google.com/maps/embed?pb=..." />
+    <p class="mt-1 text-xs text-gray-400">Go to Google Maps → Share → Embed a map → copy iframe src URL</p>
+  </div>
+</div>

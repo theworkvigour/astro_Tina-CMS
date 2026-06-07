@@ -23,6 +23,7 @@ import ContactFormSection from '~/components/admin/sections/ContactFormSection.a
 import CtaForm from '~/components/admin/sections/CtaForm.astro';
 import FeaturedProductsForm from '~/components/admin/sections/FeaturedProductsForm.astro';
 import BlogLatestForm from '~/components/admin/sections/BlogLatestForm.astro';
+import MapForm from '~/components/admin/sections/MapForm.astro';
 
 const session = Astro.cookies.get('ks-admin-session')?.value;
 const verified = session ? verifySessionToken(session) : null;
@@ -95,6 +96,7 @@ try {
             {section.type === 'cta' && <CtaForm prefix={prefix} data={sectionData} />}
             {section.type === 'featured_products' && <FeaturedProductsForm prefix={prefix} data={sectionData} />}
             {section.type === 'blog_latest' && <BlogLatestForm prefix={prefix} data={sectionData} />}
+            {section.type === 'map' && <MapForm prefix={prefix} data={sectionData} />}
           </div>
         </details>
       );
@@ -399,6 +401,14 @@ try {
         } else if (type === 'blog_latest') {
           if (d.title) out.title = d.title;
           if (d.information) out.information = d.information;
+        } else if (type === 'map') {
+          if (d.title) out.title = d.title;
+          if (d.subtitle) out.subtitle = d.subtitle;
+          if (d.address) out.address = d.address;
+          if (d.embedUrl) out.embedUrl = d.embedUrl;
+          if (d.latitude) out.latitude = d.latitude;
+          if (d.longitude) out.longitude = d.longitude;
+          if (d.zoom) out.zoom = Number(d.zoom);
         }
         return out;
       }
