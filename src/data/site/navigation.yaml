@@ -43,6 +43,8 @@ header:
           href: /contact
         - text: About
           href: /about
+        - text: R&D Center
+          href: /randdcenter
   actions:
     - text: Get a quote
       href: /contact
