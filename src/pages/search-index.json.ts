@@ -4,7 +4,7 @@ import yaml from 'js-yaml';
 
 export const prerender = true;
 
-const SITE = 'https://astrcms.theworkvigo.workers.dev';
+const SITE = '';
 
 function stripHtml(html: string): string {
   return String(html || '')

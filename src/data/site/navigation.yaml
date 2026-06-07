@@ -6,8 +6,6 @@ header:
       href: /help
     - text: Join Us
       href: /join
-    - text: Sign In
-      href: /login
   links:
     - text: Products
       links:
@@ -46,6 +44,9 @@ header:
         - text: About
           href: /about
   actions:
+    - text: Sign in
+      href: /login
+      variant: primary
     - text: Get a quote
       href: /contact
       variant: primary
