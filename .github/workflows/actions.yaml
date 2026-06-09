@@ -10,7 +10,7 @@ env:
   NODE_VERSION: '22'
 
 jobs:
-  check:
+  check-astro:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,11 +19,11 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: yarn
       - run: yarn install --immutable
-      - run: yarn run check
+      - run: yarn run check:astro
 
   build-and-deploy:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    needs: [check]
+    needs: [check-astro]
     strategy:
       fail-fast: false
       matrix:
