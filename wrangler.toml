@@ -9,3 +9,11 @@ binding = "ASSETS"
 
 [vars]
 NODE_VERSION = "22"
+# Forces Keystatic API to use dev fallback (skip OAuth check) when no GitHub App is configured
+NODE_ENV = "development"
+# SESSION_SECRET must be set via Cloudflare Dashboard → Worker → Variables → Secrets
+
+# When ready for production Keystatic OAuth, uncomment:
+# KEYSTATIC_GITHUB_CLIENT_ID = ""
+# KEYSTATIC_GITHUB_CLIENT_SECRET = ""
+# KEYSTATIC_SECRET = ""
