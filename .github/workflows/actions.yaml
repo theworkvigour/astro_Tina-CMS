@@ -47,9 +47,12 @@ jobs:
         run: |
           set +e
           cd dist/server
-          cat > wrangler.ci.json << 'EOF'
-          {"main":"entry.mjs","no_bundle":true,"assets":{"directory":"../client","binding":"ASSETS"},"compatibility_date":"2026-06-05","compatibility_flags":["nodejs_compat"],"kv_namespaces":[{"binding":"SESSION"}],"images":{"binding":"IMAGES"},"vars":{"NODE_ENV":"development"}}
-          EOF
+          # strip absolute Windows paths from generated wrangler.json
+          node -e "
+            const c = require('./wrangler.json');
+            delete c.configPath; delete c.userConfigPath;
+            require('fs').writeFileSync('wrangler.ci.json', JSON.stringify(c));
+          "
           yarn wrangler deploy --config wrangler.ci.json --name vectoflare-${{ matrix.locale }} > /tmp/deploy-${{ matrix.locale }}.log 2>&1
           rc=$?; cat /tmp/deploy-${{ matrix.locale }}.log; exit $rc
         env:
