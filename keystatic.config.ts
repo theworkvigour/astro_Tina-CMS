@@ -11,6 +11,7 @@ const AVAILABLE_LOCALES = {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createMultilingualSchema = (fieldSchema: Record<string, any>): Record<string, any> => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const result: Record<string, any> = {};
   for (const [code, label] of Object.entries(AVAILABLE_LOCALES)) {
     result[code] = fields.object(fieldSchema, { label });

@@ -13,6 +13,7 @@ import yamlData from '~/data/pages/pricing.yaml';
 
 const locale = process.env.SITE_LOCALE || 'en';
 const entry = await getEntry('pricing', 'index');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ksData = (entry?.data as any)?.[locale] || (entry?.data as any)?.['en'] || {};
 const data = Object.keys(ksData).length > 0 ? ksData : yamlData;
 

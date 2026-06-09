@@ -14,6 +14,7 @@ import { generateChallenge, buildCookieValue, cookieName, cookieTtlSeconds } fro
 
 const locale = process.env.SITE_LOCALE || 'en';
 const entry = await getEntry('contact', 'index');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ksData = (entry?.data as any)?.[locale] || (entry?.data as any)?.['en'] || {};
 const data = Object.keys(ksData).length > 0 ? ksData : yamlData;
 
@@ -32,6 +33,7 @@ Astro.cookies.set(cookieName(), cookie.value, {
   maxAge: cookieTtlSeconds(),
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const brandingData: any = branding ?? {};
 const resolvedEmailTo = (form.email_to && String(form.email_to).trim()) || (brandingData.contact_email_to as string) || '';
 

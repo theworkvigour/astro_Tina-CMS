@@ -241,6 +241,7 @@ const mapSection = z.object({
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createLocaleSchema = <T extends z.ZodRawShape>(sectionSchemas: T): z.ZodObject<any> => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const localeMap: Record<string, z.ZodObject<any>> = {};
   for (const locale of AVAILABLE_LOCALES) {
     localeMap[locale] = z.object(sectionSchemas).partial();
