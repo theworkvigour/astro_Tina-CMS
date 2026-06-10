@@ -1,0 +1,1760 @@
+# ver: 1
+# Unified country data with translations for all 6 locales
+# value: canonical English name (used as form submission value)
+# tel: international dialing code
+countries:
+  - value: Afghanistan
+    label:
+      en: Afghanistan
+      zh: 阿富汗
+      fr: Afghanistan
+      de: Afghanistan
+      es: Afganistán
+      pt: Afeganistão
+    tel: +93
+  - value: Albania
+    label:
+      en: Albania
+      zh: 阿尔巴尼亚
+      fr: Albanie
+      de: Albanien
+      es: Albania
+      pt: Albânia
+    tel: +355
+  - value: Algeria
+    label:
+      en: Algeria
+      zh: 阿尔及利亚
+      fr: Algérie
+      de: Algerien
+      es: Argelia
+      pt: Argélia
+    tel: +213
+  - value: Andorra
+    label:
+      en: Andorra
+      zh: 安道尔
+      fr: Andorre
+      de: Andorra
+      es: Andorra
+      pt: Andorra
+    tel: +376
+  - value: Angola
+    label:
+      en: Angola
+      zh: 安哥拉
+      fr: Angola
+      de: Angola
+      es: Angola
+      pt: Angola
+    tel: +244
+  - value: Antigua and Barbuda
+    label:
+      en: Antigua and Barbuda
+      zh: 安提瓜和巴布达
+      fr: Antigua-et-Barbuda
+      de: Antigua und Barbuda
+      es: Antigua y Barbuda
+      pt: Antígua e Barbuda
+    tel: +1-268
+  - value: Argentina
+    label:
+      en: Argentina
+      zh: 阿根廷
+      fr: Argentine
+      de: Argentinien
+      es: Argentina
+      pt: Argentina
+    tel: +54
+  - value: Armenia
+    label:
+      en: Armenia
+      zh: 亚美尼亚
+      fr: Arménie
+      de: Armenien
+      es: Armenia
+      pt: Armênia
+    tel: +374
+  - value: Australia
+    label:
+      en: Australia
+      zh: 澳大利亚
+      fr: Australie
+      de: Australien
+      es: Australia
+      pt: Austrália
+    tel: +61
+  - value: Austria
+    label:
+      en: Austria
+      zh: 奥地利
+      fr: Autriche
+      de: Österreich
+      es: Austria
+      pt: Áustria
+    tel: +43
+  - value: Azerbaijan
+    label:
+      en: Azerbaijan
+      zh: 阿塞拜疆
+      fr: Azerbaïdjan
+      de: Aserbaidschan
+      es: Azerbaiyán
+      pt: Azerbaijão
+    tel: +994
+  - value: Bahamas
+    label:
+      en: Bahamas
+      zh: 巴哈马
+      fr: Bahamas
+      de: Bahamas
+      es: Bahamas
+      pt: Bahamas
+    tel: +1-242
+  - value: Bahrain
+    label:
+      en: Bahrain
+      zh: 巴林
+      fr: Bahreïn
+      de: Bahrain
+      es: Baréin
+      pt: Bahrein
+    tel: +973
+  - value: Bangladesh
+    label:
+      en: Bangladesh
+      zh: 孟加拉国
+      fr: Bangladesh
+      de: Bangladesch
+      es: Bangladesh
+      pt: Bangladesh
+    tel: +880
+  - value: Barbados
+    label:
+      en: Barbados
+      zh: 巴巴多斯
+      fr: Barbade
+      de: Barbados
+      es: Barbados
+      pt: Barbados
+    tel: +1-246
+  - value: Belarus
+    label:
+      en: Belarus
+      zh: 白俄罗斯
+      fr: Biélorussie
+      de: Belarus
+      es: Bielorrusia
+      pt: Bielorrússia
+    tel: +375
+  - value: Belgium
+    label:
+      en: Belgium
+      zh: 比利时
+      fr: Belgique
+      de: Belgien
+      es: Bélgica
+      pt: Bélgica
+    tel: +32
+  - value: Belize
+    label:
+      en: Belize
+      zh: 伯利兹
+      fr: Belize
+      de: Belize
+      es: Belice
+      pt: Belize
+    tel: +501
+  - value: Benin
+    label:
+      en: Benin
+      zh: 贝宁
+      fr: Bénin
+      de: Benin
+      es: Benín
+      pt: Benim
+    tel: +229
+  - value: Bhutan
+    label:
+      en: Bhutan
+      zh: 不丹
+      fr: Bhoutan
+      de: Bhutan
+      es: Bután
+      pt: Butão
+    tel: +975
+  - value: Bolivia
+    label:
+      en: Bolivia
+      zh: 玻利维亚
+      fr: Bolivie
+      de: Bolivien
+      es: Bolivia
+      pt: Bolívia
+    tel: +591
+  - value: Bosnia and Herzegovina
+    label:
+      en: Bosnia and Herzegovina
+      zh: 波斯尼亚和黑塞哥维那
+      fr: Bosnie-Herzégovine
+      de: Bosnien und Herzegowina
+      es: Bosnia y Herzegovina
+      pt: Bósnia e Herzegovina
+    tel: +387
+  - value: Botswana
+    label:
+      en: Botswana
+      zh: 博茨瓦纳
+      fr: Botswana
+      de: Botsuana
+      es: Botsuana
+      pt: Botsuana
+    tel: +267
+  - value: Brazil
+    label:
+      en: Brazil
+      zh: 巴西
+      fr: Brésil
+      de: Brasilien
+      es: Brasil
+      pt: Brasil
+    tel: +55
+  - value: Brunei
+    label:
+      en: Brunei
+      zh: 文莱
+      fr: Brunei
+      de: Brunei
+      es: Brunéi
+      pt: Brunei
+    tel: +673
+  - value: Bulgaria
+    label:
+      en: Bulgaria
+      zh: 保加利亚
+      fr: Bulgarie
+      de: Bulgarien
+      es: Bulgaria
+      pt: Bulgária
+    tel: +359
+  - value: Burkina Faso
+    label:
+      en: Burkina Faso
+      zh: 布基纳法索
+      fr: Burkina Faso
+      de: Burkina Faso
+      es: Burkina Faso
+      pt: Burquina Faso
+    tel: +226
+  - value: Burundi
+    label:
+      en: Burundi
+      zh: 布隆迪
+      fr: Burundi
+      de: Burundi
+      es: Burundi
+      pt: Burundi
+    tel: +257
+  - value: Cabo Verde
+    label:
+      en: Cabo Verde
+      zh: 佛得角
+      fr: Cap-Vert
+      de: Kap Verde
+      es: Cabo Verde
+      pt: Cabo Verde
+    tel: +238
+  - value: Cambodia
+    label:
+      en: Cambodia
+      zh: 柬埔寨
+      fr: Cambodge
+      de: Kambodscha
+      es: Camboya
+      pt: Camboja
+    tel: +855
+  - value: Cameroon
+    label:
+      en: Cameroon
+      zh: 喀麦隆
+      fr: Cameroun
+      de: Kamerun
+      es: Camerún
+      pt: Camarões
+    tel: +237
+  - value: Canada
+    label:
+      en: Canada
+      zh: 加拿大
+      fr: Canada
+      de: Kanada
+      es: Canadá
+      pt: Canadá
+    tel: +1
+  - value: Central African Republic
+    label:
+      en: Central African Republic
+      zh: 中非共和国
+      fr: République centrafricaine
+      de: Zentralafrikanische Republik
+      es: República Centroafricana
+      pt: República Centro-Africana
+    tel: +236
+  - value: Chad
+    label:
+      en: Chad
+      zh: 乍得
+      fr: Tchad
+      de: Tschad
+      es: Chad
+      pt: Chade
+    tel: +235
+  - value: Chile
+    label:
+      en: Chile
+      zh: 智利
+      fr: Chili
+      de: Chile
+      es: Chile
+      pt: Chile
+    tel: +56
+  - value: China
+    label:
+      en: China
+      zh: 中国
+      fr: Chine
+      de: China
+      es: China
+      pt: China
+    tel: +86
+  - value: Colombia
+    label:
+      en: Colombia
+      zh: 哥伦比亚
+      fr: Colombie
+      de: Kolumbien
+      es: Colombia
+      pt: Colômbia
+    tel: +57
+  - value: Comoros
+    label:
+      en: Comoros
+      zh: 科摩罗
+      fr: Comores
+      de: Komoren
+      es: Comoras
+      pt: Comores
+    tel: +269
+  - value: Congo
+    label:
+      en: Congo
+      zh: 刚果
+      fr: Congo
+      de: Kongo
+      es: Congo
+      pt: Congo
+    tel: +242
+  - value: Costa Rica
+    label:
+      en: Costa Rica
+      zh: 哥斯达黎加
+      fr: Costa Rica
+      de: Costa Rica
+      es: Costa Rica
+      pt: Costa Rica
+    tel: +506
+  - value: Côte d'Ivoire
+    label:
+      en: Côte d'Ivoire
+      zh: 科特迪瓦
+      fr: Côte d'Ivoire
+      de: Elfenbeinküste
+      es: Costa de Marfil
+      pt: Costa do Marfim
+    tel: +225
+  - value: Croatia
+    label:
+      en: Croatia
+      zh: 克罗地亚
+      fr: Croatie
+      de: Kroatien
+      es: Croacia
+      pt: Croácia
+    tel: +385
+  - value: Cuba
+    label:
+      en: Cuba
+      zh: 古巴
+      fr: Cuba
+      de: Kuba
+      es: Cuba
+      pt: Cuba
+    tel: +53
+  - value: Cyprus
+    label:
+      en: Cyprus
+      zh: 塞浦路斯
+      fr: Chypre
+      de: Zypern
+      es: Chipre
+      pt: Chipre
+    tel: +357
+  - value: Czech Republic
+    label:
+      en: Czech Republic
+      zh: 捷克
+      fr: République tchèque
+      de: Tschechische Republik
+      es: República Checa
+      pt: República Tcheca
+    tel: +420
+  - value: Denmark
+    label:
+      en: Denmark
+      zh: 丹麦
+      fr: Danemark
+      de: Dänemark
+      es: Dinamarca
+      pt: Dinamarca
+    tel: +45
+  - value: Djibouti
+    label:
+      en: Djibouti
+      zh: 吉布提
+      fr: Djibouti
+      de: Dschibuti
+      es: Yibuti
+      pt: Djibuti
+    tel: +253
+  - value: Dominica
+    label:
+      en: Dominica
+      zh: 多米尼克
+      fr: Dominique
+      de: Dominica
+      es: Dominica
+      pt: Dominica
+    tel: +1-767
+  - value: Dominican Republic
+    label:
+      en: Dominican Republic
+      zh: 多米尼加共和国
+      fr: République dominicaine
+      de: Dominikanische Republik
+      es: República Dominicana
+      pt: República Dominicana
+    tel: +1-809
+  - value: DR Congo
+    label:
+      en: DR Congo
+      zh: 刚果民主共和国
+      fr: République démocratique du Congo
+      de: Demokratische Republik Kongo
+      es: República Democrática del Congo
+      pt: República Democrática do Congo
+    tel: +243
+  - value: Ecuador
+    label:
+      en: Ecuador
+      zh: 厄瓜多尔
+      fr: Équateur
+      de: Ecuador
+      es: Ecuador
+      pt: Equador
+    tel: +593
+  - value: Egypt
+    label:
+      en: Egypt
+      zh: 埃及
+      fr: Égypte
+      de: Ägypten
+      es: Egipto
+      pt: Egito
+    tel: +20
+  - value: El Salvador
+    label:
+      en: El Salvador
+      zh: 萨尔瓦多
+      fr: Salvador
+      de: El Salvador
+      es: El Salvador
+      pt: El Salvador
+    tel: +503
+  - value: Equatorial Guinea
+    label:
+      en: Equatorial Guinea
+      zh: 赤道几内亚
+      fr: Guinée équatoriale
+      de: Äquatorialguinea
+      es: Guinea Ecuatorial
+      pt: Guiné Equatorial
+    tel: +240
+  - value: Eritrea
+    label:
+      en: Eritrea
+      zh: 厄立特里亚
+      fr: Érythrée
+      de: Eritrea
+      es: Eritrea
+      pt: Eritreia
+    tel: +291
+  - value: Estonia
+    label:
+      en: Estonia
+      zh: 爱沙尼亚
+      fr: Estonie
+      de: Estland
+      es: Estonia
+      pt: Estônia
+    tel: +372
+  - value: Eswatini
+    label:
+      en: Eswatini
+      zh: 斯威士兰
+      fr: Eswatini
+      de: Eswatini
+      es: Suazilandia
+      pt: Essuatíni
+    tel: +268
+  - value: Ethiopia
+    label:
+      en: Ethiopia
+      zh: 埃塞俄比亚
+      fr: Éthiopie
+      de: Äthiopien
+      es: Etiopía
+      pt: Etiópia
+    tel: +251
+  - value: Fiji
+    label:
+      en: Fiji
+      zh: 斐济
+      fr: Fidji
+      de: Fidschi
+      es: Fiyi
+      pt: Fiji
+    tel: +679
+  - value: Finland
+    label:
+      en: Finland
+      zh: 芬兰
+      fr: Finlande
+      de: Finnland
+      es: Finlandia
+      pt: Finlândia
+    tel: +358
+  - value: France
+    label:
+      en: France
+      zh: 法国
+      fr: France
+      de: Frankreich
+      es: Francia
+      pt: França
+    tel: +33
+  - value: Gabon
+    label:
+      en: Gabon
+      zh: 加蓬
+      fr: Gabon
+      de: Gabun
+      es: Gabón
+      pt: Gabão
+    tel: +241
+  - value: Gambia
+    label:
+      en: Gambia
+      zh: 冈比亚
+      fr: Gambie
+      de: Gambia
+      es: Gambia
+      pt: Gâmbia
+    tel: +220
+  - value: Georgia
+    label:
+      en: Georgia
+      zh: 格鲁吉亚
+      fr: Géorgie
+      de: Georgien
+      es: Georgia
+      pt: Geórgia
+    tel: +995
+  - value: Germany
+    label:
+      en: Germany
+      zh: 德国
+      fr: Allemagne
+      de: Deutschland
+      es: Alemania
+      pt: Alemanha
+    tel: +49
+  - value: Ghana
+    label:
+      en: Ghana
+      zh: 加纳
+      fr: Ghana
+      de: Ghana
+      es: Ghana
+      pt: Gana
+    tel: +233
+  - value: Greece
+    label:
+      en: Greece
+      zh: 希腊
+      fr: Grèce
+      de: Griechenland
+      es: Grecia
+      pt: Grécia
+    tel: +30
+  - value: Grenada
+    label:
+      en: Grenada
+      zh: 格林纳达
+      fr: Grenade
+      de: Grenada
+      es: Granada
+      pt: Granada
+    tel: +1-473
+  - value: Guatemala
+    label:
+      en: Guatemala
+      zh: 危地马拉
+      fr: Guatemala
+      de: Guatemala
+      es: Guatemala
+      pt: Guatemala
+    tel: +502
+  - value: Guinea
+    label:
+      en: Guinea
+      zh: 几内亚
+      fr: Guinée
+      de: Guinea
+      es: Guinea
+      pt: Guiné
+    tel: +224
+  - value: Guinea-Bissau
+    label:
+      en: Guinea-Bissau
+      zh: 几内亚比绍
+      fr: Guinée-Bissau
+      de: Guinea-Bissau
+      es: Guinea-Bisáu
+      pt: Guiné-Bissau
+    tel: +245
+  - value: Guyana
+    label:
+      en: Guyana
+      zh: 圭亚那
+      fr: Guyana
+      de: Guyana
+      es: Guyana
+      pt: Guiana
+    tel: +592
+  - value: Haiti
+    label:
+      en: Haiti
+      zh: 海地
+      fr: Haïti
+      de: Haiti
+      es: Haití
+      pt: Haiti
+    tel: +509
+  - value: Honduras
+    label:
+      en: Honduras
+      zh: 洪都拉斯
+      fr: Honduras
+      de: Honduras
+      es: Honduras
+      pt: Honduras
+    tel: +504
+  - value: Hungary
+    label:
+      en: Hungary
+      zh: 匈牙利
+      fr: Hongrie
+      de: Ungarn
+      es: Hungría
+      pt: Hungria
+    tel: +36
+  - value: Iceland
+    label:
+      en: Iceland
+      zh: 冰岛
+      fr: Islande
+      de: Island
+      es: Islandia
+      pt: Islândia
+    tel: +354
+  - value: India
+    label:
+      en: India
+      zh: 印度
+      fr: Inde
+      de: Indien
+      es: India
+      pt: Índia
+    tel: +91
+  - value: Indonesia
+    label:
+      en: Indonesia
+      zh: 印度尼西亚
+      fr: Indonésie
+      de: Indonesien
+      es: Indonesia
+      pt: Indonésia
+    tel: +62
+  - value: Iran
+    label:
+      en: Iran
+      zh: 伊朗
+      fr: Iran
+      de: Iran
+      es: Irán
+      pt: Irã
+    tel: +98
+  - value: Iraq
+    label:
+      en: Iraq
+      zh: 伊拉克
+      fr: Irak
+      de: Irak
+      es: Irak
+      pt: Iraque
+    tel: +964
+  - value: Ireland
+    label:
+      en: Ireland
+      zh: 爱尔兰
+      fr: Irlande
+      de: Irland
+      es: Irlanda
+      pt: Irlanda
+    tel: +353
+  - value: Israel
+    label:
+      en: Israel
+      zh: 以色列
+      fr: Israël
+      de: Israel
+      es: Israel
+      pt: Israel
+    tel: +972
+  - value: Italy
+    label:
+      en: Italy
+      zh: 意大利
+      fr: Italie
+      de: Italien
+      es: Italia
+      pt: Itália
+    tel: +39
+  - value: Jamaica
+    label:
+      en: Jamaica
+      zh: 牙买加
+      fr: Jamaïque
+      de: Jamaika
+      es: Jamaica
+      pt: Jamaica
+    tel: +1-876
+  - value: Japan
+    label:
+      en: Japan
+      zh: 日本
+      fr: Japon
+      de: Japan
+      es: Japón
+      pt: Japão
+    tel: +81
+  - value: Jordan
+    label:
+      en: Jordan
+      zh: 约旦
+      fr: Jordanie
+      de: Jordanien
+      es: Jordania
+      pt: Jordânia
+    tel: +962
+  - value: Kazakhstan
+    label:
+      en: Kazakhstan
+      zh: 哈萨克斯坦
+      fr: Kazakhstan
+      de: Kasachstan
+      es: Kazajistán
+      pt: Cazaquistão
+    tel: +7
+  - value: Kenya
+    label:
+      en: Kenya
+      zh: 肯尼亚
+      fr: Kenya
+      de: Kenia
+      es: Kenia
+      pt: Quênia
+    tel: +254
+  - value: Kiribati
+    label:
+      en: Kiribati
+      zh: 基里巴斯
+      fr: Kiribati
+      de: Kiribati
+      es: Kiribati
+      pt: Quiribati
+    tel: +686
+  - value: Kuwait
+    label:
+      en: Kuwait
+      zh: 科威特
+      fr: Koweït
+      de: Kuwait
+      es: Kuwait
+      pt: Kuwait
+    tel: +965
+  - value: Kyrgyzstan
+    label:
+      en: Kyrgyzstan
+      zh: 吉尔吉斯斯坦
+      fr: Kirghizistan
+      de: Kirgisistan
+      es: Kirguistán
+      pt: Quirguistão
+    tel: +996
+  - value: Laos
+    label:
+      en: Laos
+      zh: 老挝
+      fr: Laos
+      de: Laos
+      es: Laos
+      pt: Laos
+    tel: +856
+  - value: Latvia
+    label:
+      en: Latvia
+      zh: 拉脱维亚
+      fr: Lettonie
+      de: Lettland
+      es: Letonia
+      pt: Letônia
+    tel: +371
+  - value: Lebanon
+    label:
+      en: Lebanon
+      zh: 黎巴嫩
+      fr: Liban
+      de: Libanon
+      es: Líbano
+      pt: Líbano
+    tel: +961
+  - value: Lesotho
+    label:
+      en: Lesotho
+      zh: 莱索托
+      fr: Lesotho
+      de: Lesotho
+      es: Lesoto
+      pt: Lesoto
+    tel: +266
+  - value: Liberia
+    label:
+      en: Liberia
+      zh: 利比里亚
+      fr: Liberia
+      de: Liberia
+      es: Liberia
+      pt: Libéria
+    tel: +231
+  - value: Libya
+    label:
+      en: Libya
+      zh: 利比亚
+      fr: Libye
+      de: Libyen
+      es: Libia
+      pt: Líbia
+    tel: +218
+  - value: Liechtenstein
+    label:
+      en: Liechtenstein
+      zh: 列支敦士登
+      fr: Liechtenstein
+      de: Liechtenstein
+      es: Liechtenstein
+      pt: Liechtenstein
+    tel: +423
+  - value: Lithuania
+    label:
+      en: Lithuania
+      zh: 立陶宛
+      fr: Lituanie
+      de: Litauen
+      es: Lituania
+      pt: Lituânia
+    tel: +370
+  - value: Luxembourg
+    label:
+      en: Luxembourg
+      zh: 卢森堡
+      fr: Luxembourg
+      de: Luxemburg
+      es: Luxemburgo
+      pt: Luxemburgo
+    tel: +352
+  - value: Madagascar
+    label:
+      en: Madagascar
+      zh: 马达加斯加
+      fr: Madagascar
+      de: Madagaskar
+      es: Madagascar
+      pt: Madagáscar
+    tel: +261
+  - value: Malawi
+    label:
+      en: Malawi
+      zh: 马拉维
+      fr: Malawi
+      de: Malawi
+      es: Malawi
+      pt: Maláui
+    tel: +265
+  - value: Malaysia
+    label:
+      en: Malaysia
+      zh: 马来西亚
+      fr: Malaisie
+      de: Malaysia
+      es: Malasia
+      pt: Malásia
+    tel: +60
+  - value: Maldives
+    label:
+      en: Maldives
+      zh: 马尔代夫
+      fr: Maldives
+      de: Malediven
+      es: Maldivas
+      pt: Maldivas
+    tel: +960
+  - value: Mali
+    label:
+      en: Mali
+      zh: 马里
+      fr: Mali
+      de: Mali
+      es: Malí
+      pt: Mali
+    tel: +223
+  - value: Malta
+    label:
+      en: Malta
+      zh: 马耳他
+      fr: Malte
+      de: Malta
+      es: Malta
+      pt: Malta
+    tel: +356
+  - value: Marshall Islands
+    label:
+      en: Marshall Islands
+      zh: 马绍尔群岛
+      fr: Îles Marshall
+      de: Marshallinseln
+      es: Islas Marshall
+      pt: Ilhas Marshall
+    tel: +692
+  - value: Mauritania
+    label:
+      en: Mauritania
+      zh: 毛里塔尼亚
+      fr: Mauritanie
+      de: Mauretanien
+      es: Mauritania
+      pt: Mauritânia
+    tel: +222
+  - value: Mauritius
+    label:
+      en: Mauritius
+      zh: 毛里求斯
+      fr: Maurice
+      de: Mauritius
+      es: Mauricio
+      pt: Maurício
+    tel: +230
+  - value: Mexico
+    label:
+      en: Mexico
+      zh: 墨西哥
+      fr: Mexique
+      de: Mexiko
+      es: México
+      pt: México
+    tel: +52
+  - value: Micronesia
+    label:
+      en: Micronesia
+      zh: 密克罗尼西亚
+      fr: Micronésie
+      de: Mikronesien
+      es: Micronesia
+      pt: Micronésia
+    tel: +691
+  - value: Moldova
+    label:
+      en: Moldova
+      zh: 摩尔多瓦
+      fr: Moldavie
+      de: Republik Moldau
+      es: Moldavia
+      pt: Moldávia
+    tel: +373
+  - value: Monaco
+    label:
+      en: Monaco
+      zh: 摩纳哥
+      fr: Monaco
+      de: Monaco
+      es: Mónaco
+      pt: Mônaco
+    tel: +377
+  - value: Mongolia
+    label:
+      en: Mongolia
+      zh: 蒙古
+      fr: Mongolie
+      de: Mongolei
+      es: Mongolia
+      pt: Mongólia
+    tel: +976
+  - value: Montenegro
+    label:
+      en: Montenegro
+      zh: 黑山
+      fr: Monténégro
+      de: Montenegro
+      es: Montenegro
+      pt: Montenegro
+    tel: +382
+  - value: Morocco
+    label:
+      en: Morocco
+      zh: 摩洛哥
+      fr: Maroc
+      de: Marokko
+      es: Marruecos
+      pt: Marrocos
+    tel: +212
+  - value: Mozambique
+    label:
+      en: Mozambique
+      zh: 莫桑比克
+      fr: Mozambique
+      de: Mosambik
+      es: Mozambique
+      pt: Moçambique
+    tel: +258
+  - value: Myanmar
+    label:
+      en: Myanmar
+      zh: 缅甸
+      fr: Birmanie
+      de: Myanmar
+      es: Myanmar
+      pt: Mianmar
+    tel: +95
+  - value: Namibia
+    label:
+      en: Namibia
+      zh: 纳米比亚
+      fr: Namibie
+      de: Namibia
+      es: Namibia
+      pt: Namíbia
+    tel: +264
+  - value: Nauru
+    label:
+      en: Nauru
+      zh: 瑙鲁
+      fr: Nauru
+      de: Nauru
+      es: Nauru
+      pt: Nauru
+    tel: +674
+  - value: Nepal
+    label:
+      en: Nepal
+      zh: 尼泊尔
+      fr: Népal
+      de: Nepal
+      es: Nepal
+      pt: Nepal
+    tel: +977
+  - value: Netherlands
+    label:
+      en: Netherlands
+      zh: 荷兰
+      fr: Pays-Bas
+      de: Niederlande
+      es: Países Bajos
+      pt: Países Baixos
+    tel: +31
+  - value: New Zealand
+    label:
+      en: New Zealand
+      zh: 新西兰
+      fr: Nouvelle-Zélande
+      de: Neuseeland
+      es: Nueva Zelanda
+      pt: Nova Zelândia
+    tel: +64
+  - value: Nicaragua
+    label:
+      en: Nicaragua
+      zh: 尼加拉瓜
+      fr: Nicaragua
+      de: Nicaragua
+      es: Nicaragua
+      pt: Nicarágua
+    tel: +505
+  - value: Niger
+    label:
+      en: Niger
+      zh: 尼日尔
+      fr: Niger
+      de: Niger
+      es: Níger
+      pt: Níger
+    tel: +227
+  - value: Nigeria
+    label:
+      en: Nigeria
+      zh: 尼日利亚
+      fr: Nigeria
+      de: Nigeria
+      es: Nigeria
+      pt: Nigéria
+    tel: +234
+  - value: North Korea
+    label:
+      en: North Korea
+      zh: 朝鲜
+      fr: Corée du Nord
+      de: Nordkorea
+      es: Corea del Norte
+      pt: Coreia do Norte
+    tel: +850
+  - value: North Macedonia
+    label:
+      en: North Macedonia
+      zh: 北马其顿
+      fr: Macédoine du Nord
+      de: Nordmazedonien
+      es: Macedonia del Norte
+      pt: Macedônia do Norte
+    tel: +389
+  - value: Norway
+    label:
+      en: Norway
+      zh: 挪威
+      fr: Norvège
+      de: Norwegen
+      es: Noruega
+      pt: Noruega
+    tel: +47
+  - value: Oman
+    label:
+      en: Oman
+      zh: 阿曼
+      fr: Oman
+      de: Oman
+      es: Omán
+      pt: Omã
+    tel: +968
+  - value: Pakistan
+    label:
+      en: Pakistan
+      zh: 巴基斯坦
+      fr: Pakistan
+      de: Pakistan
+      es: Pakistán
+      pt: Paquistão
+    tel: +92
+  - value: Palau
+    label:
+      en: Palau
+      zh: 帕劳
+      fr: Palaos
+      de: Palau
+      es: Palaos
+      pt: Palau
+    tel: +680
+  - value: Panama
+    label:
+      en: Panama
+      zh: 巴拿马
+      fr: Panama
+      de: Panama
+      es: Panamá
+      pt: Panamá
+    tel: +507
+  - value: Papua New Guinea
+    label:
+      en: Papua New Guinea
+      zh: 巴布亚新几内亚
+      fr: Papouasie-Nouvelle-Guinée
+      de: Papua-Neuguinea
+      es: Papúa Nueva Guinea
+      pt: Papua-Nova Guiné
+    tel: +675
+  - value: Paraguay
+    label:
+      en: Paraguay
+      zh: 巴拉圭
+      fr: Paraguay
+      de: Paraguay
+      es: Paraguay
+      pt: Paraguai
+    tel: +595
+  - value: Peru
+    label:
+      en: Peru
+      zh: 秘鲁
+      fr: Pérou
+      de: Peru
+      es: Perú
+      pt: Peru
+    tel: +51
+  - value: Philippines
+    label:
+      en: Philippines
+      zh: 菲律宾
+      fr: Philippines
+      de: Philippinen
+      es: Filipinas
+      pt: Filipinas
+    tel: +63
+  - value: Poland
+    label:
+      en: Poland
+      zh: 波兰
+      fr: Pologne
+      de: Polen
+      es: Polonia
+      pt: Polônia
+    tel: +48
+  - value: Portugal
+    label:
+      en: Portugal
+      zh: 葡萄牙
+      fr: Portugal
+      de: Portugal
+      es: Portugal
+      pt: Portugal
+    tel: +351
+  - value: Qatar
+    label:
+      en: Qatar
+      zh: 卡塔尔
+      fr: Qatar
+      de: Katar
+      es: Catar
+      pt: Catar
+    tel: +974
+  - value: Romania
+    label:
+      en: Romania
+      zh: 罗马尼亚
+      fr: Roumanie
+      de: Rumänien
+      es: Rumania
+      pt: Romênia
+    tel: +40
+  - value: Russia
+    label:
+      en: Russia
+      zh: 俄罗斯
+      fr: Russie
+      de: Russland
+      es: Rusia
+      pt: Rússia
+    tel: +7
+  - value: Rwanda
+    label:
+      en: Rwanda
+      zh: 卢旺达
+      fr: Rwanda
+      de: Ruanda
+      es: Ruanda
+      pt: Ruanda
+    tel: +250
+  - value: Saint Kitts and Nevis
+    label:
+      en: Saint Kitts and Nevis
+      zh: 圣基茨和尼维斯
+      fr: Saint-Kitts-et-Nevis
+      de: St. Kitts und Nevis
+      es: San Cristóbal y Nieves
+      pt: São Cristóvão e Neves
+    tel: +1-869
+  - value: Saint Lucia
+    label:
+      en: Saint Lucia
+      zh: 圣卢西亚
+      fr: Sainte-Lucie
+      de: St. Lucia
+      es: Santa Lucía
+      pt: Santa Lúcia
+    tel: +1-758
+  - value: Saint Vincent and the Grenadines
+    label:
+      en: Saint Vincent and the Grenadines
+      zh: 圣文森特和格林纳丁斯
+      fr: Saint-Vincent-et-les-Grenadines
+      de: St. Vincent und die Grenadinen
+      es: San Vicente y las Granadinas
+      pt: São Vicente e Granadinas
+    tel: +1-784
+  - value: Samoa
+    label:
+      en: Samoa
+      zh: 萨摩亚
+      fr: Samoa
+      de: Samoa
+      es: Samoa
+      pt: Samoa
+    tel: +685
+  - value: San Marino
+    label:
+      en: San Marino
+      zh: 圣马力诺
+      fr: Saint-Marin
+      de: San Marino
+      es: San Marino
+      pt: San Marino
+    tel: +378
+  - value: Sao Tome and Principe
+    label:
+      en: Sao Tome and Principe
+      zh: 圣多美和普林西比
+      fr: Sao Tomé-et-Principe
+      de: São Tomé und Príncipe
+      es: Santo Tomé y Príncipe
+      pt: São Tomé e Príncipe
+    tel: +239
+  - value: Saudi Arabia
+    label:
+      en: Saudi Arabia
+      zh: 沙特阿拉伯
+      fr: Arabie saoudite
+      de: Saudi-Arabien
+      es: Arabia Saudita
+      pt: Arábia Saudita
+    tel: +966
+  - value: Senegal
+    label:
+      en: Senegal
+      zh: 塞内加尔
+      fr: Sénégal
+      de: Senegal
+      es: Senegal
+      pt: Senegal
+    tel: +221
+  - value: Serbia
+    label:
+      en: Serbia
+      zh: 塞尔维亚
+      fr: Serbie
+      de: Serbien
+      es: Serbia
+      pt: Sérvia
+    tel: +381
+  - value: Seychelles
+    label:
+      en: Seychelles
+      zh: 塞舌尔
+      fr: Seychelles
+      de: Seychellen
+      es: Seychelles
+      pt: Seicheles
+    tel: +248
+  - value: Sierra Leone
+    label:
+      en: Sierra Leone
+      zh: 塞拉利昂
+      fr: Sierra Leone
+      de: Sierra Leone
+      es: Sierra Leona
+      pt: Serra Leoa
+    tel: +232
+  - value: Singapore
+    label:
+      en: Singapore
+      zh: 新加坡
+      fr: Singapour
+      de: Singapur
+      es: Singapur
+      pt: Singapura
+    tel: +65
+  - value: Slovakia
+    label:
+      en: Slovakia
+      zh: 斯洛伐克
+      fr: Slovaquie
+      de: Slowakei
+      es: Eslovaquia
+      pt: Eslováquia
+    tel: +421
+  - value: Slovenia
+    label:
+      en: Slovenia
+      zh: 斯洛文尼亚
+      fr: Slovénie
+      de: Slowenien
+      es: Eslovenia
+      pt: Eslovênia
+    tel: +386
+  - value: Solomon Islands
+    label:
+      en: Solomon Islands
+      zh: 所罗门群岛
+      fr: Îles Salomon
+      de: Salomonen
+      es: Islas Salomón
+      pt: Ilhas Salomão
+    tel: +677
+  - value: Somalia
+    label:
+      en: Somalia
+      zh: 索马里
+      fr: Somalie
+      de: Somalia
+      es: Somalia
+      pt: Somália
+    tel: +252
+  - value: South Africa
+    label:
+      en: South Africa
+      zh: 南非
+      fr: Afrique du Sud
+      de: Südafrika
+      es: Sudáfrica
+      pt: África do Sul
+    tel: +27
+  - value: South Korea
+    label:
+      en: South Korea
+      zh: 韩国
+      fr: Corée du Sud
+      de: Südkorea
+      es: Corea del Sur
+      pt: Coreia do Sul
+    tel: +82
+  - value: South Sudan
+    label:
+      en: South Sudan
+      zh: 南苏丹
+      fr: Soudan du Sud
+      de: Südsudan
+      es: Sudán del Sur
+      pt: Sudão do Sul
+    tel: +211
+  - value: Spain
+    label:
+      en: Spain
+      zh: 西班牙
+      fr: Espagne
+      de: Spanien
+      es: España
+      pt: Espanha
+    tel: +34
+  - value: Sri Lanka
+    label:
+      en: Sri Lanka
+      zh: 斯里兰卡
+      fr: Sri Lanka
+      de: Sri Lanka
+      es: Sri Lanka
+      pt: Sri Lanka
+    tel: +94
+  - value: Sudan
+    label:
+      en: Sudan
+      zh: 苏丹
+      fr: Soudan
+      de: Sudan
+      es: Sudán
+      pt: Sudão
+    tel: +249
+  - value: Suriname
+    label:
+      en: Suriname
+      zh: 苏里南
+      fr: Suriname
+      de: Suriname
+      es: Surinam
+      pt: Suriname
+    tel: +597
+  - value: Sweden
+    label:
+      en: Sweden
+      zh: 瑞典
+      fr: Suède
+      de: Schweden
+      es: Suecia
+      pt: Suécia
+    tel: +46
+  - value: Switzerland
+    label:
+      en: Switzerland
+      zh: 瑞士
+      fr: Suisse
+      de: Schweiz
+      es: Suiza
+      pt: Suíça
+    tel: +41
+  - value: Syria
+    label:
+      en: Syria
+      zh: 叙利亚
+      fr: Syrie
+      de: Syrien
+      es: Siria
+      pt: Síria
+    tel: +963
+  - value: Tajikistan
+    label:
+      en: Tajikistan
+      zh: 塔吉克斯坦
+      fr: Tadjikistan
+      de: Tadschikistan
+      es: Tayikistán
+      pt: Tajiquistão
+    tel: +992
+  - value: Tanzania
+    label:
+      en: Tanzania
+      zh: 坦桑尼亚
+      fr: Tanzanie
+      de: Tansania
+      es: Tanzania
+      pt: Tanzânia
+    tel: +255
+  - value: Thailand
+    label:
+      en: Thailand
+      zh: 泰国
+      fr: Thaïlande
+      de: Thailand
+      es: Tailandia
+      pt: Tailândia
+    tel: +66
+  - value: Timor-Leste
+    label:
+      en: Timor-Leste
+      zh: 东帝汶
+      fr: Timor oriental
+      de: Osttimor
+      es: Timor Oriental
+      pt: Timor-Leste
+    tel: +670
+  - value: Togo
+    label:
+      en: Togo
+      zh: 多哥
+      fr: Togo
+      de: Togo
+      es: Togo
+      pt: Togo
+    tel: +228
+  - value: Tonga
+    label:
+      en: Tonga
+      zh: 汤加
+      fr: Tonga
+      de: Tonga
+      es: Tonga
+      pt: Tonga
+    tel: +676
+  - value: Trinidad and Tobago
+    label:
+      en: Trinidad and Tobago
+      zh: 特立尼达和多巴哥
+      fr: Trinité-et-Tobago
+      de: Trinidad und Tobago
+      es: Trinidad y Tobago
+      pt: Trinidad e Tobago
+    tel: +1-868
+  - value: Tunisia
+    label:
+      en: Tunisia
+      zh: 突尼斯
+      fr: Tunisie
+      de: Tunesien
+      es: Túnez
+      pt: Tunísia
+    tel: +216
+  - value: Turkey
+    label:
+      en: Turkey
+      zh: 土耳其
+      fr: Turquie
+      de: Türkei
+      es: Turquía
+      pt: Turquia
+    tel: +90
+  - value: Turkmenistan
+    label:
+      en: Turkmenistan
+      zh: 土库曼斯坦
+      fr: Turkménistan
+      de: Turkmenistan
+      es: Turkmenistán
+      pt: Turcomenistão
+    tel: +993
+  - value: Tuvalu
+    label:
+      en: Tuvalu
+      zh: 图瓦卢
+      fr: Tuvalu
+      de: Tuvalu
+      es: Tuvalu
+      pt: Tuvalu
+    tel: +688
+  - value: Uganda
+    label:
+      en: Uganda
+      zh: 乌干达
+      fr: Ouganda
+      de: Uganda
+      es: Uganda
+      pt: Uganda
+    tel: +256
+  - value: Ukraine
+    label:
+      en: Ukraine
+      zh: 乌克兰
+      fr: Ukraine
+      de: Ukraine
+      es: Ucrania
+      pt: Ucrânia
+    tel: +380
+  - value: United Arab Emirates
+    label:
+      en: United Arab Emirates
+      zh: 阿拉伯联合酋长国
+      fr: Émirats arabes unis
+      de: Vereinigte Arabische Emirate
+      es: Emiratos Árabes Unidos
+      pt: Emirados Árabes Unidos
+    tel: +971
+  - value: United Kingdom
+    label:
+      en: United Kingdom
+      zh: 英国
+      fr: Royaume-Uni
+      de: Vereinigtes Königreich
+      es: Reino Unido
+      pt: Reino Unido
+    tel: +44
+  - value: United States
+    label:
+      en: United States
+      zh: 美国
+      fr: États-Unis
+      de: Vereinigte Staaten
+      es: Estados Unidos
+      pt: Estados Unidos
+    tel: +1
+  - value: Uruguay
+    label:
+      en: Uruguay
+      zh: 乌拉圭
+      fr: Uruguay
+      de: Uruguay
+      es: Uruguay
+      pt: Uruguai
+    tel: +598
+  - value: Uzbekistan
+    label:
+      en: Uzbekistan
+      zh: 乌兹别克斯坦
+      fr: Ouzbékistan
+      de: Usbekistan
+      es: Uzbekistán
+      pt: Uzbequistão
+    tel: +998
+  - value: Vanuatu
+    label:
+      en: Vanuatu
+      zh: 瓦努阿图
+      fr: Vanuatu
+      de: Vanuatu
+      es: Vanuatu
+      pt: Vanuatu
+    tel: +678
+  - value: Venezuela
+    label:
+      en: Venezuela
+      zh: 委内瑞拉
+      fr: Venezuela
+      de: Venezuela
+      es: Venezuela
+      pt: Venezuela
+    tel: +58
+  - value: Vietnam
+    label:
+      en: Vietnam
+      zh: 越南
+      fr: Viêt Nam
+      de: Vietnam
+      es: Vietnam
+      pt: Vietnã
+    tel: +84
+  - value: Yemen
+    label:
+      en: Yemen
+      zh: 也门
+      fr: Yémen
+      de: Jemen
+      es: Yemen
+      pt: Iêmen
+    tel: +967
+  - value: Zambia
+    label:
+      en: Zambia
+      zh: 赞比亚
+      fr: Zambie
+      de: Sambia
+      es: Zambia
+      pt: Zâmbia
+    tel: +260
+  - value: Zimbabwe
+    label:
+      en: Zimbabwe
+      zh: 津巴布韦
+      fr: Zimbabwe
+      de: Simbabwe
+      es: Zimbabue
+      pt: Zimbábue
+    tel: +263
+  - value: Holy See
+    label:
+      en: Holy See
+      zh: 梵蒂冈
+      fr: Saint-Siège
+      de: Heiliger Stuhl
+      es: Santa Sede
+      pt: Santa Sé
+    tel: +379
+  - value: State of Palestine
+    label:
+      en: State of Palestine
+      zh: 巴勒斯坦
+      fr: Palestine
+      de: Palästina
+      es: Palestina
+      pt: Palestina
+    tel: +970

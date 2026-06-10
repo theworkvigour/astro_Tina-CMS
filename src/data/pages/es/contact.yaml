@@ -31,6 +31,8 @@ contact_form:
     - name: country
       label: Country
       row: 4
+      type: select
+      optionsKey: countries
     - name: email
       label: E-mail
       row: 5

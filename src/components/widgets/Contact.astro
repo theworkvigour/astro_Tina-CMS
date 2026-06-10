@@ -78,7 +78,7 @@ const consentError = consent?.error_message || 'Please confirm that you accept t
 
 const resolveOptions = (f: Field): FieldOption[] => {
   if (Array.isArray(f.options) && f.options.length > 0) return f.options;
-  if (f.optionsKey === 'countries' && countries.length > 0) return countries;
+  if (f.optionsKey === 'countries') return countries;
   return [];
 };
 
@@ -100,7 +100,7 @@ const rows = Object.keys(grouped)
       id={id}
       method="POST"
       action="/api/contact"
-      class="space-y-5"
+      class="space-y-7"
       data-contact-form
       data-success-message={successMessage}
       data-error-message={errorMessage}
@@ -123,9 +123,9 @@ const rows = Object.keys(grouped)
                   <textarea
                     id={`${id}-${f.name}`}
                     name={f.name}
-                    rows={f.rows ?? 6}
+                    rows={f.rows ?? 4}
                     placeholder={f.placeholder}
-                    class="py-3 px-4 block w-full text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900"
+                    class="py-2 px-4 block w-full text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900"
                   ></textarea>
                 </div>
               );
@@ -138,7 +138,7 @@ const rows = Object.keys(grouped)
                   type={(f.type === 'select' ? 'text' : (f.type ?? 'text')) as any}
                   name={f.name}
                   placeholder={f.placeholder}
-                  class="py-3 px-4 block w-full text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900"
+                  class="py-2 px-4 block w-full text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900"
                 />
               </div>
             );
@@ -154,7 +154,7 @@ const rows = Object.keys(grouped)
                         <select
                           name={`${f.name}_countryCode`}
                           data-tel-country
-                          class="py-3 px-2 block w-32 text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900"
+                          class="py-2 px-2 block w-40 text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900"
                           aria-label="Country code"
                         >
                           {countryCodes.map((c) => (
@@ -168,7 +168,7 @@ const rows = Object.keys(grouped)
                           inputmode="numeric"
                           pattern="[0-9 ()+\\-]{6,}"
                           placeholder={f.placeholder ?? '555 123 4567'}
-                          class="py-3 px-4 block w-full text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900"
+                          class="py-2 px-4 block w-full text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900"
                         />
                       </div>
                     </div>
@@ -182,7 +182,7 @@ const rows = Object.keys(grouped)
                       <select
                         id={`${id}-${f.name}`}
                         name={f.name}
-                        class="py-3 px-4 block w-full text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900"
+                        class="py-2 px-4 block w-full text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900"
                         required
                       >
                         {opts.map((o) => (
@@ -200,7 +200,7 @@ const rows = Object.keys(grouped)
                       type={(f.type === 'email' ? 'email' : f.type === 'tel' ? 'tel' : 'text') as any}
                       name={f.name}
                       placeholder={f.placeholder}
-                      class="py-3 px-4 block w-full text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900"
+                      class="py-2 px-4 block w-full text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900"
                     />
                   </div>
                 );
