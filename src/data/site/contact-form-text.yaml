@@ -1,0 +1,202 @@
+# ver: 1
+# Centralized contact form display text for all locales
+# Adding a new language = add one lang key to each field below
+submit_button:
+  en: Send message
+  zh: 发送消息
+  fr: Envoyer
+  de: Nachricht senden
+  es: Enviar mensaje
+  pt: Enviar mensagem
+
+success_message:
+  en: Thanks! Your message has landed in our inbox. We will reply within one business day.
+  zh: 谢谢！您的消息已发送。我们会在一个工作日内回复。
+  fr: Merci ! Votre message a bien été envoyé. Nous vous répondrons sous un jour ouvré.
+  de: Vielen Dank! Ihre Nachricht ist eingegangen. Wir antworten innerhalb eines Werktags.
+  es: ¡Gracias! Su mensaje ha sido enviado. Le responderemos en un día hábil.
+  pt: Obrigado! Sua mensagem foi enviada. Responderemos em um dia útil.
+
+error_message:
+  en: Something went wrong sending your message. Please try again or email us directly.
+  zh: 发送消息时出错。请重试或直接给我们发送邮件。
+  fr: Une erreur est survenue. Veuillez réessayer ou nous envoyer un e-mail directement.
+  de: Beim Senden Ihrer Nachricht ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.
+  es: Ocurrió un error al enviar su mensaje. Intente de nuevo o escríbanos directamente.
+  pt: Ocorreu um erro ao enviar sua mensagem. Tente novamente ou envie-nos um e-mail.
+
+captcha_label:
+  en: 'Anti-spam: please solve the following'
+  zh: 防垃圾：请解答以下问题
+  fr: 'Anti-spam : veuillez résoudre'
+  de: 'Anti-Spam: bitte lösen Sie'
+  es: 'Anti-spam: por favor resuelva'
+  pt: 'Anti-spam: por favor resolva'
+
+consent_text:
+  en: I agree to the processing of my personal data in accordance with the
+  zh: 我同意按照
+  fr: J'accepte le traitement de mes données personnelles conformément à la
+  de: Ich stimme der Verarbeitung meiner personenbezogenen Daten gemäß der
+  es: Acepto el tratamiento de mis datos personales de acuerdo con la
+  pt: Concordo com o tratamento dos meus dados pessoais de acordo com a
+
+consent_link_text:
+  en: Privacy Policy
+  zh: 隐私政策
+  fr: Politique de confidentialité
+  de: Datenschutzerklärung
+  es: Política de privacidad
+  pt: Política de privacidade
+
+fields:
+  - name: firstName
+    label:
+      en: First Name
+      zh: 名
+      fr: Prénom
+      de: Vorname
+      es: Nombre
+      pt: Nome
+    placeholder:
+      en: ''
+      zh: ''
+      fr: ''
+      de: ''
+      es: ''
+      pt: ''
+  - name: lastName
+    label:
+      en: Last Name
+      zh: 姓
+      fr: Nom de famille
+      de: Nachname
+      es: Apellido
+      pt: Sobrenome
+    placeholder:
+      en: ''
+      zh: ''
+      fr: ''
+      de: ''
+      es: ''
+      pt: ''
+  - name: companyName
+    label:
+      en: Company Name
+      zh: 公司名称
+      fr: Entreprise
+      de: Unternehmen
+      es: Empresa
+      pt: Empresa
+    placeholder:
+      en: ''
+      zh: ''
+      fr: ''
+      de: ''
+      es: ''
+      pt: ''
+  - name: address
+    label:
+      en: Address
+      zh: 地址
+      fr: Adresse
+      de: Adresse
+      es: Dirección
+      pt: Endereço
+    placeholder:
+      en: ''
+      zh: ''
+      fr: ''
+      de: ''
+      es: ''
+      pt: ''
+  - name: zip
+    label:
+      en: Zip / Postal Code
+      zh: 邮政编码
+      fr: Code postal
+      de: Postleitzahl
+      es: Código postal
+      pt: CEP
+    placeholder:
+      en: ''
+      zh: ''
+      fr: ''
+      de: ''
+      es: ''
+      pt: ''
+  - name: country
+    label:
+      en: Country
+      zh: 国家
+      fr: Pays
+      de: Land
+      es: País
+      pt: País
+    placeholder:
+      en: ''
+      zh: ''
+      fr: ''
+      de: ''
+      es: ''
+      pt: ''
+  - name: email
+    label:
+      en: E-mail
+      zh: 邮箱
+      fr: E-mail
+      de: E-Mail
+      es: Correo electrónico
+      pt: E-mail
+    placeholder:
+      en: ''
+      zh: ''
+      fr: ''
+      de: ''
+      es: ''
+      pt: ''
+  - name: tel
+    label:
+      en: TEL
+      zh: 电话
+      fr: Téléphone
+      de: Telefon
+      es: Teléfono
+      pt: Telefone
+    placeholder:
+      en: ''
+      zh: ''
+      fr: ''
+      de: ''
+      es: ''
+      pt: ''
+  - name: subject
+    label:
+      en: Subject
+      zh: 主题
+      fr: Sujet
+      de: Betreff
+      es: Asunto
+      pt: Assunto
+    placeholder:
+      en: ''
+      zh: ''
+      fr: ''
+      de: ''
+      es: ''
+      pt: ''
+  - name: message
+    label:
+      en: Message
+      zh: 留言
+      fr: Message
+      de: Nachricht
+      es: Mensaje
+      pt: Mensagem
+    placeholder:
+      en: ''
+      zh: ''
+      fr: ''
+      de: ''
+      es: ''
+      pt: ''
