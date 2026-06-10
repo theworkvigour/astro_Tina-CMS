@@ -338,6 +338,27 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 
   try {
+    // 0. update languages.yaml master list
+    const languagesYamlPath = 'src/data/site/languages.yaml';
+    let existingList: Array<{ code: string; name: string; locale: string }> = [];
+    try {
+      const existing = await client.readFile(languagesYamlPath);
+      const yamlMod = await import('js-yaml');
+      const parsed = yamlMod.load(existing.content);
+      if (Array.isArray(parsed)) existingList = parsed;
+    } catch {}
+    existingList = existingList.filter((l) => l.locale !== code);
+    existingList.push({ code: name.toUpperCase().slice(0, 2) || code.toUpperCase(), name, locale: code });
+    existingList.sort((a, b) => a.locale.localeCompare(b.locale));
+    const yamlMod = await import('js-yaml');
+    const newYamlContent = yamlMod.dump(existingList, { lineWidth: 120, noRefs: true, sortKeys: false });
+    const langSha = await getFileSha(client, languagesYamlPath);
+    if (langSha) {
+      await client.updateFile(languagesYamlPath, newYamlContent, langSha, `feat: add ${code} to languages.yaml`);
+    } else {
+      await client.createFile(languagesYamlPath, newYamlContent, `feat: add ${code} to languages.yaml`);
+    }
+
     // 1. create config file
     await client.createFile(configPath, configTemplate(code, name, textDirection), `feat: add ${code} language config`);
 
@@ -387,6 +408,22 @@ export const DELETE: APIRoute = async ({ request, cookies }) => {
   }
 
   const errors: string[] = [];
+
+  // remove from languages.yaml
+  try {
+    const yamlMod = await import('js-yaml');
+    const existing = await client.readFile('src/data/site/languages.yaml');
+    const parsed = yamlMod.load(existing.content);
+    if (Array.isArray(parsed)) {
+      const updated = parsed.filter((l: { locale?: string }) => l.locale !== code);
+      const newContent = yamlMod.dump(updated, { lineWidth: 120, noRefs: true, sortKeys: false });
+      const sha = existing.sha;
+      await client.updateFile('src/data/site/languages.yaml', newContent, sha, `chore: remove ${code} from languages.yaml`);
+    }
+  } catch (e) {
+    errors.push(`languages.yaml: ${e instanceof Error ? e.message : 'unknown'}`);
+  }
+
   for (const filePath of toDelete) {
     const sha = await getFileSha(client, filePath);
     if (sha) {

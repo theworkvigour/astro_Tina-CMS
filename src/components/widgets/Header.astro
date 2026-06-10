@@ -9,6 +9,8 @@ import { getHomePermalink } from '~/utils/permalinks';
 import { trimSlash, getAsset } from '~/utils/permalinks';
 import type { CallToAction } from '~/types';
 
+import langData from '~/data/site/languages.yaml';
+
 interface Link {
   text?: string;
   href?: string;
@@ -52,17 +54,10 @@ const {
 
 const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 
-const langs = [
-  { code: 'EN', name: 'English', locale: 'en' },
-  { code: 'FR', name: 'Français', locale: 'fr' },
-  { code: 'DE', name: 'Deutsch', locale: 'de' },
-  { code: 'ES', name: 'Español', locale: 'es' },
-  { code: 'PT', name: 'Português', locale: 'pt' },
-  { code: 'ZH', name: '中文', locale: 'zh' },
-];
+const langs: Array<{ code: string; name: string; locale: string }> = Array.isArray(langData) ? langData : [];
 
 const currentLocale = process.env.SITE_LOCALE || 'en';
-const currentLang = langs.find((l) => l.locale === currentLocale) || langs[0];
+const currentLang = langs.find((l) => l.locale === currentLocale) || langs[0] || { code: 'EN', name: 'English', locale: 'en' };
 ---
 
 <header
