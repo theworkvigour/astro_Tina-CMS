@@ -3,62 +3,33 @@ export const prerender = false;
 import AdminLayout from '~/layouts/AdminLayout.astro';
 import { verifySessionToken } from '~/lib/auth';
 import { readTokenFromCookies } from '~/lib/token-store';
-import { GitHubClient } from '~/lib/github';
 
 const session = Astro.cookies.get('ks-admin-session')?.value;
 const verified = session ? verifySessionToken(session) : null;
 if (!verified) return Astro.redirect('/login');
 
 const token = readTokenFromCookies(Astro.cookies);
-let langs: Array<{ code: string; name: string; textDirection: string; hasConfig: boolean; hasNav: boolean; pageCount: number }> = [];
+let initialLangs: Array<{ code: string; name: string; textDirection: string; hasConfig: boolean; hasNav: boolean; pageCount: number }> = [];
 if (token) {
   try {
-    const client = new GitHubClient(token);
-    const toFetch = ['en', 'fr', 'de', 'es', 'pt', 'zh'];
-    for (const code of toFetch) {
-      const configPath = code === 'en' ? 'src/config.yaml' : `src/config.${code}.yaml`;
-      const navPath = `src/data/site/navigation.${code}.yaml`;
-      const pageFiles = ['home.yaml', 'about.yaml', 'services.yaml', 'pricing.yaml', 'contact.yaml', 'news.yaml'];
-
-      let configOk = false;
-      let navOk = false;
-      let pageCount = 0;
-      let name = code.toUpperCase();
-      let textDirection = 'ltr';
-
-      try {
-        const c = await client.readFile(configPath);
-        configOk = true;
-        const lm = c.content.match(/language:\s*(\w+)/);
-        if (lm) name = lm[1].toUpperCase();
-        const dm = c.content.match(/textDirection:\s*(\w+)/);
-        if (dm) textDirection = dm[1];
-      } catch {}
-
-      try {
-        await client.readFile(navPath);
-        navOk = true;
-      } catch {}
-
-      for (const pf of pageFiles) {
-        try {
-          const p = code === 'en' ? `src/data/pages/${pf}` : `src/data/pages/${code}/${pf}`;
-          await client.readFile(p);
-          pageCount++;
-        } catch {}
-      }
-
-      langs.push({ code, name, textDirection, hasConfig: configOk, hasNav: navOk, pageCount });
+    const res = await fetch(Astro.request.url.replace(/\/+$/, '') + '/api/admin/languages', {
+      headers: { Cookie: Astro.request.headers.get('cookie') || '' },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      initialLangs = data.languages || [];
     }
   } catch {}
 }
 ---
 
+<script is:inline id="lang-data-init" type="application/json">{JSON.stringify(initialLangs)}</script>
+
 <AdminLayout title="Language Manager" active="languages" username={verified?.username}>
   <div class="mb-6 flex items-center justify-between">
     <div>
       <p class="text-sm text-gray-500 dark:text-gray-400">
-        Add or remove languages. Each language gets its own config, navigation, and page data directory.
+        Add or remove languages. Each language gets its own config, navigation, page data, and CI workflow entry.
       </p>
     </div>
     <button
@@ -96,34 +67,7 @@ if (token) {
   </div>
 
   <div id="lang-list" class="space-y-2">
-    {langs.map((l) => (
-      <div class="flex items-center justify-between rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 px-5 py-3">
-        <div class="flex items-center gap-4">
-          <span class="w-8 h-8 flex items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-sm font-bold">{l.code.toUpperCase()}</span>
-          <div>
-            <div class="text-sm font-medium">{l.name}</div>
-            <div class="text-xs text-gray-400 font-mono">{l.code} · {l.textDirection}</div>
-          </div>
-        </div>
-        <div class="flex items-center gap-4">
-          <span class={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full ${l.hasConfig ? 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300'}`}>
-            {l.hasConfig ? '✓ Config' : '✗ Config'}
-          </span>
-          <span class={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full ${l.hasNav ? 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300'}`}>
-            {l.hasNav ? '✓ Nav' : '✗ Nav'}
-          </span>
-          <span class="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">
-            {l.pageCount} pages
-          </span>
-          {l.code !== 'en' && (
-            <button
-              data-delete={l.code}
-              class="text-xs text-red-600 dark:text-red-400 hover:underline"
-            >Delete</button>
-          )}
-        </div>
-      </div>
-    ))}
+    <div id="loading-msg" class="text-sm text-gray-400 italic">Loading...</div>
   </div>
 </AdminLayout>
 
@@ -135,9 +79,49 @@ if (token) {
   const submit = document.getElementById('submit-add');
   const status = document.getElementById('add-status');
   const list = document.getElementById('lang-list');
+  const loading = document.getElementById('loading-msg');
 
   function show(el) { if (el) el.classList.remove('hidden'); }
   function hide(el) { if (el) el.classList.add('hidden'); }
+
+  function renderLangs(initialLangs) {
+    if (loading) hide(loading);
+    if (!list) return;
+    list.innerHTML = initialLangs.map(function (l) {
+      var badges = '';
+      badges += '<span class="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full ' + (l.hasConfig ? 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300') + '">' + (l.hasConfig ? '\u2713 Config' : '\u2717 Config') + '</span> ';
+      badges += '<span class="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full ' + (l.hasNav ? 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300') + '">' + (l.hasNav ? '\u2713 Nav' : '\u2717 Nav') + '</span> ';
+      badges += '<span class="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">' + l.pageCount + ' pages</span>';
+      var delBtn = l.code !== 'en' ? '<button data-delete="' + l.code + '" class="text-xs text-red-600 dark:text-red-400 hover:underline ml-3">Delete</button>' : '';
+      return '<div class="flex items-center justify-between rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 px-5 py-3">' +
+        '<div class="flex items-center gap-4">' +
+          '<span class="w-8 h-8 flex items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-sm font-bold">' + l.code.toUpperCase() + '</span>' +
+          '<div>' +
+            '<div class="text-sm font-medium">' + escHtml(l.name) + '</div>' +
+            '<div class="text-xs text-gray-400 font-mono">' + l.code + ' \u00B7 ' + l.textDirection + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="flex items-center gap-2">' + badges + delBtn + '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function escHtml(s) {
+    var d = document.createElement('div');
+    d.appendChild(document.createTextNode(s));
+    return d.innerHTML;
+  }
+
+  // render initial data from server
+  var initData = document.getElementById('lang-data-init');
+  if (initData) {
+    try { renderLangs(JSON.parse(initData.textContent || '[]')); } catch(e) {}
+  }
+
+  // fetch fresh data from API
+  fetch('/api/admin/languages').then(function (r) { return r.json(); }).then(function (d) {
+    if (d.languages) renderLangs(d.languages);
+  })['catch'](function () {});
 
   if (btn && form) {
     btn.addEventListener('click', function () { show(form); hide(btn.closest('.flex')?.querySelector('#add-status')); });
@@ -148,13 +132,13 @@ if (token) {
 
   if (submit) {
     submit.addEventListener('click', async function () {
-      const code = document.getElementById('f-code');
-      const name = document.getElementById('f-name');
-      const dir = document.getElementById('f-dir');
+      var code = document.getElementById('f-code');
+      var name = document.getElementById('f-name');
+      var dir = document.getElementById('f-dir');
       if (!code || !name || !dir || !status) return;
 
-      const c = code.value.trim().toLowerCase();
-      const n = name.value.trim();
+      var c = code.value.trim().toLowerCase();
+      var n = name.value.trim();
       if (!c || !/^[a-z]{2,3}$/.test(c)) {
         show(status); status.textContent = 'Code must be 2-3 lowercase letters (e.g. ja, ko, ar)'; status.className = 'mt-3 text-sm text-red-600';
         return;
@@ -169,12 +153,12 @@ if (token) {
       show(status); status.textContent = 'Creating language...'; status.className = 'mt-3 text-sm text-blue-600';
 
       try {
-        const res = await fetch('/api/admin/languages', {
+        var res = await fetch('/api/admin/languages', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ code: c, name: n, textDirection: dir.value }),
         });
-        const data = await res.json();
+        var data = await res.json();
         if (data.success) {
           status.textContent = 'Language created! Reloading...';
           status.className = 'mt-3 text-sm text-green-600';
@@ -196,24 +180,24 @@ if (token) {
   // delete handlers
   if (list) {
     list.addEventListener('click', async function (e) {
-      const target = e.target;
+      var target = e.target;
       if (!(target instanceof Element)) return;
-      const btn = target.closest('[data-delete]');
-      if (!btn) return;
-      const code = btn.getAttribute('data-delete');
+      var delBtn = target.closest('[data-delete]');
+      if (!delBtn) return;
+      var code = delBtn.getAttribute('data-delete');
       if (!code) return;
       if (!confirm('Delete language "' + code.toUpperCase() + '"? This cannot be undone.')) return;
 
-      const row = btn.closest('.flex');
+      var row = delBtn.closest('.flex');
       if (row) row.style.opacity = '0.4';
 
       try {
-        const res = await fetch('/api/admin/languages', {
+        var res = await fetch('/api/admin/languages', {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ code }),
+          body: JSON.stringify({ code: code }),
         });
-        const data = await res.json();
+        var data = await res.json();
         if (data.success) {
           setTimeout(function () { window.location.reload(); }, 800);
         } else {

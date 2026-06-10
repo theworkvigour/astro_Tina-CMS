@@ -1,7 +1,11 @@
 import { getEntry } from 'astro:content';
 import { I18N } from 'astrowind:config';
+import langs from '~/data/site/languages.yaml';
 
-export const AVAILABLE_LOCALES = ['en', 'fr', 'de', 'es', 'pt', 'zh'] as const;
+type LangEntry = { code: string; name: string; locale: string; textDirection: string };
+const langList = langs as LangEntry[];
+
+export const AVAILABLE_LOCALES = langList.map((l) => l.locale) as [string, ...string[]];
 export type Locale = (typeof AVAILABLE_LOCALES)[number];
 
 export function getLocale(): Locale {
@@ -17,7 +21,6 @@ export async function getLocaleData<T = DeepRecord>(
 ): Promise<T> {
   const locale = getLocale();
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const entry = await getEntry(collection as any, id);
     const ksData = ((entry?.data as Record<string, unknown>)?.[locale] ||
       (entry?.data as Record<string, unknown>)?.['en'] ||

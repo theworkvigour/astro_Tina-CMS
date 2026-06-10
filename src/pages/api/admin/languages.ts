@@ -15,7 +15,6 @@ const FILES = [
   'src/data/pages/news.yaml',
 ] as const;
 
-// template for a new locale config
 function configTemplate(locale: string, name: string, dir: string): string {
   const upper = locale.toUpperCase();
   return `site:
@@ -109,7 +108,6 @@ ui:
 `;
 }
 
-// template for a new locale navigation file
 function navTemplate(name: string): string {
   return `header:
   topBar:
@@ -253,32 +251,54 @@ interface LanguageEntry {
   pageCount: number;
 }
 
+/** Read the master locale list from src/data/site/languages.yaml via GitHub */
+async function readLocaleList(client: import('~/lib/github').GitHubClient): Promise<Array<{ code: string; name: string; locale: string; textDirection: string }>> {
+  const yamlContent = await tryRead(client, 'src/data/site/languages.yaml');
+  if (!yamlContent) return [];
+  const yamlMod = await import('js-yaml');
+  const parsed = yamlMod.load(yamlContent);
+  if (Array.isArray(parsed)) return parsed;
+  return [];
+}
+
+/** Update the CI workflow matrix.locale line to match the current locale list */
+async function syncCiWorkflow(
+  client: import('~/lib/github').GitHubClient,
+  locales: string[]
+): Promise<void> {
+  const workflowPath = '.github/workflows/actions.yaml';
+  try {
+    const existing = await client.readFile(workflowPath);
+    const sorted = [...new Set(locales)].sort();
+    const localeArray = `        locale: [${sorted.join(', ')}]`;
+    const updated = existing.content.replace(
+      /^\s+locale:\s*\[.+\]/m,
+      localeArray
+    );
+    if (updated !== existing.content) {
+      await client.updateFile(workflowPath, updated, existing.sha, 'chore: sync CI workflow locale matrix');
+    }
+  } catch {
+    // workflow file may not exist yet
+  }
+}
+
 export const GET: APIRoute = async ({ cookies }) => {
   const auth = authorizeAdmin(cookies);
   if (!auth.ok) return errorResponse(auth.error, auth.status);
 
   const client = auth.ctx.github;
-  const known = ['en', 'fr', 'de', 'es', 'pt', 'zh'];
+  const langList = await readLocaleList(client);
   const results: LanguageEntry[] = [];
 
-  for (const code of known) {
+  for (const lang of langList) {
+    const code = lang.locale;
     const configPath = code === 'en' ? 'src/config.yaml' : `src/config.${code}.yaml`;
     const navPath = `src/data/site/navigation.${code}.yaml`;
 
     const configContent = await tryRead(client, configPath);
     const navContent = await tryRead(client, navPath);
 
-    let name = code.toUpperCase();
-    let textDirection = 'ltr';
-
-    if (configContent) {
-      const langMatch = configContent.match(/language:\s*(\w+)/);
-      if (langMatch) name = langMatch[1].toUpperCase();
-      const dirMatch = configContent.match(/textDirection:\s*(\w+)/);
-      if (dirMatch) textDirection = dirMatch[1];
-    }
-
-    // count existing pages for this locale
     let pageCount = 0;
     if (code === 'en') {
       for (const pf of PAGE_FILES) {
@@ -294,8 +314,8 @@ export const GET: APIRoute = async ({ cookies }) => {
 
     results.push({
       code,
-      name,
-      textDirection,
+      name: lang.name || code.toUpperCase(),
+      textDirection: lang.textDirection || 'ltr',
       hasConfig: !!configContent,
       hasNav: !!navContent,
       pageCount,
@@ -331,7 +351,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const configPath = `src/config.${code}.yaml`;
   const navPath = `src/data/site/navigation.${code}.yaml`;
 
-  // check if config already exists
   const existingConfig = await tryRead(client, configPath);
   if (existingConfig) {
     return errorResponse(`Language "${code}" already exists (config.${code}.yaml found)`, 409);
@@ -340,7 +359,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   try {
     // 0. update languages.yaml master list
     const languagesYamlPath = 'src/data/site/languages.yaml';
-    let existingList: Array<{ code: string; name: string; locale: string }> = [];
+    let existingList: Array<{ code: string; name: string; locale: string; textDirection?: string }> = [];
     try {
       const existing = await client.readFile(languagesYamlPath);
       const yamlMod = await import('js-yaml');
@@ -348,10 +367,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       if (Array.isArray(parsed)) existingList = parsed;
     } catch {}
     existingList = existingList.filter((l) => l.locale !== code);
-    existingList.push({ code: name.toUpperCase().slice(0, 2) || code.toUpperCase(), name, locale: code });
+    existingList.push({ code: code.toUpperCase(), name, locale: code, textDirection });
     existingList.sort((a, b) => a.locale.localeCompare(b.locale));
     const yamlMod = await import('js-yaml');
-    const newYamlContent = yamlMod.dump(existingList, { lineWidth: 120, noRefs: true, sortKeys: false });
+    const newYamlContent = yamlMod.dump(existingList, { lineWidth: 120, noRefs: true, sortKeys: false, quotingType: "'" });
     const langSha = await getFileSha(client, languagesYamlPath);
     if (langSha) {
       await client.updateFile(languagesYamlPath, newYamlContent, langSha, `feat: add ${code} to languages.yaml`);
@@ -373,6 +392,11 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         await client.createFile(destPath, srcContent, `feat: add ${code} ${pf}`);
       }
     }
+
+    // 4. sync CI workflow with updated locale list
+    const updatedList = [...existingList.filter((l) => l.locale !== code), { code: code.toUpperCase(), name, locale: code, textDirection }];
+    updatedList.sort((a, b) => a.locale.localeCompare(b.locale));
+    await syncCiWorkflow(client, updatedList.map((l) => l.locale));
 
     return jsonResponse({ success: true, code, message: `Language "${code}" created successfully` });
   } catch (err) {
@@ -399,7 +423,6 @@ export const DELETE: APIRoute = async ({ request, cookies }) => {
 
   const client = auth.ctx.github;
 
-  // collect all files to delete
   const toDelete: string[] = [];
   toDelete.push(`src/config.${code}.yaml`);
   toDelete.push(`src/data/site/navigation.${code}.yaml`);
@@ -410,18 +433,29 @@ export const DELETE: APIRoute = async ({ request, cookies }) => {
   const errors: string[] = [];
 
   // remove from languages.yaml
+  let remainingLocales: string[] = [];
   try {
     const yamlMod = await import('js-yaml');
     const existing = await client.readFile('src/data/site/languages.yaml');
     const parsed = yamlMod.load(existing.content);
     if (Array.isArray(parsed)) {
       const updated = parsed.filter((l: { locale?: string }) => l.locale !== code);
-      const newContent = yamlMod.dump(updated, { lineWidth: 120, noRefs: true, sortKeys: false });
+      remainingLocales = updated.map((l: { locale: string }) => l.locale);
+      const newContent = yamlMod.dump(updated, { lineWidth: 120, noRefs: true, sortKeys: false, quotingType: "'" });
       const sha = existing.sha;
       await client.updateFile('src/data/site/languages.yaml', newContent, sha, `chore: remove ${code} from languages.yaml`);
     }
   } catch (e) {
     errors.push(`languages.yaml: ${e instanceof Error ? e.message : 'unknown'}`);
+  }
+
+  // sync CI workflow
+  if (remainingLocales.length > 0) {
+    try {
+      await syncCiWorkflow(client, remainingLocales);
+    } catch (e) {
+      errors.push(`CI workflow: ${e instanceof Error ? e.message : 'unknown'}`);
+    }
   }
 
   for (const filePath of toDelete) {

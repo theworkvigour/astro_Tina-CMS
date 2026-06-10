@@ -1,8 +1,7 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
 import { file, glob } from 'astro/loaders';
-
-const AVAILABLE_LOCALES = ['en', 'fr', 'de', 'es', 'pt', 'zh'] as const;
+import { AVAILABLE_LOCALES } from './utils/locale';
 
 const metadataDefinition = () =>
   z

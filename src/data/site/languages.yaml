@@ -1,18 +1,24 @@
 - code: EN
   name: English
   locale: en
+  textDirection: ltr
 - code: FR
   name: Français
   locale: fr
+  textDirection: ltr
 - code: DE
   name: Deutsch
   locale: de
+  textDirection: ltr
 - code: ES
   name: Español
   locale: es
+  textDirection: ltr
 - code: PT
   name: Português
   locale: pt
+  textDirection: ltr
 - code: ZH
   name: 中文
   locale: zh
+  textDirection: ltr
