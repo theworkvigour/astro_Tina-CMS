@@ -31,7 +31,7 @@ export default ({ config: _themeConfig = 'src/config.yaml' } = {}): AstroIntegra
 
         const derivedLocale = typeof _themeConfig === 'string' ? deriveLocale(_themeConfig) : undefined;
         if (derivedLocale) {
-          merged.i18n = merged.i18n || {};
+          merged.i18n = merged.i18n ?? { language: derivedLocale, textDirection: 'ltr' };
           merged.i18n.language = derivedLocale;
         }
 
