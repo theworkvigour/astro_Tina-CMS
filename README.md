@@ -1,302 +1,216 @@
-# 🚀 AstroWind
+# Vectoflare — Multilingual Astro + Cloudflare Workers
 
-<img src="https://raw.githubusercontent.com/arthelokyo/.github/main/resources/astrowind/lighthouse-score.png" align="right"
-     alt="AstroWind Lighthouse Score" width="100" height="358">
+基于 [AstroWind](https://github.com/arthelokyo/astrowind) 改造的**配置驱动多语言网站**，支持 6 种语言的内容独立管理，每个语言部署为独立的 Cloudflare Worker。
 
-🌟 _Most *starred* & *forked* Astro theme in 2022, 2023, 2024 & 2025_. 🌟
+## 语言
 
-**AstroWind** is a free and open-source template to make your website using **[Astro v6](https://astro.build/) + [Tailwind CSS v4](https://tailwindcss.com/)**. Ready to start a new project and designed taking into account web best practices.
+| Locale | URL |
+|--------|-----|
+| 🇬🇧 en | `https://vectoflare-en.theworkvigo.workers.dev` |
+| 🇫🇷 fr | `https://vectoflare-fr.theworkvigo.workers.dev` |
+| 🇩🇪 de | `https://vectoflare-de.theworkvigo.workers.dev` |
+| 🇪🇸 es | `https://vectoflare-es.theworkvigo.workers.dev` |
+| 🇵🇹 pt | `https://vectoflare-pt.theworkvigo.workers.dev` |
+| 🇨🇳 zh | `https://vectoflare-zh.theworkvigo.workers.dev` |
 
-- ✅ **Production-ready** scores in **PageSpeed Insights** reports.
-- ✅ Integration with **Tailwind CSS v4** supporting **Dark mode** and **_RTL_**.
-- ✅ **Fast and SEO friendly blog** with automatic **RSS feed**, **MDX** support, **Categories & Tags**, **Social Share**, ...
-- ✅ **Image Optimization** (using new **Astro Assets** and **Unpic** for Universal image CDN).
-- ✅ Generation of **project sitemap** based on your routes.
-- ✅ **Open Graph tags** for social media sharing.
-- ✅ **Analytics** built-in Google Analytics, and Splitbee integration.
-
-<br>
-
-![AstroWind Theme Screenshot](https://raw.githubusercontent.com/arthelokyo/.github/main/resources/astrowind/screenshot-astrowind-readme-fina-v1.png)
-
-[![arthelokyo](https://custom-icon-badges.demolab.com/badge/made%20by%20-arthelokyo-556bf2?style=flat-square&logo=arthelokyo&logoColor=white&labelColor=101827)](https://github.com/arthelokyo)
-[![License](https://img.shields.io/github/license/arthelokyo/astrowind?style=flat-square&color=dddddd&labelColor=000000)](https://github.com/arthelokyo/astrowind/blob/main/LICENSE.md)
-[![Maintained](https://img.shields.io/badge/maintained%3F-yes-brightgreen.svg?style=flat-square)](https://github.com/arthelokyo)
-[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat-square)](https://github.com/arthelokyo/astrowind#contributing)
-[![Known Vulnerabilities](https://snyk.io/test/github/arthelokyo/astrowind/badge.svg?style=flat-square)](https://snyk.io/test/github/arthelokyo/astrowind)
-[![Stars](https://img.shields.io/github/stars/arthelokyo/astrowind.svg?style=social&label=stars&maxAge=86400&color=ff69b4)](https://github.com/arthelokyo/astrowind)
-[![Forks](https://img.shields.io/github/forks/arthelokyo/astrowind.svg?style=social&label=forks&maxAge=86400&color=ff69b4)](https://github.com/arthelokyo/astrowind)
-
-<br>
-
-<details open>
-<summary>Table of Contents</summary>
-
-- [Demo](#demo)
-- [Upcoming: AstroWind 2.0 – We Need Your Vision!](#-upcoming-astrowind-20--we-need-your-vision)
-- [TL;DR](#tldr)
-- [Getting started](#getting-started)
-  - [Project structure](#project-structure)
-  - [Commands](#commands)
-  - [Configuration](#configuration)
-  - [Deploy](#deploy)
-- [Frequently Asked Questions](#frequently-asked-questions)
-- [Contributing](#contributing)
-- [Acknowledgements](#acknowledgements)
-- [License](#license)
-
-</details>
-
-<br>
-
-## Demo
-
-📌 [https://astrowind.vercel.app/](https://astrowind.vercel.app/)
-
-<br>
-
-## 🔔 Upcoming: AstroWind 2.0 – We Need Your Vision!
-
-We're gearing up for **AstroWind 2.0**, and we want it to be shaped by you, our community. Join the discussion and share your ideas, suggestions, and feedback to help us make AstroWind even better.
-
-[Share Your Feedback in Our Discussion!](https://github.com/arthelokyo/astrowind/discussions/392)
-
-<br>
-
-## TL;DR
-
-```shell
-npm create astro@latest -- --template arthelokyo/astrowind
-```
-
-## Getting started
-
-**AstroWind** tries to give you quick access to creating a website using [Astro v6](https://astro.build/) + [Tailwind CSS v4](https://tailwindcss.com/). It's a free theme which focuses on simplicity, good practices and high performance.
-
-Very little vanilla javascript is used only to provide basic functionality so that each developer decides which framework (React, Vue, Svelte, Solid JS...) to use and how to approach their goals.
-
-> **Note:** Requires **Node.js >= 22.12.0**. The template currently uses `output: 'static'`, but the blog only works with `prerender = true`.
-
-### Project structure
-
-Inside **AstroWind** template, you'll see the following folders and files:
+## 架构
 
 ```
 /
-├── public/
-│   ├── _headers
-│   └── robots.txt
 ├── src/
-│   ├── assets/
-│   │   ├── favicons/
-│   │   ├── images/
-│   │   └── styles/
-│   │       └── tailwind.css
-│   ├── components/
-│   │   ├── blog/
-│   │   ├── common/
-│   │   ├── ui/
-│   │   ├── widgets/
-│   │   │   ├── Header.astro
-│   │   │   └── ...
-│   │   ├── CustomStyles.astro
-│   │   ├── Favicons.astro
-│   │   └── Logo.astro
-│   ├── content.config.ts
-│   ├── data/
-│   │   └── post/
-│   │       ├── post-slug-1.md
-│   │       ├── post-slug-2.mdx
-│   │       └── ...
-│   ├── layouts/
-│   │   ├── Layout.astro
-│   │   ├── MarkdownLayout.astro
-│   │   └── PageLayout.astro
+│   ├── assets/styles/tailwind.css    # Tailwind CSS v4 配置
+│   ├── components/                    # UI 组件 (common/, ui/, widgets/, blog/)
+│   ├── data/                          # 多语言内容
+│   │   ├── en/                        # 英文内容 (YAML/JSON/MD)
+│   │   ├── fr/                        # 法文内容
+│   │   ├── de/                        # 德文内容
+│   │   ├── es/                        # 西文内容
+│   │   ├── pt/                        # 葡文内容
+│   │   ├── zh/                        # 中文内容
+│   │   └── contact/                   # 联系表单提交 (加密)
+│   ├── lib/                           # 工具库 (GitHub API, 联系表单, markdown等)
 │   ├── pages/
-│   │   ├── [...blog]/
-│   │   │   ├── [category]/
-│   │   │   ├── [tag]/
-│   │   │   ├── [...page].astro
-│   │   │   └── index.astro
-│   │   ├── index.astro
-│   │   ├── 404.astro
-│   │   ├-- rss.xml.ts
-│   │   └── ...
-│   ├── utils/
-│   ├── config.yaml
-│   └── navigation.js
-├── package.json
-├── astro.config.ts
-└── ...
+│   │   ├── keystatic/                 # 自定义管理后台
+│   │   │   ├── pages.astro            # 页面内容编辑
+│   │   │   ├── navigation.astro       # 导航菜单编辑
+│   │   │   ├── branding.astro         # 品牌配置编辑
+│   │   │   ├── posts.astro            # 文章管理
+│   │   │   ├── products.astro         # 产品管理
+│   │   │   ├── contact-submissions.astro # 联系表单管理
+│   │   │   ├── link-refactor.astro    # 链接重构工具
+│   │   │   └── validate-links.astro   # 链接验证工具
+│   │   ├── [locale]/                  # 本地化路由
+│   │   └── api/admin/                 # 管理API
+│   ├── config/                        # 每语言 YAML 配置 + 导航
+│   │   ├── en/
+│   │   ├── fr/
+│   │   ├── ...
+│   └── utils/locale.ts                # 语言工具函数
+├── dist/                              # 构建产物 (per-locale)
+│   └── server/wrangler.json           # 自动生成的 Cloudflare 配置
+├── .github/workflows/actions.yaml     # CI/CD
+├── astro.config.ts                    # Astro 配置
+├── wrangler.toml                      # Cloudflare 全局配置
+└── package.json
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## 前置要求
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+- **Node.js >= 22.12.0**
+- **Yarn 4.x** (corepack 自动管理)
+- **Cloudflare 账号** (Worker + KV Namespace)
+- **GitHub PAT** (用于管理后台保存内容)
 
-Any static assets, like images, can be placed in the `public/` directory if they do not require any transformation or in the `assets/` directory if they are imported directly.
-
-[![Edit AstroWind on CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://githubbox.com/arthelokyo/astrowind/tree/main) [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/arthelokyo/astrowind)
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file `README.md`. Update `src/config.yaml` and contents. Have fun!
-
-<br>
-
-### Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command             | Action                                             |
-| :------------------ | :------------------------------------------------- |
-| `npm install`       | Installs dependencies                              |
-| `npm run dev`       | Starts local dev server at `localhost:4321`        |
-| `npm run build`     | Build your production site to `./dist/`            |
-| `npm run preview`   | Preview your build locally, before deploying       |
-| `npm run check`     | Check your project for errors                      |
-| `npm run fix`       | Run Eslint and format codes with Prettier          |
-| `npm run astro ...` | Run CLI commands like `astro add`, `astro preview` |
-
-<br>
-
-### Configuration
-
-Basic configuration file: `./src/config.yaml`
-
-```yaml
-site:
-  name: 'Example'
-  site: 'https://example.com'
-  base: '/' # Change this if you need to deploy to Github Pages, for example
-  trailingSlash: false # Generate permalinks with or without "/" at the end
-
-  googleSiteVerificationId: false # Or some value,
-
-# Default SEO metadata
-metadata:
-  title:
-    default: 'Example'
-    template: '%s — Example'
-  description: 'This is the default meta description of Example website'
-  robots:
-    index: true
-    follow: true
-  openGraph:
-    site_name: 'Example'
-    images:
-      - url: '~/assets/images/default.png'
-        width: 1200
-        height: 628
-    type: website
-  twitter:
-    handle: '@twitter_user'
-    site: '@twitter_user'
-    cardType: summary_large_image
-
-i18n:
-  language: en
-  textDirection: ltr
-
-apps:
-  blog:
-    isEnabled: true # If the blog will be enabled
-    postsPerPage: 6 # Number of posts per page
-
-    post:
-      isEnabled: true
-      permalink: '/blog/%slug%' # Variables: %slug%, %year%, %month%, %day%, %hour%, %minute%, %second%, %category%
-      robots:
-        index: true
-
-    list:
-      isEnabled: true
-      pathname: 'blog' # Blog main path, you can change this to "articles" (/articles)
-      robots:
-        index: true
-
-    category:
-      isEnabled: true
-      pathname: 'category' # Category main path /category/some-category, you can change this to "group" (/group/some-category)
-      robots:
-        index: true
-
-    tag:
-      isEnabled: true
-      pathname: 'tag' # Tag main path /tag/some-tag, you can change this to "topics" (/topics/some-category)
-      robots:
-        index: false
-
-    isRelatedPostsEnabled: true # If a widget with related posts is to be displayed below each post
-    relatedPostsCount: 4 # Number of related posts to display
-
-analytics:
-  vendors:
-    googleAnalytics:
-      id: null # or "G-XXXXXXXXXX"
-
-ui:
-  theme: 'system' # Values: "system" | "light" | "dark" | "light:only" | "dark:only"
-```
-
-<br>
-
-#### Customize Design
-
-With Tailwind CSS v4, all configuration is CSS-first. To customize Font families, Colors or more Elements refer to the following files:
-
-- `src/components/CustomStyles.astro` — CSS variables for colors and fonts
-- `src/assets/styles/tailwind.css` — Tailwind theme tokens (`@theme`), custom utilities (`@utility`), and plugins
-
-### Deploy
-
-#### Deploy to production (manual)
-
-You can create an optimized production build with:
+## 本地开发
 
 ```shell
-npm run build
+# 安装依赖
+yarn install
+
+# 开发英文版 (默认)
+yarn dev
+
+# 开发法文版
+SITE_LOCALE=fr yarn dev
+
+# 开发中文版
+SITE_LOCALE=zh yarn dev
 ```
 
-Now, your website is ready to be deployed. All generated files are located at
-`dist` folder, which you can deploy the folder to any hosting service you
-prefer.
+### .dev.vars
 
-#### Deploy to Netlify
+本地开发时，在项目根目录创建 `.dev.vars` 文件：
 
-Clone this repository on your own GitHub account and deploy it to Netlify:
+```
+SESSION_SECRET=your-random-secret-here
+```
 
-[![Netlify Deploy button](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/arthelokyo/astrowind)
+用于会话加密和联系表单加密。
 
-#### Deploy to Vercel
+## 构建
 
-Clone this repository on your own GitHub account and deploy to Vercel:
+每个语言独立构建，通过 `SITE_LOCALE` 环境变量指定：
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Farthelokyo%2Fastrowind)
+```shell
+# 构建英文版
+SITE_LOCALE=en yarn build
 
-#### Deploy to PandaStack
+# 构建所有语言
+yarn build:all
+```
 
-Clone this repository on your own GitHub account and deploy to PandaStack:
+构建产物在 `dist/` 目录。
 
-[![Deploy to PandaStack](https://dashboard.pandastack.io/deploy-button.svg)](https://dashboard.pandastack.io/deploy?repo=arthelokyo/astrowind&type=static&buildCmd=npm+run+build&outputDir=dist)
+## 部署
 
-<br>
+### 自动部署 (CI/CD)
 
-## Frequently Asked Questions
+推送代码到 `main` 分支会自动触发 GitHub Actions：
 
-- Why?
--
--
+1. **check-astro** — 运行 `astro check` 检查
+2. **build-and-deploy** — 为 6 个语言分别构建并部署到 Cloudflare Workers
 
-<br>
+部署位置：`vectoflare-{locale}.theworkvigo.workers.dev`
 
-## Contributing
+### 手动部署
 
-If you have any ideas, suggestions or find any bugs, feel free to open a discussion, an issue or create a pull request.
-That would be very useful for all of us and we would be happy to listen and take action.
+```shell
+# 构建并部署英文版
+SITE_LOCALE=en yarn build
+cd dist/server
+yarn wrangler deploy --name vectoflare-en
 
-## Acknowledgements
+# 构建并部署法文版
+SITE_LOCALE=fr yarn build
+cd dist/server
+yarn wrangler deploy --name vectoflare-fr
+```
 
-Initially created by **Arthelokyo** and maintained by a community of [contributors](https://github.com/arthelokyo/astrowind/graphs/contributors).
+### 密钥管理
 
-## License
+```shell
+# 设置会话密钥 (每个 Worker)
+echo "your-secret" | yarn wrangler secret put SESSION_SECRET --name vectoflare-en
+```
 
-**AstroWind** is licensed under the MIT license — see the [LICENSE](./LICENSE.md) file for details.
+CI/CD 自动从 GitHub Secrets `SESSION_SECRET` 设置。
+
+## 管理后台
+
+每个语言的 Worker 都包含独立的管理后台，路径为 `/keystatic/`：
+
+| 路径 | 功能 |
+|------|------|
+| `/keystatic` | 仪表盘 |
+| `/keystatic/pages` | 编辑页面内容 |
+| `/keystatic/navigation` | 编辑导航菜单 |
+| `/keystatic/branding` | 编辑品牌配置 |
+| `/keystatic/posts` | 管理文章 |
+| `/keystatic/products` | 管理产品 |
+| `/keystatic/contact-submissions` | 查看联系表单提交 |
+| `/keystatic/link-refactor` | 链接/名称批量重构 |
+| `/keystatic/validate-links` | 链接有效性验证 |
+| `/keystatic/change-password` | 修改管理密码 |
+
+### 首次使用
+
+1. 访问 `https://vectoflare-en.theworkvigo.workers.dev/keystatic`
+2. 输入管理员密码登录（默认密码在 `branding.yaml` 中配置）
+3. 首次需要配置 GitHub Token：
+   - 在 GitHub 创建一个 **Personal Access Token (classic)**，权限勾选 `repo`
+   - 在管理后台 `/keystatic/` 中填入 Token
+   - Token 会加密保存在浏览器 Cookie 中
+
+### 内容保存
+
+编辑内容后，管理后台通过 GitHub API 将变更直接提交到代码仓库的 `src/data/{locale}/` 目录。下次 CI 自动部署时更新线上网站。
+
+### 内容回退机制
+
+页面内容按以下优先级回退：
+1. **当前语言的 JSON 内容**（在 `src/data/{locale}/pages.json` 中定义）
+2. **英文内容**（如果当前语言没有定义）
+3. **YAML 配置**（如果 JSON 也找不到）
+
+## 联系表单
+
+`/contact` 页面使用 SSR 模式，包含：
+
+- **数学验证码** — HMAC 签名验证
+- **蜜罐字段** — 隐藏字段反爬虫
+- **速率限制** — 每个 IP 每小时 5 次
+- **AES-256-GCM 加密** — 提交内容加密存储
+- **GitHub 提交** — 加密记录保存到 `src/data/contact/submissions.enc.json`
+- **邮件通知** — 通过 Resend API 发送（可选）
+
+## 技术栈
+
+- **Astro v6** — 框架
+- **Tailwind CSS v4** — 样式 (CSS-first 配置)
+- **Cloudflare Workers** — 部署平台 (SSR)
+- **@astrojs/cloudflare** — Astro Cloudflare 适配器
+- **@keystatic/core** — 内容 Schema 定义
+- **js-yaml** — YAML 解析
+- **GitHub API (octokit)** — 内容保存
+
+## 项目命令
+
+| 命令 | 作用 |
+|------|------|
+| `yarn dev` | 本地开发 (localhost:4321) |
+| `yarn build` | 构建 (`SITE_LOCALE` 指定语言) |
+| `yarn build:all` | 构建全部 6 种语言 |
+| `yarn preview` | 预览构建产物 |
+| `yarn check` | astro check + ESLint + Prettier |
+| `yarn fix` | 自动修复 ESLint + Prettier |
+| `yarn astro` | 运行 Astro CLI |
+
+## CI/CD 环境变量
+
+在 GitHub 仓库设置以下 Secrets:
+
+| Secret | 用途 |
+|--------|------|
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare 账号 ID |
+| `CLOUDFLARE_API_TOKEN` | Cloudflare API 令牌 (需要有 Workers + KV 权限) |
+| `SESSION_SECRET` | 会话加密密钥 (随机字符串) |
