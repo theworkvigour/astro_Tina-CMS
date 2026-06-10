@@ -53,12 +53,12 @@ const {
 const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 
 const langs = [
-  { code: 'EN', name: 'English' },
-  { code: 'FR', name: 'Français' },
-  { code: 'DE', name: 'Deutsch' },
-  { code: 'ES', name: 'Español' },
-  { code: 'PT', name: 'Português' },
-  { code: 'AR', name: 'العربية' },
+  { code: 'EN', name: 'English', locale: 'en' },
+  { code: 'FR', name: 'Français', locale: 'fr' },
+  { code: 'DE', name: 'Deutsch', locale: 'de' },
+  { code: 'ES', name: 'Español', locale: 'es' },
+  { code: 'PT', name: 'Português', locale: 'pt' },
+  { code: 'ZH', name: '中文', locale: 'zh' },
 ];
 ---
 
@@ -134,15 +134,16 @@ const langs = [
           >
             {langs.map((l) => (
               <li>
-                <button
-                  type="button"
+                <a
+                  href="javascript:void(0)"
+                  data-locale={l.locale}
                   data-lang-code={l.code}
                   data-lang-name={l.name}
-                  class="w-full text-left px-3 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center justify-between"
+                  class="block w-full text-left px-3 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center justify-between"
                 >
                   <span>{l.name}</span>
                   <span class="text-xs text-gray-400 font-mono">{l.code}</span>
-                </button>
+                </a>
               </li>
             ))}
           </ul>
@@ -251,15 +252,16 @@ const langs = [
           >
             {langs.map((l) => (
               <li>
-                <button
-                  type="button"
+                <a
+                  href="javascript:void(0)"
+                  data-locale={l.locale}
                   data-lang-code={l.code}
                   data-lang-name={l.name}
-                  class="w-full text-left px-3 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center justify-between"
+                  class="block w-full text-left px-3 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center justify-between"
                 >
                   <span>{l.name}</span>
                   <span class="text-xs text-gray-400 font-mono">{l.code}</span>
-                </button>
+                </a>
               </li>
             ))}
           </ul>
@@ -311,8 +313,6 @@ Type a keyword to start searching
 
 <script is:inline data-astro-rerun>
   (function () {
-    const KEY = 'vf_lang';
-
     function setupLangSwitcher(switcher, btnSel, menuSel, labelSel) {
       if (!switcher) return null;
       const btn = switcher.querySelector(btnSel);
@@ -320,62 +320,44 @@ Type a keyword to start searching
       const label = labelSel ? switcher.querySelector(labelSel) : null;
       if (!btn || !menu) return null;
 
-      const saved = (() => {
-        try { return localStorage.getItem(KEY) || 'EN'; } catch { return 'EN'; }
-      })();
-      if (label) label.textContent = saved;
       btn.setAttribute('aria-expanded', 'false');
 
       btn.addEventListener('click', function (e) {
         e.stopPropagation();
         const open = menu.classList.toggle('hidden') === false;
         btn.setAttribute('aria-expanded', String(open));
-        // Sync the other menu
         document.querySelectorAll('[data-lang-menu], [data-lang-menu-mobile]').forEach(function (m) {
           if (m !== menu) { m.classList.add('hidden'); }
         });
       });
 
       menu.addEventListener('click', function (e) {
-        const t = e.target instanceof Element ? e.target.closest('[data-lang-code]') : null;
+        const t = e.target instanceof Element ? e.target.closest('[data-locale]') : null;
         if (!t) return;
         e.preventDefault();
-        const code = t.getAttribute('data-lang-code') || 'EN';
-        const name = t.getAttribute('data-lang-name') || code;
-        try { localStorage.setItem(KEY, code); } catch {}
-        // Update all labels
-        document.querySelectorAll('[data-lang-current]').forEach(function (el) { el.textContent = code; });
-        document.querySelectorAll('[data-lang-menu], [data-lang-menu-mobile]').forEach(function (m) { m.classList.add('hidden'); });
-        document.querySelectorAll('[data-lang-button], [data-lang-button-mobile]').forEach(function (b) { b.setAttribute('aria-expanded', 'false'); });
-        showToast('Language: ' + name + ' (' + code + ') — translation coming soon');
+        const locale = t.getAttribute('data-locale') || 'en';
+        const path = window.location.pathname;
+        const host = window.location.hostname;
+        // Cross-Worker URL: vectoflare-{locale}.theworkvigo.workers.dev{path}
+        let target;
+        if (host.indexOf('vectoflare-') === 0) {
+          target = 'https://vectoflare-' + locale + '.theworkvigo.workers.dev' + path;
+        } else {
+          target = window.location.origin + '/' + locale + path;
+        }
+        window.location.href = target;
       });
 
       return { btn, menu, label };
     }
 
-    function showToast(msg) {
-      let host = document.getElementById('vf-toast');
-      if (!host) {
-        host = document.createElement('div');
-        host.id = 'vf-toast';
-        host.className = 'fixed top-3 right-3 z-[60] pointer-events-none';
-        document.body.appendChild(host);
-      }
-      const div = document.createElement('div');
-      div.className = 'bg-gray-900 text-white text-sm px-3 py-2 rounded-md shadow-lg pointer-events-auto';
-      div.textContent = msg;
-      host.appendChild(div);
-      setTimeout(function () { div.style.opacity = '0'; }, 2400);
-      setTimeout(function () { div.remove(); }, 2800);
-    }
-
-    const d1 = setupLangSwitcher(
+    setupLangSwitcher(
       document.querySelector('[data-lang-switcher]'),
       '[data-lang-button]',
       '[data-lang-menu]',
       '[data-lang-current]'
     );
-    const d2 = setupLangSwitcher(
+    setupLangSwitcher(
       document.querySelector('[data-lang-switcher-mobile]'),
       '[data-lang-button-mobile]',
       '[data-lang-menu-mobile]',
