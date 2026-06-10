@@ -60,6 +60,9 @@ const langs = [
   { code: 'PT', name: 'Português', locale: 'pt' },
   { code: 'ZH', name: '中文', locale: 'zh' },
 ];
+
+const currentLocale = process.env.SITE_LOCALE || 'en';
+const currentLang = langs.find((l) => l.locale === currentLocale) || langs[0];
 ---
 
 <header
@@ -243,7 +246,7 @@ const langs = [
             class="inline-flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             <Icon name="tabler:language" class="w-4 h-4" />
-            <span data-lang-current>EN</span>
+            <span data-lang-current>{currentLang.code}</span>
             <Icon name="tabler:chevron-down" class="w-3.5 h-3.5" />
           </button>
           <ul
@@ -311,6 +314,7 @@ Type a keyword to start searching
   </div>
 </div>
 
+<script set:html={`var SITE_LOCALE='${currentLocale}';`}></script>
 <script is:inline data-astro-rerun>
   (function () {
     function setupLangSwitcher(switcher, btnSel, menuSel, labelSel) {
@@ -321,6 +325,7 @@ Type a keyword to start searching
       if (!btn || !menu) return null;
 
       btn.setAttribute('aria-expanded', 'false');
+      if (label) label.textContent = (typeof SITE_LOCALE !== 'undefined' ? SITE_LOCALE : 'en').toUpperCase();
 
       btn.addEventListener('click', function (e) {
         e.stopPropagation();
