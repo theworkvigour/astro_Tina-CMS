@@ -32,7 +32,22 @@ const token = readTokenFromCookies(Astro.cookies);
 if (!token) return Astro.redirect('/keystatic/github-token');
 
 const slug = Astro.params.slug;
-const page: PageSpec | undefined = slug ? PAGE_BY_SLUG[slug] : undefined;
+let page: PageSpec | undefined = slug ? PAGE_BY_SLUG[slug] : undefined;
+
+// If not found in local schemas, try fetching from API
+if (!page && slug) {
+  try {
+    const siteOrigin = new URL(Astro.request.url).origin;
+    const res = await fetch(siteOrigin + '/api/admin/pages', {
+      headers: { Cookie: Astro.request.headers.get('cookie') || '' },
+    });
+    if (res.ok) {
+      const data2 = await res.json();
+      const pages = (data2.pages || []) as PageSpec[];
+      page = pages.find((p: any) => p.slug === slug && p.defined);
+    }
+  } catch {}
+}
 if (!page) return Astro.redirect('/keystatic/pages');
 
 let data: Record<string, any> = {};

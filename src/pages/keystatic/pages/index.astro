@@ -3,39 +3,95 @@ export const prerender = false;
 import AdminLayout from '~/layouts/AdminLayout.astro';
 import { verifySessionToken } from '~/lib/auth';
 import { readTokenFromCookies } from '~/lib/token-store';
-import { PAGES } from '~/components/admin/page-schemas';
 
 const session = Astro.cookies.get('ks-admin-session')?.value;
 const verified = session ? verifySessionToken(session) : null;
 if (!verified) return Astro.redirect('/login');
 const token = readTokenFromCookies(Astro.cookies);
 if (!token) return Astro.redirect('/keystatic/github-token');
+
+interface PageItem {
+  slug: string;
+  label: string;
+  path: string;
+  file: string;
+  defined: boolean;
+  sections: Array<{ key: string; type: string; label: string }>;
+}
+
+let pages: PageItem[] = [];
+let loadError: string | null = null;
+try {
+  const siteOrigin = new URL(Astro.request.url).origin;
+  const res = await fetch(siteOrigin + '/api/admin/pages', {
+    headers: { Cookie: Astro.request.headers.get('cookie') || '' },
+  });
+  if (res.ok) {
+    const data = await res.json();
+    pages = data.pages || [];
+  } else {
+    loadError = 'API returned ' + res.status;
+  }
+} catch (err) {
+  loadError = err instanceof Error ? err.message : 'Failed to load pages';
+}
 ---
+
 <AdminLayout title="Page Content / Pages" active="pages" username={verified?.username}>
   <div class="mb-6">
-    <h1 class="text-2xl font-semibold">Page Content Manager</h1>
-    <p class="mt-1 text-sm text-gray-500">Edit all widget blocks on the main pages (Home, About, Services, Pricing, Contact, News). All changes are committed to <code class="font-mono">src/data/pages/</code> in the GitHub repository.</p>
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-semibold">Page Content Manager</h1>
+        <p class="mt-1 text-sm text-gray-500">{pages.length} pages total</p>
+      </div>
+      <a
+        href="/keystatic/pages/new"
+        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md"
+      >+ New Page</a>
+    </div>
   </div>
 
+  {loadError && (
+    <div class="mb-4 rounded-md border border-red-200 bg-red-50 dark:bg-red-950/40 dark:border-red-900 p-3 text-sm text-red-700 dark:text-red-300">
+      Failed to load: {loadError}
+    </div>
+  )}
+
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    {PAGES.map((page) => (
+    {pages.length === 0 && !loadError && (
+      <div class="col-span-full text-center py-12 text-gray-500">No pages yet. Click + New Page to create the first one.</div>
+    )}
+    {pages.map((page) => (
       <a
-        href={`/keystatic/pages/${page.slug}`}
-        class="block rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-6 hover:border-blue-400 transition"
+        href={page.defined ? `/keystatic/pages/${page.slug}` : '#'}
+        class={`block rounded-xl border ${page.defined ? 'border-gray-200 dark:border-gray-800 hover:border-blue-400' : 'border-dashed border-yellow-300 dark:border-yellow-700'} bg-white dark:bg-gray-950 p-6 transition`}
       >
         <div class="flex items-center justify-between">
           <div>
-            <div class="text-base font-semibold">{page.label}</div>
+            <div class="text-base font-semibold">{page.label}
+              {!page.defined && <span class="ml-2 text-xs text-yellow-600 dark:text-yellow-400">(not defined)</span>}
+            </div>
             <div class="mt-1 text-xs text-gray-500 font-mono">{page.file}</div>
           </div>
           <span class="text-xs text-gray-400 font-mono">{page.path}</span>
         </div>
-        <div class="mt-4 flex flex-wrap gap-1.5">
-          {page.sections.map((s) => (
-            <span class="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">{s.label}</span>
-          ))}
+        {page.defined && page.sections.length > 0 && (
+          <div class="mt-4 flex flex-wrap gap-1.5">
+            {page.sections.map((s) => (
+              <span class="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
+                {s.label || s.key}:{s.type}
+              </span>
+            ))}
+          </div>
+        )}
+        {!page.defined && (
+          <div class="mt-4 text-xs text-yellow-600 dark:text-yellow-400">
+            This YAML file was discovered in <code class="font-mono">src/data/pages/</code> but has no section definition. Use <a href="/keystatic/pages/new" class="text-blue-600 underline">+ New Page</a> to define it.
+          </div>
+        )}
+        <div class="mt-4 text-sm text-blue-600 dark:text-blue-400">
+          {page.defined ? 'Edit this page →' : 'Requires definition →'}
         </div>
-        <div class="mt-4 text-sm text-blue-600 dark:text-blue-400">Edit this page →</div>
       </a>
     ))}
   </div>
