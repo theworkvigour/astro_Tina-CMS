@@ -9,6 +9,7 @@ import { getHomePermalink } from '~/utils/permalinks';
 import { trimSlash, getAsset } from '~/utils/permalinks';
 import type { CallToAction } from '~/types';
 
+import { I18N } from 'astrowind:config';
 import langData from '~/data/site/languages.yaml';
 
 interface Link {
@@ -56,7 +57,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 
 const langs: Array<{ code: string; name: string; locale: string }> = Array.isArray(langData) ? langData : [];
 
-const currentLocale = process.env.SITE_LOCALE || 'en';
+const currentLocale = I18N?.language || 'en';
 const currentLang = langs.find((l) => l.locale === currentLocale) || langs[0] || { code: 'EN', name: 'English', locale: 'en' };
 ---
 
