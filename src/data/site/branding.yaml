@@ -4,9 +4,9 @@ logo_alt: Vectoflare logo
 copyright: © {year} {site_name} · All rights reserved.
 whatsapp_number: '+8613305324192'
 whatsapp_default_message: Hello, I would like to inquire about a product.
-contact_email_to: hello@vectoflare.example
+contact_email_to: info@vectoflare.com
 contact_email_provider: none
-contact_from_email: ''
+contact_from_email: contact@vectoflare.com
 contact_from_name: Admin
 contact_resend_api_key: Aa123456#
 contact_submissions_pat: ''
